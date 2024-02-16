@@ -75,8 +75,12 @@ app.post('/api/v1/tours', (req, res) => {
    //    res.send(`bodyContent: ${bodyContent}`); // ERROR in Potsman
    //    res.send({ bodyContent: bodyContent }); // it must be in format of JSON OBJECT due to middleware:
    // app.use(express.json());
-
-   const tour = { data: req.body }; // here reads the information from Postman due to req.body
+   const id_1 = tours.length - 1; // we don't need actually the length, we need only last id
+   const id = id_1 + 1;
+   //    const tour = { data: req.body, id: id }; // here reads the information from Postman due to req.body
+   //    const tour = { id: req.body.id, data: req.body }; // here reads the information from Postman due to req.body
+   const tour = req.body; // here reads the information from Postman due to req.body
+   tour.id = id;
    console.log(tour);
 
    tours.push(tour); // to add the new tour to our current tours
@@ -85,6 +89,8 @@ app.post('/api/v1/tours', (req, res) => {
       results: tours.length,
       tours: tour,
    });
+
+   fs.writeFileSync(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), 'utf-8');
 });
 
 PORT = 3000;
