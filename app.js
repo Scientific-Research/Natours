@@ -1,5 +1,5 @@
 const express = require('express');
-const tours = require('./dev-data/data/tours.json');
+const tours = require('./dev-data/data/tours-simple.json');
 
 const app = express();
 
