@@ -66,7 +66,7 @@ app.get('/api/v1/tours', (req, res) => {
 });
 
 // POST
-app.post('/api/v1/tour', (req, res) => {
+app.post('/api/v1/tours', (req, res) => {
    const tour = { data: req.body }; // here reads the information from Postman due to req.body
    console.log(tour);
 
