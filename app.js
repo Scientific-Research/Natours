@@ -5,7 +5,8 @@ const express = require('express');
 const app = express();
 
 // for app.post(), we need this app.use(express.json()) absolutely!
-app.use(express.json()); // To parse JSON data
+app.use(express.json()); // To parse JSON data => this is a middleware and we use it when we
+// have JSON and express - it stays between req and res, that's why it called: middleware!
 
 /**  
 // GET
