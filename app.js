@@ -68,8 +68,13 @@ app.get('/api/v1/tours', (req, res) => {
 
 // POST
 app.post('/api/v1/tours', (req, res) => {
-   //    console.log(req.body);
-   //    res.send('Done');
+   // SOME INITIAL TESTS:
+   //    const bodyContent = req.body;
+   //    console.log(bodyContent);
+   //    res.send('bodyContent: ' + bodyContent); // ERROR in Postman
+   //    res.send(`bodyContent: ${bodyContent}`); // ERROR in Potsman
+   //    res.send({ bodyContent: bodyContent }); // it must be in format of JSON OBJECT due to middleware:
+   // app.use(express.json());
 
    const tour = { data: req.body }; // here reads the information from Postman due to req.body
    console.log(tour);
