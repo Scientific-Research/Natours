@@ -4,6 +4,9 @@ const express = require('express');
 
 const app = express();
 
+// for app.post(), we need this app.use(express.json()) absolutely!
+app.use(express.json()); // To parse JSON data
+
 /**  
 // GET
 app.get('/', (req, res) => {
@@ -52,10 +55,26 @@ app.get('/api/v1/tours', (req, res) => {
    res.status(200).json({
       status: 'success',
       results: tours.length,
-      data: {
-         // tours:tours
-         tours,
-      },
+      //   data: {
+      //      // tours:tours
+      //      tours,
+      //   },
+      // tours:tours
+      // OR
+      tours,
+   });
+});
+
+// POST
+app.post('/api/v1/tour', (req, res) => {
+   const tour = { data: req.body }; // here reads the information from Postman due to req.body
+   console.log(tour);
+
+   tours.push(tour); // to add the new tour to our current tours
+   res.status(201).json({
+      status: 'success',
+      results: tours.length,
+      tours: tour,
    });
 });
 
