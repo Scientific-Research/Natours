@@ -3,7 +3,16 @@ const express = require('express');
 const app = express();
 
 app.get('/', (req, res) => {
-   res.status(200).send('Hallo from express!');
+   //    res.status(200).send('Hallo from express!');
+   // or we can send the message in format of JSON:
+   // JSON is ,in fact, a JavsScript Object Notaion, which is a JavaScript Object, but
+   // the difference is that: Key has quotation like Value. but in Normal JS Object, Key
+   // doesn't have quotaion and Value only has the quotation! for example:
+   // message is Key and 'Hello from express' is Value here!
+   res.status(200).json({
+      message: 'Hallo from express!',
+      app: 'Natours',
+   });
 });
 
 PORT = 3000;
