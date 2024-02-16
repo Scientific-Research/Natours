@@ -1,5 +1,6 @@
+const fs = require('fs');
 const express = require('express');
-const tours = require('./dev-data/data/tours-simple.json');
+// const tours = require('./dev-data/data/tours-simple.json');
 
 const app = express();
 
@@ -33,8 +34,29 @@ app.post('/info', (req, res) => {
 });
 */
 
+// const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8'));
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
+// without 'utf-8', we will have Buffer(a lot of numbers from ASCII Table)
+// with 'utf-8' we will have string at output but not in the from of JS object string
+// That's why at the end, we have to add JSON.parse() to convert our string to JS object string
+
 app.get('/api/v1/tours', (req, res) => {
-   res.status(200).send(tours.map((tour) => tour));
+   //    res.status(200).send(tours.map((tour) => tour));
+   // Solution Nr.1
+   //    res.status(200).send({
+   //       tours,
+   //    });
+   // Solution Nr.2 // actually, we don't need to write .json() here, because we convert the file
+   // already to the JSON via JSON.parse() and it is enough to write only .send() =>
+   // douple mouple :)
+   res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+         // tours:tours
+         tours,
+      },
+   });
 });
 
 PORT = 3000;
