@@ -207,15 +207,15 @@
     ]
   },
   {
-    "id": 9,
-    "name": "Test Tour",
-    "duration": 10,
-    "difficulty": "easy"
-  },
-  {
-    "id": 10,
     "name": "Test Tour-2",
     "duration": 25,
-    "difficulty": "very difficult"
+    "difficulty": "very difficult",
+    "id": 9
+  },
+  {
+    "name": "Test Tour-2",
+    "duration": 25,
+    "difficulty": "very difficult",
+    "id": 10
   }
 ]

@@ -75,15 +75,23 @@ app.post('/api/v1/tours', (req, res) => {
    //    res.send(`bodyContent: ${bodyContent}`); // ERROR in Potsman
    //    res.send({ bodyContent: bodyContent }); // it must be in format of JSON OBJECT due to middleware:
    // app.use(express.json());
+
+   ///// THIS IS MY SOLUTION TO GET THE ID AND PUT IT IN OUR OBJECT TOUR!
    const id_1 = tours.length - 1; // we don't need actually the length, we need only last id
-   const id = id_1 + 1;
+   const newId = id_1 + 1;
    //    const tour = { data: req.body, id: id }; // here reads the information from Postman due to req.body
    //    const tour = { id: req.body.id, data: req.body }; // here reads the information from Postman due to req.body
-   const tour = req.body; // here reads the information from Postman due to req.body
-   tour.id = id;
-   console.log(tour);
+   const newTour = req.body; // here reads the information from Postman due to req.body
+   newTour.id = newId; // to add above id to our tour object in Postman!
+   console.log(newTour);
+   ///// THIS IS MY SOLUTION TO GET THE ID AND PUT IT IN OUR OBJECT TOUR!
 
-   tours.push(tour); // to add the new tour to our current tours
+   ///// THIS IS JONAS SOLUTION TO GET THE ID AND PUT IT IN OUR OBJECT TOUR!
+   //    const newId = tours[tours.length - 1].id + 1;
+   //    const newTour = Object.assign({ id: newId }, req.body);
+   ///// THIS IS JONAS SOLUTION TO GET THE ID AND PUT IT IN OUR OBJECT TOUR!
+
+   tours.push(newTour); // to add the new tour to our current tours
    //    res.status(201).json({
    //       status: 'success',
    //       results: tours.length,
@@ -94,8 +102,10 @@ app.post('/api/v1/tours', (req, res) => {
    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
       res.status(201).json({
          status: 'success',
-         results: tours.length,
-         tours: tour,
+         //  results: tours.length,
+         //  data: {
+         tours: newTour,
+         //  },
       })
    );
    // WE ARE NOT ALLOWING TO USE SYNC FUNCTION HERE, BECAUSE IT WILL
