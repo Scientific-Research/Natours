@@ -66,6 +66,21 @@ app.get('/api/v1/tours', (req, res) => {
    });
 });
 
+// to get the tour with ID:
+app.get('/api/v1/tours/:id', (req, res) => {
+   const id = req.params.id;
+   console.log(id);
+
+   const tour = tours.find((item) => item.id === parseInt(id));
+   console.log(tour);
+
+   res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      tours: tour,
+   });
+});
+
 // POST
 app.post('/api/v1/tours', (req, res) => {
    // SOME INITIAL TESTS:
