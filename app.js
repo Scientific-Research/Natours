@@ -84,13 +84,23 @@ app.post('/api/v1/tours', (req, res) => {
    console.log(tour);
 
    tours.push(tour); // to add the new tour to our current tours
-   res.status(201).json({
-      status: 'success',
-      results: tours.length,
-      tours: tour,
-   });
-
-   fs.writeFileSync(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), 'utf-8');
+   //    res.status(201).json({
+   //       status: 'success',
+   //       results: tours.length,
+   //       tours: tour,
+   //    });
+   // WHEN WE USE ASYNC FUNCTION, WE HAVE TO BRING THE res.status()...
+   // INSIDE THE fs.writeFile()
+   fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
+      res.status(201).json({
+         status: 'success',
+         results: tours.length,
+         tours: tour,
+      })
+   );
+   // WE ARE NOT ALLOWING TO USE SYNC FUNCTION HERE, BECAUSE IT WILL
+   // BLOCK THE PROGRAM! THAT'S WHY WE HAVE TO USE ASYNC FUNCTION LIKE ABOVE FINCTION!
+   // fs.writeFileSync(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), 'utf-8');
 });
 
 PORT = 3000;
