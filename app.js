@@ -75,8 +75,11 @@ app.get('/api/v1/tours/:id', (req, res) => {
       // const id = req.params.id * 1; In JS, you can covert the string to number using * 1
       console.log('Tours length: ' + tours.length);
 
-      if (id > tours.length) throw new Error('Resource not found! Please try again later!');
+      // if (id > tours.length) throw new Error('Invalid ID! Please try again later!');
+      // OR we test it in this way: !tour: it means there is no tour with this id, it is undefined!
       const tour = tours.find((item) => item.id === parseInt(id));
+      // !tour: it means there is no tour with this id, it is undefined!
+      if (!tour) throw new Error('Invalid ID! Please try again later!');
       console.log(tour);
       res.status(200).json({
          status: 'success',
@@ -85,7 +88,11 @@ app.get('/api/v1/tours/:id', (req, res) => {
          tour,
       });
    } catch (err) {
-      res.status(404).send('ERROR: ' + err.message);
+      // res.status(404).send('ERROR: ' + err.message);
+      res.status(404).json({
+         status: 'fail',
+         message: err.message,
+      });
    }
 });
 
