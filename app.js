@@ -66,21 +66,27 @@ app.get('/api/v1/tours', (req, res) => {
    });
 });
 
-// to get the tour with ID:
+// to GET the tour with ID:
 app.get('/api/v1/tours/:id', (req, res) => {
    const id = req.params.id;
    console.log('id: ' + id);
 
-   // const id = req.params.id * 1; In JS, you can covert the string to number using * 1
-   const tour = tours.find((item) => item.id === parseInt(id));
-   console.log(tour);
+   try {
+      // const id = req.params.id * 1; In JS, you can covert the string to number using * 1
+      console.log('Tours length: ' + tours.length);
 
-   res.status(200).json({
-      status: 'success',
-      // results: tours.length,
-      // tour: tour,
-      tour,
-   });
+      if (id > tours.length) throw new Error('Resource not found! Please try again later!');
+      const tour = tours.find((item) => item.id === parseInt(id));
+      console.log(tour);
+      res.status(200).json({
+         status: 'success',
+         // results: tours.length,
+         // tour: tour,
+         tour,
+      });
+   } catch (err) {
+      res.status(404).send('ERROR: ' + err.message);
+   }
 });
 
 // POST
