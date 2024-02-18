@@ -39,7 +39,7 @@ app.post('/info', (req, res) => {
 */
 
 // const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`, 'utf-8'));
-const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
+let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 // without 'utf-8', we will have Buffer(a lot of numbers from ASCII Table)
 // with 'utf-8' we will have string at output but not in the from of JS object string
 // That's why at the end, we have to add JSON.parse() to convert our string to JS object string
@@ -185,6 +185,65 @@ app.patch('/api/v1/tours/:id', (req, res) => {
             //  results: tours.length,
             //  data: {
             tours: newTour,
+            //  },
+         })
+      );
+   } catch (err) {
+      // res.status(404).send('ERROR: ' + err.message);
+      res.status(404).json({
+         status: 'fail',
+         message: err.message,
+      });
+   }
+});
+
+// DELETE
+app.delete('/api/v1/tours/:id', (req, res) => {
+   const id = req.params.id;
+   // console.log('id: ' + id);
+
+   try {
+      // const id = req.params.id * 1; In JS, you can covert the string to number using * 1
+      // console.log('Tours length: ' + tours.length);
+
+      // if (id > tours.length) throw new Error('Invalid ID! Please try again later!');
+      // OR we test it in this way: !tour: it means there is no tour with this id, it is undefined!
+      const tour = tours.find((item) => item.id === parseInt(id));
+      // !tour: it means there is no tour with this id, it is undefined!
+      if (!tour) throw new Error('Invalid ID! Please try again later!');
+      // Before Patch => Updating
+      // console.log('Before Patch => Updating');
+      // console.log(tour);
+
+      // const newTour = req.body; // here reads the information from Postman due to req.body
+      ///// THIS IS MY SOLUTION TO GET THE ID AND PUT IT IN OUR OBJECT TOUR!
+      // const id_1 = tours.length - 1; // we don't need actually the length, we need only last id
+      // const newId = id_1 + 1;
+
+      // newTour.id = parseInt(id); // to add above id to our tour object in Postman!
+      // const x = tours[id];
+      // let toursId = tours.indexOf(tours[id]); // to find the index of current tour, which we
+      // are editing now and then put the edited tour exactly to its former place(its id)!
+      // console.log('toursId: ' + toursId);
+      // tours[toursId] = newTour; // to say please put the edited tour to its original place
+
+      let deletedTour = tours.filter((el) => el.id !== parseInt(id));
+      console.log(deletedTour);
+      tours = deletedTour;
+
+      // Before Patch => Updating
+      // console.log('After Patch => Updating');
+      // console.log(newTour);
+
+      // WHEN WE USE ASYNC FUNCTION, WE HAVE TO BRING THE res.status()...
+      // INSIDE THE fs.writeFile()
+      fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
+         res.status(200).json({
+            status: 'success',
+            //  results: tours.length,
+            //  data: {
+            // tours: newTour,
+            deletedTour: deletedTour,
             //  },
          })
       );
