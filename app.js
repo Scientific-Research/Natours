@@ -69,15 +69,17 @@ app.get('/api/v1/tours', (req, res) => {
 // to get the tour with ID:
 app.get('/api/v1/tours/:id', (req, res) => {
    const id = req.params.id;
-   console.log(id);
+   console.log('id: ' + id);
 
+   // const id = req.params.id * 1; In JS, you can covert the string to number using * 1
    const tour = tours.find((item) => item.id === parseInt(id));
    console.log(tour);
 
    res.status(200).json({
       status: 'success',
-      results: tours.length,
-      tours: tour,
+      // results: tours.length,
+      // tour: tour,
+      tour,
    });
 });
 
