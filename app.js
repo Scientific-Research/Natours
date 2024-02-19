@@ -37,12 +37,7 @@ const getTour = (req, res) => {
    }
 };
 
-app.get('/api/v1/tours', getAllTours);
-
-app.get('/api/v1/tours/:id', getTour);
-
-// POST
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
    const id_1 = tours.length - 1;
    const newId = id_1 + 1;
    const newTour = req.body;
@@ -56,7 +51,13 @@ app.post('/api/v1/tours', (req, res) => {
          tours: newTour,
       })
    );
-});
+};
+
+app.get('/api/v1/tours', getAllTours);
+
+app.get('/api/v1/tours/:id', getTour);
+
+app.post('/api/v1/tours', createTour);
 
 // PATCH
 app.patch('/api/v1/tours/:id', (req, res) => {
