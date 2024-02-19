@@ -111,11 +111,17 @@ const deleteTour = (req, res) => {
 };
 
 // All the routes
-app.get('/api/v1/tours', getAllTours);
-app.get('/api/v1/tours/:id', getTour);
-app.post('/api/v1/tours', createTour);
-app.patch('/api/v1/tours/:id', updateTour);
-app.delete('/api/v1/tours/:id', deleteTour);
+// app.get('/api/v1/tours', getAllTours);
+// app.post('/api/v1/tours', createTour);
+
+// app.get('/api/v1/tours/:id', getTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+// this only for get() and post()
+app.route('/api/v1/tours').get(getAllTours).post(createTour);
+// this only for get() => one item, patch() and delete()
+app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 PORT = 3000;
 app.listen(PORT, '127.0.0.1', () => {
