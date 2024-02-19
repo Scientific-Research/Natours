@@ -5,21 +5,29 @@ const app = express();
 // our first built-in middleware function
 app.use(express.json());
 
-// create our own middleware function:
+// 1- create our own middleware function: => our global route handler before other ones:
 app.use((req, res, next) => {
    console.log('Hello from our own middleware!');
    next(); // calling the next() here!
 });
-
+// 2- create our own middleware function: => our global route handler before other ones:
+app.use((req, res, next) => {
+   req.requestTime = new Date().toISOString();
+   next();
+});
 let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
 // Refactoring
+// const getAllTours = (req, res,next) => {
 const getAllTours = (req, res) => {
+   console.log(req.requestTime);
    res.status(200).json({
       status: 'success',
+      requestedAt: req.requestTime,
       results: tours.length,
       tours,
    });
+   // next();
 };
 
 const getTour = (req, res) => {
@@ -127,6 +135,7 @@ const deleteTour = (req, res) => {
 
 // this only for get() and post()
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
+
 // this only for get() => one item, patch() and delete()
 app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
