@@ -227,9 +227,13 @@ app.delete('/api/v1/tours/:id', (req, res) => {
       // console.log('toursId: ' + toursId);
       // tours[toursId] = newTour; // to say please put the edited tour to its original place
 
-      let deletedTour = tours.filter((el) => el.id !== parseInt(id));
+      let deletedTour = tours.filter((el) => el.id === parseInt(id));
+      // deletedTour: to show just the deleted tour!
+      let notDeletedTours = tours.filter((el) => el.id !== parseInt(id));
+      // notDeletedTours: to show all the remaining tour!
       console.log(deletedTour);
-      tours = deletedTour;
+      tours = notDeletedTours;
+      // to send the remaning tours => not deleted tours to tours to display them in GET section
 
       // Before Patch => Updating
       // console.log('After Patch => Updating');
