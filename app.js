@@ -110,6 +110,7 @@ const deleteTour = (req, res) => {
    }
 };
 
+// All the routes
 app.get('/api/v1/tours', getAllTours);
 app.get('/api/v1/tours/:id', getTour);
 app.post('/api/v1/tours', createTour);
