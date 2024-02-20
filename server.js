@@ -2,6 +2,8 @@
 
 // const app = express();
 const app = require('./app');
+// show us which environment we are using currently: => it shows us development
+console.log(app.get('env'));
 
 // 4) START SERVER => now, our exntry point to start our application is server.js and no longer
 // app.js => i will change it in package.json for nodemon too.
