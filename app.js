@@ -9,6 +9,9 @@ const app = express();
 app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
 // our first built-in middleware function
 app.use(express.json());
+// how to show the static files using middleware in express:
+app.use(express.static(`${__dirname}/public`)); //=> http://127.0.0.1:3000/overview.html
+// OR: http://127.0.0.1:3000/img/pin.png
 
 // 1- create our own middleware function: => our global route handler before other ones:
 app.use((req, res, next) => {
