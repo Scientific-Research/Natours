@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 
 // const app = express();
 const app = require('./app');
+
+dotenv.config({ path: './config.env' });
 // show us which environment we are using currently: => it shows us development
 // console.log(app.get('env'));
 console.log(process.env); // shows us a bunch of node variables
