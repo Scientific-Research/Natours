@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const app = express();
 
 // 1) MIDDLEWARES
-app.use(morgan('dev'));
+app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
 // our first built-in middleware function
 app.use(express.json());
 
