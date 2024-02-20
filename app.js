@@ -1,6 +1,7 @@
-const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
+const tourRouter = require('./routes/tourRoutes');
+const userRouter = require('./routes/userRoutes');
 
 const app = express();
 
@@ -19,161 +20,8 @@ app.use((req, res, next) => {
    req.requestTime = new Date().toISOString();
    next();
 });
-let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
 // Refactoring
-// 2) ROUTE HANDLERS
-// const getAllTours = (req, res,next) => {
-const getAllTours = (req, res) => {
-   console.log(req.requestTime);
-   res.status(200).json({
-      status: 'success',
-      requestedAt: req.requestTime,
-      results: tours.length,
-      tours,
-   });
-   // next();
-};
-
-const getTour = (req, res) => {
-   const id = req.params.id;
-   console.log('id: ' + id);
-
-   try {
-      console.log('Tours length: ' + tours.length);
-
-      const tour = tours.find((item) => item.id === parseInt(id));
-      if (!tour) throw new Error('Invalid ID! Please try again later!');
-      console.log(tour);
-      res.status(200).json({
-         status: 'success',
-         tour,
-      });
-   } catch (err) {
-      res.status(404).json({
-         status: 'fail',
-         message: err.message,
-      });
-   }
-};
-
-const createTour = (req, res) => {
-   const id_1 = tours.length - 1;
-   const newId = id_1 + 1;
-   const newTour = req.body;
-   newTour.id = newId;
-   console.log(newTour);
-
-   tours.push(newTour);
-   fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
-      res.status(201).json({
-         status: 'success',
-         tours: newTour,
-      })
-   );
-};
-
-const updateTour = (req, res) => {
-   const id = req.params.id;
-
-   try {
-      const tour = tours.find((item) => item.id === parseInt(id));
-      if (!tour) throw new Error('Invalid ID! Please try again later!');
-      console.log('Before Patch => Updating');
-      console.log(tour);
-
-      const newTour = req.body;
-
-      newTour.id = parseInt(id);
-      let toursId = tours.indexOf(tours[id]);
-      tours[toursId] = newTour;
-
-      console.log('After Patch => Updating');
-      console.log(newTour);
-
-      fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
-         res.status(201).json({
-            status: 'success',
-            tours: newTour,
-         })
-      );
-   } catch (err) {
-      res.status(404).json({
-         status: 'fail',
-         message: err.message,
-      });
-   }
-};
-
-const deleteTour = (req, res) => {
-   const id = req.params.id;
-
-   try {
-      const tour = tours.find((item) => item.id === parseInt(id));
-      if (!tour) throw new Error('Invalid ID! Please try again later!');
-
-      let deletedTour = tours.filter((el) => el.id === parseInt(id));
-      let notDeletedTours = tours.filter((el) => el.id !== parseInt(id));
-      console.log(deletedTour);
-      tours = notDeletedTours;
-      fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
-         res.status(200).json({
-            status: 'success',
-            deletedTour: deletedTour,
-         })
-      );
-   } catch (err) {
-      res.status(404).json({
-         status: 'fail',
-         message: err.message,
-      });
-   }
-};
-
-const getAllUsers = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - getAllUsers',
-      },
-   });
-};
-
-const getUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - getUser',
-      },
-   });
-};
-
-const createUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - createUser',
-      },
-   });
-};
-
-const updateUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - updateUser',
-      },
-   });
-};
-
-const deleteUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - deleteUser',
-      },
-   });
-};
 
 // All the routes
 // app.get('/api/v1/tours', getAllTours);
@@ -184,24 +32,8 @@ const deleteUser = (req, res) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 // 3) ROUTES
-const tourRouter = express.Router();
-const userRouter = express.Router();
-
-app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
-
-// this only for get() and post()
-// tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
-tourRouter.route('/').get(getAllTours).post(createTour);
-// this only for get() => one item, patch() and delete()
-// tourRouter.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
-tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
-
-// Route for users:
-userRouter.route('/').get(getAllUsers).post(createUser);
-// app.route('/api/v1/users').get(getAllUsers).post(createUser);
-userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
-// app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
+app.use('/api/v1/tours', tourRouter);
 
 // 4) START SERVER
 PORT = 3000;
