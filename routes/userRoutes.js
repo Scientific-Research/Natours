@@ -2,51 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 // const userRouter = express.Router();
+const userController = require('../controllers/userController');
 
-const getAllUsers = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - getAllUsers',
-      },
-   });
-};
-
-const getUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - getUser',
-      },
-   });
-};
-
-const createUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - createUser',
-      },
-   });
-};
-
-const updateUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - updateUser',
-      },
-   });
-};
-
-const deleteUser = (req, res) => {
-   res.status(500).json({
-      data: {
-         status: 'error',
-         message: 'This route is not yet defined! - deleteUser',
-      },
-   });
-};
+// using deconstructuring:
+const { getAllUsers, getUser, createUser, updateUser, deleteUser } = userController;
 
 // Route for users:
 router.route('/').get(getAllUsers).post(createUser);
