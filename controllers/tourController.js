@@ -18,6 +18,18 @@ exports.checkID = (req, res, next, val) => {
    }
    next();
 };
+
+// Check Body
+exports.checkBody = (req, res, next) => {
+   if (!req.body.name || !req.body.price) {
+      return res.status(400).json({
+         status: 'fail',
+         message: 'Missing name or price properties!',
+      });
+   }
+   next();
+};
+
 // 2) ROUTE HANDLERS
 // const getAllTours = (req, res,next) => {
 exports.getAllTours = (req, res) => {
