@@ -6,7 +6,18 @@ let tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simp
 // const tourRouter = express.Router();
 // app.use('/api/v1/tours', router);
 // app.use('/api/v1/tours', tourRouter);
-
+// this middleware is placed before all the other middlewares to check if the id is valid
+// then goes to the next middleware, otherwise, it will return and will not go to other middlewares.
+exports.checkID = (req, res, next, val) => {
+   console.log(`Tour id is: ${val}`); // val has the value of id
+   if (req.params.id * 1 > tours.length) {
+      return res.status(404).json({
+         status: 'fail',
+         message: 'Invalid ID -- Checked by checkID middleware in tourController.js',
+      });
+   }
+   next();
+};
 // 2) ROUTE HANDLERS
 // const getAllTours = (req, res,next) => {
 exports.getAllTours = (req, res) => {
@@ -95,7 +106,7 @@ exports.deleteTour = (req, res) => {
 
    try {
       const tour = tours.find((item) => item.id === parseInt(id));
-      if (!tour) throw new Error('Invalid ID! Please try again later!');
+      if (!tour) throw new Error('No tour with this ID anymore! pick a different one.');
 
       let deletedTour = tours.filter((el) => el.id === parseInt(id));
       let notDeletedTours = tours.filter((el) => el.id !== parseInt(id));

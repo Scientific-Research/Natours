@@ -4,9 +4,10 @@ const router = express.Router();
 
 const tourController = require('../controllers/tourController');
 
+router.param('id', tourController.checkID);
+
 // using destructuring:
 const { getAllTours, getTour, createTour, updateTour, deleteTour } = tourController;
-
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 router.route('/').get(getAllTours).post(createTour);
 // tourRouter.route('/').get(getAllTours).post(createTour);
