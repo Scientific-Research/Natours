@@ -145,6 +145,11 @@ app.route('/api/v1/tours').get(getAllTours).post(createTour);
 // this only for get() => one item, patch() and delete()
 app.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
+// Route for users:
+app.route('/api/v1/users').get(getAllUsers).post(createUser);
+
+app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
 // 4) START SERVER
 PORT = 3000;
 app.listen(PORT, '127.0.0.1', () => {
