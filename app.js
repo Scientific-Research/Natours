@@ -6,7 +6,13 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 // 1) MIDDLEWARES
-app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
+console.log(process.env.NODE_ENV);
+
+// WHEN WE ARE ONLY AND ONLY IN DEVELOPMENT MODE; MORGAN WILL SHOW US THIS INFO: GET /api/v1/tours/9 200 5.404 ms - 142
+// IN VSCODE TERMINAL. WHEN I CHANGE IT TO PRODUCTION; IT WILL NOT SHOW US SUCH INFO.
+if (process.env.NODE_ENV === 'development') {
+   app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
+}
 // our first built-in middleware function
 app.use(express.json());
 // how to show the static files using middleware in express:
