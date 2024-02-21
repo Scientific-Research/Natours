@@ -4,7 +4,9 @@
    "description": "Learning node, express and MongoDB",
    "main": "app.js",
    "scripts": {
-      "start": "nodemon server.js"
+      "//": "cross-env make it possible to use NODE_ENV in both below commands",
+      "start:dev": "cross-env NODE_ENV=development nodemon server.js",
+      "start:prod": "cross-env NODE_ENV=production nodemon server.js"
    },
    "keywords": [],
    "author": "Maximilian",
@@ -14,5 +16,8 @@
       "express": "^4.18.2",
       "morgan": "^1.10.0",
       "nodemon": "^3.0.3"
+   },
+   "devDependencies": {
+      "cross-env": "^7.0.3"
    }
 }
