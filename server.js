@@ -16,7 +16,9 @@ const app = require('./app');
 
 const connect = async () => {
    try {
-      await mongoose.connect(process.env.DATABASE);
+      const con = await mongoose.connect(process.env.DATABASE);
+      // console.log(con);
+
       const PORT = process.env.PORT || 8000;
       app.listen(PORT, () => {
          console.log(`Server is listening on PORT ${PORT}`);
