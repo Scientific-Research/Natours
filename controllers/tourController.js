@@ -111,7 +111,8 @@ exports.createTour = async (req, res) => {
       });
    } catch (err) {
       console.log(`Error creating the tour data on MongoDB: ${err.message}`);
-      res.status(400).json({ status: 'fail', message: 'Error creating the tour data on MongoDB!' });
+      // res.status(400).json({ status: 'fail', message: 'Error creating the tour data on MongoDB!' });
+      res.status(400).json({ status: 'fail', message: err.message });
    }
 
    // const id_1 = tours.length - 1;
