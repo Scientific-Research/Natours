@@ -12,9 +12,11 @@ const tourController = require('../controllers/tourController');
 // Add it to the post handler stack
 
 // using destructuring:
-const { getAllTours, getTour, createTour, updateTour, deleteTour, checkBody } = tourController;
+// const { getAllTours, getTour, createTour, updateTour, deleteTour, checkBody } = tourController;
+const { getAllTours, getTour, createTour, updateTour, deleteTour } = tourController;
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
-router.route('/').get(getAllTours).post(checkBody, createTour);
+// router.route('/').get(getAllTours).post(checkBody, createTour);
+router.route('/').get(getAllTours).post(createTour);
 // WHEN CHECKBODY IS TRUE, ROUTER GOES TO THE CREATETOUR(); OTHERWISE, IT SHOWS US THE
 // BODY CHECK ERROR!
 // tourRouter.route('/').get(getAllTours).post(createTour);
