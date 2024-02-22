@@ -16,9 +16,13 @@ const app = require('./app');
 
 const connect = async () => {
    try {
-      const con = await mongoose.connect(process.env.DATABASE);
+      // const con = await mongoose.connect(process.env.DATABASE); // connect to MongoDB
+      const con = await mongoose.connect(process.env.DATABASE_LOCAL); // connect locally to monogosh
+      // NOTE: we have to replace localhost with 127.0.0.1, otherwise, it will not work!
+      // NOTE: In case of using the local database, we have to run mongod in Shell Terminal!
       // console.log(con);
 
+      console.log('MongoDB connection successful!');
       const PORT = process.env.PORT || 8000;
       app.listen(PORT, () => {
          console.log(`Server is listening on PORT ${PORT}`);
