@@ -58,7 +58,7 @@ const TourDB = async () => {
       const testTour = new Tour({
          name: 'The Park Camper',
          // rating: 4.7,
-         // price: 497,
+         price: 997,
       });
       // and then to save our Tour on DB:
       const doc = await testTour.save();
