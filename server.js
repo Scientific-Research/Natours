@@ -33,23 +33,22 @@ const connect = async () => {
 };
 connect();
 
+// THIS WAS JUST FOR TESTING AND WE DON'T NEED IT ANYMORE!
+// /* Tour here as Model in Mongoose is like a class in JS and we define an instance(object) of it
+//  => testTour*/
+// const TourDB = async () => {
+//    try {
+//       const testTour = new Tour({
+//          name: 'The Park Camper',
+//          // rating: 4.7,
+//          price: 997,
+//       });
+//       // and then to save our Tour on DB:
+//       const doc = await testTour.save();
+//       console.log(doc);
+//    } catch (err) {
+//       console.log(`Error saving the values to MongoDB: ${err.message}`);
+//    }
+// };
 
-
-/* Tour here as Model in Mongoose is like a class in JS and we define an instance(object) of it
- => testTour*/
-const TourDB = async () => {
-   try {
-      const testTour = new Tour({
-         name: 'The Park Camper',
-         // rating: 4.7,
-         price: 997,
-      });
-      // and then to save our Tour on DB:
-      const doc = await testTour.save();
-      console.log(doc);
-   } catch (err) {
-      console.log(`Error saving the values to MongoDB: ${err.message}`);
-   }
-};
-
-TourDB();
+// TourDB();
