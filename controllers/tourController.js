@@ -95,11 +95,12 @@ exports.createTour = async (req, res) => {
 
    // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA
    try {
-      const newTour = await Tour.create({
-         name: 'Test Tour-6',
-         rating: 4.7,
-         price: 997,
-      });
+      // const newTour = await Tour.create({
+      //    name: 'Test Tour-6',
+      //    rating: 4.7,
+      //    price: 997,
+      // });
+      const newTour = await Tour.create(req.body); // recieve the data from Postman
       doc = await newTour.save();
       console.log(doc);
       res.status(201).json({
