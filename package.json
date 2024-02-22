@@ -5,7 +5,7 @@
    "main": "app.js",
    "scripts": {
       "//": "cross-env make it possible to use NODE_ENV in both below commands",
-      "start:dev": "cross-env NODE_ENV=development nodemon server.js",
+      "start": "cross-env NODE_ENV=development nodemon server.js",
       "start:prod": "cross-env NODE_ENV=production nodemon server.js"
    },
    "keywords": [],
