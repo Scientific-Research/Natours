@@ -75,7 +75,7 @@ exports.createTour = async (req, res) => {
    // console.log(newTour);
    // NOTE: THIS IS THE FIRST METHOD TO CREATE THE DATA. In this method, we make a new instance(object)
    // from Tour but in the next method, we use Tour direct with create(), that's why don't need
-   // to create a new instance of Tour.
+   // to create a new instance of Tour. In addition to that, we don't need to use save().
    // try {
    //    const tour = new Tour({
    //       name: 'Test Tour-5',
@@ -93,7 +93,9 @@ exports.createTour = async (req, res) => {
    //    res.status(404).json({ message: 'Error creating the tour data on MongoDB!' });
    // }
 
-   // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA
+   // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA, when we use create() function, we
+   // don't need to make a new instance(object) from Tour and also we don't need to use save()
+   // function anymore. But in first method, we have to use both of them!
    try {
       // const newTour = await Tour.create({
       //    name: 'Test Tour-6',
@@ -101,11 +103,11 @@ exports.createTour = async (req, res) => {
       //    price: 997,
       // });
       const newTour = await Tour.create(req.body); // recieve the data from Postman
-      doc = await newTour.save();
-      console.log(doc);
+      // doc = await newTour.save();
+      console.log(newTour);
       res.status(201).json({
          status: 'success',
-         createdTour: doc,
+         createdTour: newTour,
       });
    } catch (err) {
       console.log(`Error creating the tour data on MongoDB: ${err.message}`);
