@@ -60,25 +60,39 @@ exports.getAllTours = async (req, res) => {
    // // next();
 };
 
-exports.getTour = (req, res) => {
+exports.getTour = async (req, res) => {
    const id = req.params.id;
-   console.log('id: ' + id);
+   console.log(id);
 
    try {
-      // console.log('Tours length: ' + tours.length);
-      // const tour = tours.find((item) => item.id === parseInt(id));
-      // if (!tour) throw new Error('Invalid ID! Please try again later!');
-      // console.log(tour);
-      // res.status(200).json({
-      //    status: 'success',
-      //    tour,
-      // });
+      // NOTE: GETTING ONLY ONE TOUR USING findById(id)-- no need to make a new instance(object) and using
+      // save() function too!
+      const tour = await Tour.findById(id);
+      console.log(tour);
+      res.status(200).json({ status: 'success', OneTour: tour });
    } catch (err) {
-      res.status(404).json({
-         status: 'fail',
-         message: err.message,
-      });
+      console.log('Error to get one tour from MongoDB!' + err.message);
+      res.status(400).json({ status: 'fail', message: err.message });
    }
+
+   // const id = req.params.id;
+   // console.log('id: ' + id);
+
+   // try {
+   //    // console.log('Tours length: ' + tours.length);
+   //    // const tour = tours.find((item) => item.id === parseInt(id));
+   //    // if (!tour) throw new Error('Invalid ID! Please try again later!');
+   //    // console.log(tour);
+   //    // res.status(200).json({
+   //    //    status: 'success',
+   //    //    tour,
+   //    // });
+   // } catch (err) {
+   //    res.status(404).json({
+   //       status: 'fail',
+   //       message: err.message,
+   //    });
+   // }
 };
 
 exports.createTour = async (req, res) => {
