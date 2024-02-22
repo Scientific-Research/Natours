@@ -70,7 +70,27 @@ exports.getTour = (req, res) => {
    }
 };
 
-exports.createTour = (req, res) => {
+exports.createTour = async (req, res) => {
+   // const newTour = req.body;
+   // console.log(newTour);
+
+   try {
+      const tour = new Tour({
+         name: 'Test Tour-5',
+         rating: 4.7,
+         price: 997,
+      });
+      const doc = await tour.save();
+      console.log(doc);
+      res.status(201).json({
+         status: 'success',
+         createdTour: doc,
+      });
+   } catch (err) {
+      console.log(`Error creating the tour data on MongoDB: ${err.message}`);
+      res.status(404).json({ message: 'Error creating the tour data on MongoDB!' });
+   }
+
    // const id_1 = tours.length - 1;
    // const newId = id_1 + 1;
    // const newTour = req.body;
