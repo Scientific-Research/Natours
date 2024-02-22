@@ -73,14 +73,34 @@ exports.getTour = (req, res) => {
 exports.createTour = async (req, res) => {
    // const newTour = req.body;
    // console.log(newTour);
+   // NOTE: THIS IS THE FIRST METHOD TO CREATE THE DATA. In this method, we make a new instance(object)
+   // from Tour but in the next method, we use Tour direct with create(), that's why don't need
+   // to create a new instance of Tour.
+   // try {
+   //    const tour = new Tour({
+   //       name: 'Test Tour-5',
+   //       rating: 4.7,
+   //       price: 997,
+   //    });
+   //    const doc = await tour.save();
+   //    console.log(doc);
+   //    res.status(201).json({
+   //       status: 'success',
+   //       createdTour: doc,
+   //    });
+   // } catch (err) {
+   //    console.log(`Error creating the tour data on MongoDB: ${err.message}`);
+   //    res.status(404).json({ message: 'Error creating the tour data on MongoDB!' });
+   // }
 
+   // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA
    try {
-      const tour = new Tour({
-         name: 'Test Tour-5',
+      const newTour = await Tour.create({
+         name: 'Test Tour-6',
          rating: 4.7,
          price: 997,
       });
-      const doc = await tour.save();
+      doc = await newTour.save();
       console.log(doc);
       res.status(201).json({
          status: 'success',
