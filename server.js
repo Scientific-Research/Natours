@@ -50,3 +50,22 @@ const tourSchema = new mongoose.Schema({
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
+
+/* Tour here as Model in Mongoose is like a class in JS and we define an instance(object) of it
+ => testTour*/
+const TourDB = async () => {
+   try {
+      const testTour = new Tour({
+         name: 'The Forest Hiker',
+         rating: 4.7,
+         price: 497,
+      });
+      // and then to save our Tour on DB:
+      const doc = await testTour.save();
+      console.log(doc);
+   } catch (err) {
+      console.log(`Error saving the values to MongoDB: ${err.message}`);
+   }
+};
+
+TourDB();
