@@ -68,6 +68,7 @@ exports.getTour = async (req, res) => {
       // NOTE: GETTING ONLY ONE TOUR USING findById(id)-- no need to make a new instance(object) and using
       // save() function too!
       const tour = await Tour.findById(id);
+      // NOTE: Tour.findOne({_id: req.params.id})
       console.log(tour);
       res.status(200).json({ status: 'success', OneTour: tour });
    } catch (err) {
