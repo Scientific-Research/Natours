@@ -1,6 +1,8 @@
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 // const express = require('express');
-dotenv.config({ path: './config.env' });
+// dotenv.config({ path: './config.env' });
+dotenv.config({ path: './.env' });
 
 // const app = express();
 const app = require('./app');
@@ -12,7 +14,15 @@ const app = require('./app');
 // 4) START SERVER => now, our exntry point to start our application is server.js and no longer
 // app.js => i will change it in package.json for nodemon too.
 
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, '127.0.0.1', () => {
-   console.log(`Server is listening on PORT ${PORT}`);
-});
+const connect = async () => {
+   try {
+      await mongoose.connect(process.env.DATABASE);
+      const PORT = process.env.PORT || 8000;
+      app.listen(PORT, () => {
+         console.log(`Server is listening on PORT ${PORT}`);
+      });
+   } catch (err) {
+      console.log('Error connecting to MongoDB:', err.message);
+   }
+};
+connect();
