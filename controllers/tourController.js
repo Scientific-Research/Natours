@@ -38,15 +38,26 @@ const Tour = require('../models/tourModel');
 
 // 2) ROUTE HANDLERS
 // const getAllTours = (req, res,next) => {
-exports.getAllTours = (req, res) => {
-   console.log(req.requestTime);
-   res.status(200).json({
-      status: 'success',
-      requestedAt: req.requestTime,
-      // results: tours.length,
-      // tours,
-   });
-   // next();
+exports.getAllTours = async (req, res) => {
+   try {
+      // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
+      // save() function too!
+      const tours = await Tour.find();
+      console.log(tours);
+      res.status(200).json({ status: 'success', AllTours: tours });
+   } catch (err) {
+      console.log('Error to get all the tours from MongoDB!' + err.message);
+      res.status(400).json({ status: 'fail', message: err.message });
+   }
+
+   // console.log(req.requestTime);
+   // res.status(200).json({
+   //    status: 'success',
+   //    requestedAt: req.requestTime,
+   //    // results: tours.length,
+   //    // tours,
+   // });
+   // // next();
 };
 
 exports.getTour = (req, res) => {
