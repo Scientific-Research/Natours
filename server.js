@@ -56,9 +56,9 @@ const Tour = mongoose.model('Tour', tourSchema);
 const TourDB = async () => {
    try {
       const testTour = new Tour({
-         name: 'The Forest Hiker',
-         rating: 4.7,
-         price: 497,
+         name: 'The Park Camper',
+         // rating: 4.7,
+         // price: 497,
       });
       // and then to save our Tour on DB:
       const doc = await testTour.save();
