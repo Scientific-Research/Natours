@@ -17,3 +17,6 @@ const tourSchema = new mongoose.Schema({
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
+
+module.exports = Tour; // we will use this Tour in tourController.js to do the CRUD operations
+// there! that's why i will import it in tourController.js
