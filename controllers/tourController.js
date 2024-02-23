@@ -40,6 +40,9 @@ const Tour = require('../models/tourModel');
 // const getAllTours = (req, res,next) => {
 exports.getAllTours = async (req, res) => {
    try {
+      console.log(req.query); // what we have in URL as SEARCH QUERY:
+      // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
+      // { duration: '5', difficulty: 'easy' }
       // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
       // save() function too!
       const tours = await Tour.find();
