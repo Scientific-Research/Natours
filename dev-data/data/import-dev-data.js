@@ -75,6 +75,9 @@ const deleteAllDataFromDB = async () => {
 };
 // deleteAllDataFromDB();
 // console.log(process.argv);
+// NOTE: WHEN WE ARE USING THIS BELOW PROCESS.ARGV[] COMMAND; WE DON'T NEED TO CALL THESE TWO FUNCTIONS
+// ANYMORE: 1- deleteAllDataFromDB(); 2- importData(); THIS COMMAND WILL DOES THE SAME!
+
 // NOTE: AFTER RUNNING THIS COMMAND IN VSCODE TERMINAL:
 // node dev-data/data/import-dev-data.js --import
 // node dev-data/data/import-dev-data.js --delete
