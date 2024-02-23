@@ -45,9 +45,13 @@ exports.getAllTours = async (req, res) => {
       // { duration: '5', difficulty: 'easy' }
       // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
       // save() function too!
-      const tours = await Tour.find();
+      // const tours = await Tour.find();
+      const tours = await Tour.find({
+         duration: 5,
+         difficulty: 'easy',
+      });
       const Result = tours.length;
-      console.log(tours);
+      // console.log(tours);
       res.status(200).json({ status: 'success', Results: Result, AllTours: tours });
    } catch (err) {
       console.log('Error to get all the tours from MongoDB!' + err.message);
