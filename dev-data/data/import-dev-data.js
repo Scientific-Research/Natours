@@ -46,8 +46,6 @@ const importData = async () => {
       const importedData = await Tour.create(tours);
       console.log('Data loaded successfully from JSON data to MongoDB!');
 
-      process.exit(); // when the delete process is finished, it will be terminated in VSCode!
-
       //   res.status(201).json({
       //      status: 'success',
       //      importedData: importedData,
@@ -56,6 +54,7 @@ const importData = async () => {
       console.log('Error Loading Data from JSON data to MongoDB! ' + err.message);
       //   res.status(400).json({ status: 'fail', message: err.message });
    }
+   process.exit(); // when the delete process is finished, it will be terminated in VSCode!
 };
 // importData();
 
@@ -65,8 +64,6 @@ const deleteAllDataFromDB = async () => {
       await Tour.deleteMany();
       console.log('Data deleted successfully!');
 
-      process.exit(); // when the delete process is finished, it will be terminated in VSCode!
-
       //   res.status(200).json({
       //      status: 'success',
       //   });
@@ -74,6 +71,7 @@ const deleteAllDataFromDB = async () => {
       console.log('Error Deleting All Data From MongoDB ' + err.message);
       //   res.status(400).json({ status: 'fail', message: err.message });
    }
+   process.exit(); // when the delete process is finished, it will be terminated in VSCode!
 };
 // deleteAllDataFromDB();
 // console.log(process.argv);
