@@ -161,6 +161,7 @@ exports.updateTour = async (req, res) => {
    try {
       const updatedTour = await Tour.findByIdAndUpdate(id, req.body, {
          new: true, // to send the new(updated) tour to the client.
+         runValidators: true,
       });
       console.log(updatedTour);
       res.status(200).json({
