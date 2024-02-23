@@ -45,13 +45,16 @@ const importData = async () => {
    try {
       const importedData = await Tour.create(tours);
       console.log('Data loaded successfully from JSON data to MongoDB!');
-      res.status(201).json({
-         status: 'success',
-         importedData: importedData,
-      });
+
+      process.exit(); // when the delete process is finished, it will be terminated in VSCode!
+
+      //   res.status(201).json({
+      //      status: 'success',
+      //      importedData: importedData,
+      //   });
    } catch (err) {
-      console.log(err.message);
-      res.status(400).json({ status: 'fail', message: err.message });
+      console.log('Error Loading Data from JSON data to MongoDB! ' + err.message);
+      //   res.status(400).json({ status: 'fail', message: err.message });
    }
 };
 // importData();
@@ -60,13 +63,25 @@ const importData = async () => {
 const deleteAllDataFromDB = async () => {
    try {
       await Tour.deleteMany();
-      res.status(200).json({
-         status: 'success',
-      });
+      console.log('Data deleted successfully!');
+
+      process.exit(); // when the delete process is finished, it will be terminated in VSCode!
+
+      //   res.status(200).json({
+      //      status: 'success',
+      //   });
    } catch (err) {
       console.log('Error Deleting All Data From MongoDB ' + err.message);
-      res.status(400).json({ status: 'fail', message: err.message });
+      //   res.status(400).json({ status: 'fail', message: err.message });
    }
 };
 // deleteAllDataFromDB();
-console.log(process.argv);
+// console.log(process.argv);
+// NOTE: AFTER RUNNING THIS COMMAND IN VSCODE TERMINAL:
+// node dev-data/data/import-dev-data.js --import
+// node dev-data/data/import-dev-data.js --delete
+if (process.argv[2] === '--import') {
+   importData();
+} else if (process.argv[2] === '--delete') {
+   deleteAllDataFromDB();
+}
