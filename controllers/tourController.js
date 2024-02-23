@@ -40,7 +40,18 @@ const Tour = require('../models/tourModel');
 // const getAllTours = (req, res,next) => {
 exports.getAllTours = async (req, res) => {
    try {
-      console.log(req.query); // what we have in URL as SEARCH QUERY:
+      const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
+      const excludedFields = ['page', 'sort', 'limit', 'fields'];
+
+      // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
+      excludedFields.forEach((el) => delete queryObj[el]);
+
+      // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
+      // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
+      const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+      // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
+
+      // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
       // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
       // { duration: '5', difficulty: 'easy' }
       // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
@@ -55,10 +66,6 @@ exports.getAllTours = async (req, res) => {
 
       // NOTE: THE SECOND METHOD TO WRITE THE SEARCH QUERY:
       // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
-
-      // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
-      const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
-      // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
       const Result = tours.length;
       // console.log(tours);
