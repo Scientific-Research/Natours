@@ -155,8 +155,22 @@ exports.createTour = async (req, res) => {
    // );
 };
 
-exports.updateTour = (req, res) => {
+exports.updateTour = async (req, res) => {
    const id = req.params.id;
+
+   try {
+      const updatedTour = await Tour.findByIdAndUpdate(id, req.body, {
+         new: true, // to send the new(updated) tour to the client.
+      });
+      console.log(updatedTour);
+      res.status(200).json({
+         status: 'success',
+         updatedTour: updatedTour,
+      });
+   } catch (err) {
+      console.log('Error updating the Tour!' + err.message);
+      res.status(400).json({ status: 'fail', message: err.message });
+   }
 
    // try {
    //    const tour = tours.find((item) => item.id === parseInt(id));
