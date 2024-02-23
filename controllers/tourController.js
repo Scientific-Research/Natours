@@ -202,8 +202,21 @@ exports.updateTour = async (req, res) => {
    // }
 };
 
-exports.deleteTour = (req, res) => {
+exports.deleteTour = async (req, res) => {
    const id = req.params.id;
+
+   try {
+      const deletedTour = await Tour.findByIdAndDelete(id);
+      if (!deletedTour) throw new Error('This Tour already deleted!');
+      console.log(deletedTour);
+      res.status(200).json({
+         status: 'success',
+         deletedTour: deletedTour,
+      });
+   } catch (err) {
+      console.log('Error deleting the tour data: ' + err.message);
+      res.status(400).json({ status: 'fail', message: err.message });
+   }
 
    // try {
    //    const tour = tours.find((item) => item.id === parseInt(id));
