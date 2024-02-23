@@ -46,10 +46,20 @@ exports.getAllTours = async (req, res) => {
       // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
       // save() function too!
       // const tours = await Tour.find();
-      const tours = await Tour.find({
-         duration: 5,
-         difficulty: 'easy',
-      });
+
+      // NOTE: THE FIRST METHOD TO WRITE THE SEARCH QUERY:
+      // const tours = await Tour.find({
+      //    duration: 5,
+      //    difficulty: 'easy',
+      // });
+
+      // NOTE: THE SECOND METHOD TO WRITE THE SEARCH QUERY:
+      // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
+
+      // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
+      const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
+      // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
+
       const Result = tours.length;
       // console.log(tours);
       res.status(200).json({ status: 'success', Results: Result, AllTours: tours });
