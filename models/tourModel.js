@@ -49,6 +49,8 @@ const tourSchema = new mongoose.Schema({
    createdAt: {
       type: Date,
       default: Date.now(),
+      select: false, // it will not display this item in a tour in Postman, when we get the list
+      // of the tours!
    },
    startDates: [Date],
 });
