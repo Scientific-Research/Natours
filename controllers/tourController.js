@@ -40,7 +40,9 @@ const Tour = require('../models/tourModel');
 // const getAllTours = (req, res,next) => {
 exports.getAllTours = async (req, res) => {
    try {
+      console.log(req.query);
       // 1 - BUILD QUERY
+      // 1) Filtering
       const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
       const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
@@ -53,6 +55,20 @@ exports.getAllTours = async (req, res) => {
       const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
       // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
+      // 2) Advanced filtering:
+      // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
+      // we can do all these using replace() => gte, gt, lte, lt using regular expression
+      // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
+      // In VSCode Terminal:console.log(req.query)=>{ difficulty: 'easy', duration: { gte: '5' } }
+      console.log('queryObj' + queryObj);
+      let queryStr = JSON.stringify(queryObj);
+      console.log('queryStr' + queryStr);
+      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+      console.log(JSON.parse(queryStr)); // we want the Object here!
+
+      // Regular expression: \b: means we want only these
+      // four word and not these four words inside other words!
+      // g means it replace for all these four word and not only the first one!
       // 2 - EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
