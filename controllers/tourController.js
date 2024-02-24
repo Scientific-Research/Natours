@@ -76,6 +76,7 @@ exports.getAllTours = async (req, res) => {
       // g means it replace for all these four word and not only the first one!
 
       // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
+      // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
       if (req.query.sort) {
          query = query.sort(req.query.sort);
       }
