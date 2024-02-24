@@ -78,7 +78,15 @@ exports.getAllTours = async (req, res) => {
       // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
       // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
       if (req.query.sort) {
-         query = query.sort(req.query.sort);
+         // how to bring the search query items together with space instead of comma:
+         const sortBy = req.query.sort.split(',').join(' ');
+         console.log(sortBy); // -price -ratingsAverage
+         // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
+         // query = query.sort(req.query.sort);
+         query = query.sort(sortBy);
+         // console.log(query);
+
+         // sort('price ratingsAverage')
       }
 
       // EXECUTE QUERY
