@@ -49,12 +49,6 @@ exports.getAllTours = async (req, res) => {
       // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
       excludedFields.forEach((el) => delete queryObj[el]);
 
-      // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
-      // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
-      // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
-      const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
-      // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
-
       // 2) Advanced filtering:
       // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
       // we can do all these using replace() => gte, gt, lte, lt using regular expression
@@ -65,6 +59,13 @@ exports.getAllTours = async (req, res) => {
       console.log('queryStr' + queryStr);
       queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
       console.log(JSON.parse(queryStr)); // we want the Object here!
+
+      // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
+      // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
+      // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+      // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+      const query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
+      // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
       // Regular expression: \b: means we want only these
       // four word and not these four words inside other words!
