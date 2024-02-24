@@ -87,6 +87,8 @@ exports.getAllTours = async (req, res) => {
          // console.log(query);
 
          // sort('price ratingsAverage')
+      } else {
+         query = query.sort('-createdAt');
       }
 
       // EXECUTE QUERY
