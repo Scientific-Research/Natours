@@ -107,6 +107,13 @@ exports.getAllTours = async (req, res) => {
       } else {
          query = query.select('-__v'); // we exclude this item(version=> __v)
       }
+
+      // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
+      // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
+      // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
+      // skip(10) means 10 pages we have to skip to 
+      query = query.skip(10).limit(10);
+
       // EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
