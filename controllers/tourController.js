@@ -94,7 +94,12 @@ exports.getAllTours = async (req, res) => {
       // 3) Field limiting
       // NOTE: this is our URL in Postman:
       // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
+      // 127.0.0.1:3000/api/v1/tours?fields=-name,-duration => it gives us all the items in
+      // a tour except name and duration in Postman, because they are minus signs beside them.
       // and we see only these four fields in Postman as result plus _id and without --v.
+      // when we remove all the search queries and our URL in postman is like this:
+      // 127.0.0.1:3000/api/v1/tours => the compiler goes to the else section and we will
+      // not have the --v anymore!
       if (req.query.fields) {
          const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
          // query = query.select('name duration price');
