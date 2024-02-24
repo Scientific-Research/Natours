@@ -42,14 +42,14 @@ exports.getAllTours = async (req, res) => {
    try {
       console.log(req.query);
       // 1 - BUILD QUERY
-      // 1) Filtering
+      // 1A) Filtering
       const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
       const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
       // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
       excludedFields.forEach((el) => delete queryObj[el]);
 
-      // 2) Advanced filtering:
+      // 1B) Advanced filtering:
       // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
       // we can do all these using replace() => gte, gt, lte, lt using regular expression
       // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
@@ -64,7 +64,7 @@ exports.getAllTours = async (req, res) => {
       // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
       // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
       // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
-      const query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
+      let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
       // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
       // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
@@ -74,7 +74,13 @@ exports.getAllTours = async (req, res) => {
       // Regular expression: \b: means we want only these
       // four word and not these four words inside other words!
       // g means it replace for all these four word and not only the first one!
-      // 2 - EXECUTE QUERY
+
+      // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
+      if (req.query.sort) {
+         query = query.sort(req.query.sort);
+      }
+
+      // EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
       // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
