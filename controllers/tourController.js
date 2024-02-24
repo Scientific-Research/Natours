@@ -91,6 +91,17 @@ exports.getAllTours = async (req, res) => {
          query = query.sort('-createdAt');
       }
 
+      // 3) Field limiting
+      // NOTE: this is our URL in Postman:
+      // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
+      // and we see only these four fields in Postman as result plus _id and without --v.
+      if (req.query.fields) {
+         const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
+         // query = query.select('name duration price');
+         query = query.select(fields); // to use this field!
+      } else {
+         query = query.select('-__v'); // we exclude this item(version=> __v)
+      }
       // EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
