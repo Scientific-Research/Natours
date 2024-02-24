@@ -67,6 +67,10 @@ exports.getAllTours = async (req, res) => {
       const query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
       // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
+      // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
+      // we can also add more search query to the URL like price in Postman URL
+      // 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500
+
       // Regular expression: \b: means we want only these
       // four word and not these four words inside other words!
       // g means it replace for all these four word and not only the first one!
