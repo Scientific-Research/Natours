@@ -109,10 +109,17 @@ exports.getAllTours = async (req, res) => {
       }
 
       // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
+      const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
+      const limit = req.query.limit * 1 || 100; // default value for limit would be 100!
+      const skip = (page - 1) * limit; // for page No.3 => skip = (3-1)*10=20 and we skip 20 results
+      // and page No.3 starts from result 21.
       // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
       // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
-      // skip(10) means 10 pages we have to skip to 
-      query = query.skip(10).limit(10);
+      // skip(10) means 10 items in first page has to be skipped to arrive to the second page!
+      // but when we say page=3&limit=10, we have to set skip for 20 => skip(20), after 20 items
+      // we will achieve third page!
+      // query = query.skip(10).limit(10);
+      query = query.skip(skip).limit(limit);
 
       // EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
