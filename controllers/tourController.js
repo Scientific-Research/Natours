@@ -46,7 +46,8 @@ class APIFeatures {
       // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
       // let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
       // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
-      this.query.find(JSON.parse(queryStr));
+      // this.query.find(JSON.parse(queryStr));
+      this.query = this.query.find(JSON.parse(queryStr));
       // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
       // we can also add more search query to the URL like price in Postman URL
       // 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500
@@ -103,6 +104,34 @@ class APIFeatures {
          // query = query.select('-__v'); // we exclude this item(version=> __v)
       }
 
+      return this;
+   }
+
+   ///////////////////////// Pagination ////////////////////////////////!SECTION
+   pagination() {
+      // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
+      // const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
+      const page = this.queryString.page * 1 || 1; // we say page number one is default value in JS!
+      const limit = this.queryString.limit * 1 || 100; // default value for limit would be 100!
+      // const limit = req.query.limit * 1 || 100; // default value for limit would be 100!
+      const skip = (page - 1) * limit; // for page No.3 => skip = (3-1)*10=20 and we skip 20 results
+      // and page No.3 starts from result 21.
+      // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
+      // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
+      // skip(10) means 10 items in first page has to be skipped to arrive to the second page!
+      // but when we say page=3&limit=10, we have to set skip for 20 => skip(20), after 20 items
+      // we will achieve third page!
+      // query = query.skip(10).limit(10);
+      // query = query.skip(skip).limit(limit);
+      this.query = this.query.skip(skip).limit(limit);
+
+      // if (req.query.page) {
+      // if (this.queryString.page) {
+      //    const numTours = await Tour.countDocuments();
+      //    if (skip >= numTours) throw new Error('This page does not exist!');
+      //    // NOTE: as soon as we get an Error, it goes out of try() block that we are now there
+      //    // and will be in catch() section and shows the user the Error message!
+      // }
       return this;
    }
 }
@@ -214,29 +243,32 @@ exports.getAllTours = async (req, res) => {
       //    query = query.select('-__v'); // we exclude this item(version=> __v)
       // }
 
-      // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
-      const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
-      const limit = req.query.limit * 1 || 100; // default value for limit would be 100!
-      const skip = (page - 1) * limit; // for page No.3 => skip = (3-1)*10=20 and we skip 20 results
-      // and page No.3 starts from result 21.
-      // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
-      // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
-      // skip(10) means 10 items in first page has to be skipped to arrive to the second page!
-      // but when we say page=3&limit=10, we have to set skip for 20 => skip(20), after 20 items
-      // we will achieve third page!
-      // query = query.skip(10).limit(10);
-      query = query.skip(skip).limit(limit);
+      // // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
+      // const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
+      // const limit = req.query.limit * 1 || 100; // default value for limit would be 100!
+      // const skip = (page - 1) * limit; // for page No.3 => skip = (3-1)*10=20 and we skip 20 results
+      // // and page No.3 starts from result 21.
+      // // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
+      // // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
+      // // skip(10) means 10 items in first page has to be skipped to arrive to the second page!
+      // // but when we say page=3&limit=10, we have to set skip for 20 => skip(20), after 20 items
+      // // we will achieve third page!
+      // // query = query.skip(10).limit(10);
+      // query = query.skip(skip).limit(limit);
 
-      if (req.query.page) {
-         const numTours = await Tour.countDocuments();
-         if (skip >= numTours) throw new Error('This page does not exist!');
-         // NOTE: as soon as we get an Error, it goes out of try() block that we are now there
-         // and will be in catch() section and shows the user the Error message!
-      }
+      // if (req.query.page) {
+      //    const numTours = await Tour.countDocuments();
+      //    if (skip >= numTours) throw new Error('This page does not exist!');
+      //    // NOTE: as soon as we get an Error, it goes out of try() block that we are now there
+      //    // and will be in catch() section and shows the user the Error message!
+      // }
 
       // EXECUTE QUERY
       // make new instance(Object) from class and send two parameters: query and queryStr to constructor!
-      const features = new APIFeatures(Tour.find(), req.query).filter().sort().limitFields();
+      // NOTE: we can write the methods like chain here because of "this" word in => return this,
+      // it sends always entire object to the next method and at the end we have the entire processed
+      // Object after filtering, sorting, limitfields and pagination:
+      const features = new APIFeatures(Tour.find(), req.query).filter().sort().limitFields().pagination();
       // features.filter();
       // features.sort();
       // const tours = await query; // We have to write it in this way, otherwise, it will not work!
