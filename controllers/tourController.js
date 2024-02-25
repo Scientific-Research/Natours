@@ -130,6 +130,7 @@ exports.getAllTours = async (req, res) => {
 
       // EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
+      // query.sort().select().skip().limit()
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
       // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
       // { duration: '5', difficulty: 'easy' }
