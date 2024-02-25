@@ -371,11 +371,11 @@ exports.getTourStats = async (req, res) => {
          {
             $sort: { avgPrice: 1 }, // 1: means Ascending and -1: means Descending
          },
-         {
-            // we can repeat the stage for second time like match here!
-            $match: { _id: { $ne: 'EASY' } }, // the id is difficulty above! ne: not equal to easy
-            // it means, it will select us the medium and difficult documents! is excluding easy doc.
-         },
+         // {
+         //    // we can repeat the stage for second time like match here!
+         //    $match: { _id: { $ne: 'EASY' } }, // the id is difficulty above! ne: not equal to easy
+         //    // it means, it will select us the medium and difficult documents! is excluding easy doc.
+         // },
       ]);
       res.status(200).json({
          status: 'success',
