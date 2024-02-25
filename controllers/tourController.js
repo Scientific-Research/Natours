@@ -356,7 +356,8 @@ exports.getTourStats = async (req, res) => {
             $group: {
                // group the documents using accumulators:
                // _id: null, // we want to calculate avarages for all groups, that's why is is null
-               _id: '$difficulty', // we want to calculate avarages for all groups, that's why is is null
+               // _id: '$difficulty', // we want to calculate avarages for all groups, that's why is is null
+               _id: '$ratingsAverage', // we want to calculate avarages for all groups, that's why is is null
                // and we don't write name of a document here!
                numTours: { $sum: 1 }, // to calculate the number of Tours
                numRatings: { $sum: '$ratingsQuantity' },
