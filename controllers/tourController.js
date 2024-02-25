@@ -364,6 +364,10 @@ exports.getTourStats = async (req, res) => {
             },
          },
       ]);
+      res.status(200).json({
+         status: 'success',
+         Statistics: stats,
+      });
    } catch (err) {
       console.log('Error deleting the tour data: ' + err.message);
       res.status(400).json({ status: 'fail', message: err.message });
