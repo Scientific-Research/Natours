@@ -65,7 +65,8 @@ class APIFeatures {
       // if (req.query.sort) {
       if (this.queryString.sort) {
          // how to bring the search query items together with space instead of comma:
-         const sortBy = req.query.sort.split(',').join(' ');
+         // const sortBy = req.query.sort.split(',').join(' ');
+         const sortBy = this.queryString.sort.split(',').join(' ');
          console.log(sortBy); // -price -ratingsAverage
          // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
          // query = query.sort(req.query.sort);
@@ -95,7 +96,8 @@ class APIFeatures {
       // not have the --v anymore!
       // if (req.query.fields) {
       if (this.queryString.fields) {
-         const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
+         // const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
+         const fields = this.queryString.fields.split(',').join(' '); //this will produce:name duration price
          // query = query.select('name duration price');
          // query = query.select(fields); // to use this field!
          this.query = this.query.select(fields); // to use this field!
