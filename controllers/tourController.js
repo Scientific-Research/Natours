@@ -55,7 +55,27 @@ class APIFeatures {
       // four word and not these four words inside other words!
       // g means it replace for all these four word and not only the first one!
    }
+   ///////////////////SORT///////////////////////!SECTION
+   sort() {
+      // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
+      // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
+      // if (req.query.sort) {
+      if (this.queryString.sort) {
+         // how to bring the search query items together with space instead of comma:
+         const sortBy = req.query.sort.split(',').join(' ');
+         console.log(sortBy); // -price -ratingsAverage
+         // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
+         // query = query.sort(req.query.sort);
+         // query = query.sort(sortBy);
+         this.query = this.query.sort(sortBy);
+         // console.log(query);
 
+         // sort('price ratingsAverage')
+      } else {
+         // query = query.sort('-createdAt');
+         this.query = this.query.sort('-createdAt');
+      }
+   }
 }
 
 // let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
@@ -186,8 +206,10 @@ exports.getAllTours = async (req, res) => {
       }
 
       // EXECUTE QUERY
-      const features = new APIFeatures(Tour.find(), req.query).filter();
+      // make new instance(Object) from class and send two parameters: query and queryStr to constructor!
+      const features = new APIFeatures(Tour.find(), req.query).filter().sort();
       // features.filter();
+      // features.sort();
       // const tours = await query; // We have to write it in this way, otherwise, it will not work!
       const tours = await features.query; // We have to write it in this way, otherwise, it will not work!
       // query.sort().select().skip().limit()
