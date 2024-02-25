@@ -80,6 +80,31 @@ class APIFeatures {
 
       return this; // to send entire object for next section.
    }
+
+   ////////////////////////////////// Limit fields /////////////////////////////////!SECTION
+   limitFields() {
+      // 3) Field limiting
+      // NOTE: this is our URL in Postman:
+      // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
+      // 127.0.0.1:3000/api/v1/tours?fields=-name,-duration => it gives us all the items in
+      // a tour except name and duration in Postman, because they are minus signs beside them.
+      // and we see only these four fields in Postman as result plus _id and without --v.
+      // when we remove all the search queries and our URL in postman is like this:
+      // 127.0.0.1:3000/api/v1/tours => the compiler goes to the else section and we will
+      // not have the --v anymore!
+      // if (req.query.fields) {
+      if (this.queryString.fields) {
+         const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
+         // query = query.select('name duration price');
+         // query = query.select(fields); // to use this field!
+         this.query = this.query.select(fields); // to use this field!
+      } else {
+         this.query = this.query.select('-__v'); // we exclude this item(version=> __v)
+         // query = query.select('-__v'); // we exclude this item(version=> __v)
+      }
+
+      return this;
+   }
 }
 
 // let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
@@ -172,22 +197,22 @@ exports.getAllTours = async (req, res) => {
       //    query = query.sort('-createdAt');
       // }
 
-      // 3) Field limiting
-      // NOTE: this is our URL in Postman:
-      // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
-      // 127.0.0.1:3000/api/v1/tours?fields=-name,-duration => it gives us all the items in
-      // a tour except name and duration in Postman, because they are minus signs beside them.
-      // and we see only these four fields in Postman as result plus _id and without --v.
-      // when we remove all the search queries and our URL in postman is like this:
-      // 127.0.0.1:3000/api/v1/tours => the compiler goes to the else section and we will
-      // not have the --v anymore!
-      if (req.query.fields) {
-         const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
-         // query = query.select('name duration price');
-         query = query.select(fields); // to use this field!
-      } else {
-         query = query.select('-__v'); // we exclude this item(version=> __v)
-      }
+      // // 3) Field limiting
+      // // NOTE: this is our URL in Postman:
+      // // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
+      // // 127.0.0.1:3000/api/v1/tours?fields=-name,-duration => it gives us all the items in
+      // // a tour except name and duration in Postman, because they are minus signs beside them.
+      // // and we see only these four fields in Postman as result plus _id and without --v.
+      // // when we remove all the search queries and our URL in postman is like this:
+      // // 127.0.0.1:3000/api/v1/tours => the compiler goes to the else section and we will
+      // // not have the --v anymore!
+      // if (req.query.fields) {
+      //    const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
+      //    // query = query.select('name duration price');
+      //    query = query.select(fields); // to use this field!
+      // } else {
+      //    query = query.select('-__v'); // we exclude this item(version=> __v)
+      // }
 
       // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
       const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
@@ -211,7 +236,7 @@ exports.getAllTours = async (req, res) => {
 
       // EXECUTE QUERY
       // make new instance(Object) from class and send two parameters: query and queryStr to constructor!
-      const features = new APIFeatures(Tour.find(), req.query).filter().sort();
+      const features = new APIFeatures(Tour.find(), req.query).filter().sort().limitFields();
       // features.filter();
       // features.sort();
       // const tours = await query; // We have to write it in this way, otherwise, it will not work!
