@@ -345,7 +345,7 @@ exports.deleteTour = async (req, res) => {
 // Aggregation pipeline is a mongoDB feature which is accessible through mongoose driver!
 exports.getTourStats = async (req, res) => {
    try {
-      const stats = Tour.aggregate([
+      const stats = await Tour.aggregate([
          // we pass here an array of stages:
          // first stage: match, each stage is an object:
          {
