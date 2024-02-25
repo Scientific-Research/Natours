@@ -351,6 +351,18 @@ exports.getTourStats = async (req, res) => {
          {
             $match: { ratingsAverage: { $gte: 4.5 } },
          },
+         // second stage is group:
+         {
+            $group: {
+               // group the documents using accumulators:
+               _id: null, // we want to calculate avarages for all groups, that's why is is null
+               // and we don't write name of a document here!
+               avgRating: { $avg: '$ratingsAverage' },
+               avgPrice: { $avg: '$price' },
+               minPrice: { $min: '$price' },
+               maxPrice: { $max: '$price' },
+            },
+         },
       ]);
    } catch (err) {
       console.log('Error deleting the tour data: ' + err.message);
