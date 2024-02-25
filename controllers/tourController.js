@@ -150,6 +150,13 @@ exports.getAllTours = async (req, res) => {
 
       const Result = tours.length;
       // console.log(tours);
+      // NOTE: 5) The best and cheap five tours:
+      // 127.0.0.1:3000/api/v1/tours?limit=5&sort=-ratingsAverage,price
+      // ratingsAverage is sorted descending due to -(minus) sign from biggest to smallest!
+      // NOTE: 6) The cheapest and best five tours:
+      // 127.0.0.1:3000/api/v1/tours?limit=5&sort=price,-ratingsAverage
+      // price is sorted in Ascending manner => from smallest price to highest price!
+      // -ratingsAverage doesn't work anymore, because price comes first.
 
       // 3 - SEND RESPONSE
       res.status(200).json({ status: 'success', Results: Result, AllTours: tours });
