@@ -13,7 +13,11 @@ const tourController = require('../controllers/tourController');
 
 // using destructuring:
 // const { getAllTours, getTour, createTour, updateTour, deleteTour, checkBody } = tourController;
-const { getAllTours, getTour, createTour, updateTour, deleteTour } = tourController;
+const { getAllTours, getTour, createTour, updateTour, deleteTour, aliasTopTours } = tourController;
+
+// 127.0.0.1:3000/api/v1/tours/top-5-cheap
+router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 // router.route('/').get(getAllTours).post(checkBody, createTour);
 router.route('/').get(getAllTours).post(createTour);

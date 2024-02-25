@@ -1,6 +1,17 @@
 // const fs = require('fs');
 const Tour = require('../models/tourModel');
 
+exports.aliasTopTours = (req, res, next) => {
+   // All fields have to be in String format! here we have a prefilling process before
+   // go to the getAllTours() function!
+   // we have here the prices sorted in Ascending manner with ratingAverage sorted in descending manner!
+   req.query.limit = '5';
+   req.query.sort = 'price,-ratingsAverage'; // sorted with price
+   // req.query.sort = '-ratingsAverage,price'; // sorted with ratingsAverage
+   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+   next();
+};
+
 // let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 // NOTE: WE DON'T NEED THIS ANYMORE, IT WAS JUST READING THE JSON FILE FOR TESTING PURPOSES
 // I WILL USE ABOVE TOURS IMPORTED FROM TOURMODEL WHICH READS DATA FROM MONGODB!
