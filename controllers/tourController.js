@@ -369,7 +369,7 @@ exports.getTourStats = async (req, res) => {
          },
          // and the third stage is sort:
          {
-            $sort: { avgPrice: 1 }, // 1: means Ascending
+            $sort: { avgPrice: 1 }, // 1: means Ascending and -1: means Descending
          },
       ]);
       res.status(200).json({
