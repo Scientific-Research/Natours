@@ -12,6 +12,52 @@ exports.aliasTopTours = (req, res, next) => {
    next();
 };
 
+// NOTE: We define here our class to use this class everywhere in our code:
+class APIFeatures {
+   constructor(query, queryString) {
+      this.query = query;
+      this.queryString = queryString;
+   }
+
+   // we make now one method for each functionality://///////////////////////////
+   ////////////////////////////////////////////////FILTER/////////////////!SECTION
+   filter() {
+      // const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
+      const queryObj = { ...this.queryString }; // we made a copy of the req.query and converted it to an Object!
+      const excludedFields = ['page', 'sort', 'limit', 'fields'];
+
+      // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
+      excludedFields.forEach((el) => delete queryObj[el]);
+
+      // 1B) Advanced filtering:
+      // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
+      // we can do all these using replace() => gte, gt, lte, lt using regular expression
+      // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
+      // In VSCode Terminal:console.log(req.query)=>{ difficulty: 'easy', duration: { gte: '5' } }
+      console.log('queryObj' + queryObj);
+      let queryStr = JSON.stringify(queryObj);
+      console.log('queryStr' + queryStr);
+      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+      console.log(JSON.parse(queryStr)); // we want the Object here!
+
+      // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
+      // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
+      // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+      // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+      // let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
+      // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
+      this.query.find(JSON.parse(queryStr));
+      // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
+      // we can also add more search query to the URL like price in Postman URL
+      // 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500
+
+      // Regular expression: \b: means we want only these
+      // four word and not these four words inside other words!
+      // g means it replace for all these four word and not only the first one!
+   }
+
+}
+
 // let tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 // NOTE: WE DON'T NEED THIS ANYMORE, IT WAS JUST READING THE JSON FILE FOR TESTING PURPOSES
 // I WILL USE ABOVE TOURS IMPORTED FROM TOURMODEL WHICH READS DATA FROM MONGODB!
@@ -54,28 +100,28 @@ exports.getAllTours = async (req, res) => {
       console.log(req.query);
       // 1 - BUILD QUERY
       // 1A) Filtering
-      const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
-      const excludedFields = ['page', 'sort', 'limit', 'fields'];
+      // const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
+      // const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
       // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
-      excludedFields.forEach((el) => delete queryObj[el]);
+      // excludedFields.forEach((el) => delete queryObj[el]);
 
       // 1B) Advanced filtering:
       // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
       // we can do all these using replace() => gte, gt, lte, lt using regular expression
       // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
       // In VSCode Terminal:console.log(req.query)=>{ difficulty: 'easy', duration: { gte: '5' } }
-      console.log('queryObj' + queryObj);
-      let queryStr = JSON.stringify(queryObj);
-      console.log('queryStr' + queryStr);
-      queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-      console.log(JSON.parse(queryStr)); // we want the Object here!
+      // console.log('queryObj' + queryObj);
+      // let queryStr = JSON.stringify(queryObj);
+      // console.log('queryStr' + queryStr);
+      // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+      // console.log(JSON.parse(queryStr)); // we want the Object here!
 
       // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
       // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
       // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
       // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
-      let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
+      // let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
       // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
       // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
@@ -86,21 +132,21 @@ exports.getAllTours = async (req, res) => {
       // four word and not these four words inside other words!
       // g means it replace for all these four word and not only the first one!
 
-      // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
-      // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
-      if (req.query.sort) {
-         // how to bring the search query items together with space instead of comma:
-         const sortBy = req.query.sort.split(',').join(' ');
-         console.log(sortBy); // -price -ratingsAverage
-         // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
-         // query = query.sort(req.query.sort);
-         query = query.sort(sortBy);
-         // console.log(query);
+      // // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
+      // // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
+      // if (req.query.sort) {
+      //    // how to bring the search query items together with space instead of comma:
+      //    const sortBy = req.query.sort.split(',').join(' ');
+      //    console.log(sortBy); // -price -ratingsAverage
+      //    // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
+      //    // query = query.sort(req.query.sort);
+      //    query = query.sort(sortBy);
+      //    // console.log(query);
 
-         // sort('price ratingsAverage')
-      } else {
-         query = query.sort('-createdAt');
-      }
+      //    // sort('price ratingsAverage')
+      // } else {
+      //    query = query.sort('-createdAt');
+      // }
 
       // 3) Field limiting
       // NOTE: this is our URL in Postman:
@@ -140,7 +186,10 @@ exports.getAllTours = async (req, res) => {
       }
 
       // EXECUTE QUERY
-      const tours = await query; // We have to write it in this way, otherwise, it will not work!
+      const features = new APIFeatures(Tour.find(), req.query).filter();
+      // features.filter();
+      // const tours = await query; // We have to write it in this way, otherwise, it will not work!
+      const tours = await features.query; // We have to write it in this way, otherwise, it will not work!
       // query.sort().select().skip().limit()
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
       // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
