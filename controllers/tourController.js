@@ -366,6 +366,9 @@ exports.getTourStats = async (req, res) => {
                minPrice: { $min: '$price' },
                maxPrice: { $max: '$price' },
             },
+            {
+               $sort:{}
+            }
          },
       ]);
       res.status(200).json({
