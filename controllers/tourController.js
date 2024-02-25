@@ -339,3 +339,21 @@ exports.deleteTour = async (req, res) => {
    //    });
    // }
 };
+
+// NOTE: Strat using aggregation Pipeline: a function does some statistics and we will create
+// a rour for that later!
+// Aggregation pipeline is a mongoDB feature which is accessible through mongoose driver!
+exports.getTourStats = async (req, res) => {
+   try {
+      const stats = Tour.aggregate([
+         // we pass here an array of stages:
+         // first stage: match, each stage is an object:
+         {
+            $match: { ratingsAverage: { $gte: 4.5 } },
+         },
+      ]);
+   } catch (err) {
+      console.log('Error deleting the tour data: ' + err.message);
+      res.status(400).json({ status: 'fail', message: err.message });
+   }
+};
