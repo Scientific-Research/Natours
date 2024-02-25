@@ -13,10 +13,13 @@ const tourController = require('../controllers/tourController');
 
 // using destructuring:
 // const { getAllTours, getTour, createTour, updateTour, deleteTour, checkBody } = tourController;
-const { getAllTours, getTour, createTour, updateTour, deleteTour, aliasTopTours } = tourController;
+const { getAllTours, getTour, createTour, updateTour, deleteTour, aliasTopTours, getTourStats } = tourController;
 
 // 127.0.0.1:3000/api/v1/tours/top-5-cheap
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
+
+// NOTE: adding Tour for Statistics using Aggregation Pipeline:
+router.route('/tour-stats').get(getTourStats);
 
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 // router.route('/').get(getAllTours).post(checkBody, createTour);
