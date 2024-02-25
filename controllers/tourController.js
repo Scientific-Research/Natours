@@ -121,6 +121,13 @@ exports.getAllTours = async (req, res) => {
       // query = query.skip(10).limit(10);
       query = query.skip(skip).limit(limit);
 
+      if (req.query.page) {
+         const numTours = await Tour.countDocuments();
+         if (skip >= numTours) throw new Error('This page does not exist!');
+         // NOTE: as soon as we get an Error, it goes out of try() block that we are now there
+         // and will be in catch() section and shows the user the Error message!
+      }
+
       // EXECUTE QUERY
       const tours = await query; // We have to write it in this way, otherwise, it will not work!
       // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
