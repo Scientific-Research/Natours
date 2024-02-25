@@ -54,6 +54,8 @@ class APIFeatures {
       // Regular expression: \b: means we want only these
       // four word and not these four words inside other words!
       // g means it replace for all these four word and not only the first one!
+
+      return this; // to send entire object for next section which is sort().
    }
    ///////////////////SORT///////////////////////!SECTION
    sort() {
@@ -75,6 +77,8 @@ class APIFeatures {
          // query = query.sort('-createdAt');
          this.query = this.query.sort('-createdAt');
       }
+
+      return this; // to send entire object for next section.
    }
 }
 
