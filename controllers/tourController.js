@@ -442,6 +442,10 @@ exports.getMonthlyPlan = async (req, res) => {
             $sort: { numTourStarts: -1 }, // -1 is for descending => starting with highest number
             // result: July is busiest month with 3 Tours starts!
          },
+         {
+            // this stage allows us to have only 6 outputs => we will have 6 objects at output!
+            $limit: 6,
+         },
       ]);
       res.status(200).json({
          status: 'success',
