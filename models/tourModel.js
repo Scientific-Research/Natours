@@ -158,6 +158,13 @@ tourSchema.post(/^find/, function (docs, next) {
 // the sectret tour and then aggregation can executes on the tour!
 
 tourSchema.pre('aggregate', function (next) {
+   // NOTE: this is an array and we can put an element in the beginning of an array using
+   // unshift() - shift() put an elemnt at the end of the array.
+   // we put { secretTour: { $ne: true } } at the beginning of the array before it enters the
+   // pipeline => removing all the documents that have secretTour: true
+   // and now, when i run 127.0.0.1:3000/api/v1/tours/tour-stats in postman, i will get 9 tours
+   // which is correct and one is secret that it doesn't come in!
+   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
    console.log(this.pipeline()); // "this" point to the current aggregation Object!
    // this.pipeline() gives us the three stages that we had before: match, group and sort
    // it shows us here this as pipeline!
