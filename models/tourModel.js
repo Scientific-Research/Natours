@@ -70,6 +70,8 @@ const tourSchema = new mongoose.Schema(
 tourSchema.virtual('durationWeeks').get(function () {
    return this.duration / 7; // for example, if a tour has 7 days => 7 / 7 => it would be 1 week!
    // NOTE: "this" points to current document!
+   // NOTE: we can not use the durationWeek as part of a query for example: Tour.find(durationWeek===1)
+   // it will not work because durationWeek is not persistant( doesn't stay) in DB!
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
