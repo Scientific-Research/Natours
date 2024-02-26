@@ -74,6 +74,17 @@ tourSchema.virtual('durationWeeks').get(function () {
    // it will not work because durationWeek is not persistant( doesn't stay) in DB!
 });
 
+// NOTE: We define a Document middleware from Mongoose and not from Express and it must be
+// define here in Schema like Virtuals and not anywhere else:
+// pre() middleware which will gonna run before an event take places! and our event here is
+// 'save':
+// DOCUMENT MIDDLEWARE: runs before .save() and .create() but not before .insertMany()
+tourSchema.pre('save', function () {
+   // NOTE: this function will be called before an actual document is saved to the DB:
+   console.log(this); // "this" points to the currently proccessed document.
+   // NOTE: to run this middleware, we have to create or save a document in Postman.
+});
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour; // we will use this Tour in tourController.js to do the CRUD operations
