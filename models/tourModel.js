@@ -55,6 +55,15 @@ const tourSchema = new mongoose.Schema({
    startDates: [Date],
 });
 
+// NOTE: durationWeeks will not persist in DB, it will be there only when get the data and then
+// will be gone!
+// defining virtual properties: we have to write regular function instead of arrow function here
+// because arrow function, doesn't take his own "this" key word!
+tourSchema.virtual('durationWeeks').get(function () {
+   return this.duration / 7; // for example, if a tour has 7 days => 7 / 7 => it would be 1 week!
+   // NOTE: "this" points to current document!
+});
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour; // we will use this Tour in tourController.js to do the CRUD operations
