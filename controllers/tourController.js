@@ -382,7 +382,23 @@ exports.getTourStats = async (req, res) => {
          Statistics: stats,
       });
    } catch (err) {
-      console.log('Error deleting the tour data: ' + err.message);
+      console.log('Error getting Tour Statistics data! : ' + err.message);
+      res.status(400).json({ status: 'fail', message: err.message });
+   }
+};
+
+// NOTE: we have a new function here to get the monthly plan according to the year!
+exports.getMonthlyPlan = async (req, res) => {
+   try {
+      const year = req.params.year * 1; // getting year parameter from URL and covert it to number!
+
+      const plan = await Tour.aggregate([]);
+      res.status(200).json({
+         status: 'success',
+         Plan: plan,
+      });
+   } catch (err) {
+      console.log('Error getting Monthly Plan Data: ' + err.message);
       res.status(400).json({ status: 'fail', message: err.message });
    }
 };
