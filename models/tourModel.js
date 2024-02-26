@@ -110,7 +110,8 @@ tourSchema.pre('save', function (next) {
 
 // NOTE: Query Middleware - second category of Mongoose middleware after Document Middleware!
 // find point out to the current Query Middleware and not current document middleware anymore!
-tourSchema.pre('find', function (next) {
+// tourSchema.pre('find', function (next) {
+tourSchema.pre(/^find/, function (next) {
    this.find({
       // NOTE: this doesn't work: secretTour: false, // find the tours in which
       // secretTour is not equal true.
@@ -119,6 +120,22 @@ tourSchema.pre('find', function (next) {
    });
    next();
 });
+
+// NOTE: to get only one tour, we use findById(id) and this is synonyme of findOne when we
+// want to use it as Query Middleware and it works fine in Postman -
+// but there is another way => using Regular Expressions => /^find/ => ^ means all find =>
+// findOne, findById, ... => all of these find will trigger our function as call back here!
+// that's why i comment the below function and put the RE in above function.
+
+// tourSchema.pre('findOne', function (next) {
+//    this.find({
+//       // NOTE: this doesn't work: secretTour: false, // find the tours in which
+//       // secretTour is not equal true.
+//       secretTour: { $ne: true }, // find the tours in which secretTour is not equal true.
+//       // or it is false, or other tours don't have such field!
+//    });
+//    next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
