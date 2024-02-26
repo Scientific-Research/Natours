@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema(
    {
@@ -81,8 +82,9 @@ tourSchema.virtual('durationWeeks').get(function () {
 // DOCUMENT MIDDLEWARE: runs before .save() and .create() but not before .insertMany()
 tourSchema.pre('save', function () {
    // NOTE: this function will be called before an actual document is saved to the DB:
-   console.log(this); // "this" points to the currently proccessed document.
+   // console.log(this); // "this" points to the currently proccessed document.
    // NOTE: to run this middleware, we have to create or save a document in Postman.
+   
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
