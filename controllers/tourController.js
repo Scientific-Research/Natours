@@ -431,6 +431,12 @@ exports.getMonthlyPlan = async (req, res) => {
                month: '$_id',
             },
          },
+         {
+            // NOTE: the next stage is project: 0: it doesn't show value, 1: it shows the value!
+            $project: {
+               _id: 0,
+            },
+         },
       ]);
       res.status(200).json({
          status: 'success',
