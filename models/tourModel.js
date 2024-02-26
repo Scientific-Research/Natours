@@ -118,13 +118,18 @@ tourSchema.pre(/^find/, function (next) {
       secretTour: { $ne: true }, // find the tours in which secretTour is not equal true.
       // or it is false, or other tours don't have such field!
    });
+
+   // NOTE: How we can measure the execution time of a query: post() time - pre() time
+   this.start = Date.now(); // Time in milliseconds!
    next();
 });
 
 // NOTE: A post middleware for find() => this middleware will run after Query was executed!
 // that's why it has access to the documents which returned!
 tourSchema.post(/^find/, function (docs, next) {
-   console.log(docs);
+   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+   // Query took 41 milliseconds!
+   console.log(docs); // it shows us the matched data to the console!
    next();
 });
 
