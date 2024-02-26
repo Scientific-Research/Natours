@@ -51,6 +51,7 @@ const tourSchema = new mongoose.Schema(
          // val is here the priceDiscount
          validate: {
             validator: function (val) {
+               // NOTE: "this" only points to current doc on NEW document creation!
                return val < this.price; // 100 < 200 => true, otherwise: false trigger a validation
                // error
             },
