@@ -9,6 +9,7 @@ const tourSchema = new mongoose.Schema(
          unique: true,
          trim: true,
       },
+      slug: String,
       duration: {
          type: Number,
          required: [true, 'A tour must have a duration'],
@@ -80,11 +81,19 @@ tourSchema.virtual('durationWeeks').get(function () {
 // pre() middleware which will gonna run before an event take places! and our event here is
 // 'save':
 // DOCUMENT MIDDLEWARE: runs before .save() and .create() but not before .insertMany()
-tourSchema.pre('save', function () {
+tourSchema.pre('save', function (next) {
    // NOTE: this function will be called before an actual document is saved to the DB:
    // console.log(this); // "this" points to the currently proccessed document.
    // NOTE: to run this middleware, we have to create or save a document in Postman.
-   
+   this.slug = slugify(this.name, { lower: true });
+   next(); // but actually, we don't have the next middleware to call it, anyway, it's good practice
+   // to put it there!
+});
+
+// another Document middleware with post()
+tourSchema.post('save', function (doc, next) {
+   console.log(doc);
+   next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
