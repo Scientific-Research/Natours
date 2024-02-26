@@ -23,7 +23,7 @@ router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 router.route('/tour-stats').get(getTourStats);
 
 // NOTE: adding a new route for getting monthly plan:
-router.route('monthly-plan/:year').get(getMonthlyPlan);
+router.route('/monthly-plan/:year').get(getMonthlyPlan);
 
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 // router.route('/').get(getAllTours).post(checkBody, createTour);

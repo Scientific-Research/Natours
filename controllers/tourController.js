@@ -392,9 +392,17 @@ exports.getMonthlyPlan = async (req, res) => {
    try {
       const year = req.params.year * 1; // getting year parameter from URL and covert it to number!
 
-      const plan = await Tour.aggregate([]);
+      const plan = await Tour.aggregate([
+         // define a new object and the corresponding stage:
+         // with this stage, we have 27 repeated Tour with separated startDates,
+         // it means: 9 Tour * 3 startDates for each of them.
+         {
+            $unwind: '$startDates',
+         },
+      ]);
       res.status(200).json({
          status: 'success',
+         planLength: plan.length,
          Plan: plan,
       });
    } catch (err) {
