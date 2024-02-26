@@ -90,11 +90,17 @@ tourSchema.pre('save', function (next) {
    // to put it there!
 });
 
-// another Document middleware with post()
-tourSchema.post('save', function (doc, next) {
-   console.log(doc);
-   next();
-});
+// tourSchema.pre('save', function (next) {
+//    console.log('Will save document...');
+//    next();
+// });
+
+// another Document middleware with post(), post has doc and next
+// tourSchema.post('save', function (doc, next) {
+//    console.log(doc); // doc has the same info like tour and is post here, that's why comes after
+//    // pre middleware!
+//    next();
+// });
 
 const Tour = mongoose.model('Tour', tourSchema);
 
