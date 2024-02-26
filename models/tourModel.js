@@ -129,7 +129,8 @@ tourSchema.pre(/^find/, function (next) {
 tourSchema.post(/^find/, function (docs, next) {
    console.log(`Query took ${Date.now() - this.start} milliseconds!`);
    // Query took 41 milliseconds!
-   console.log(docs); // it shows us the matched data to the console!
+   // console.log(docs); // it shows us the matched data to the console!
+   // I comment docs out due to not polluting my VSCode Terminal!
    next();
 });
 
@@ -148,6 +149,20 @@ tourSchema.post(/^find/, function (docs, next) {
 //    });
 //    next();
 // });
+
+// NOTE: AGGREGATION MIDDLEWARE: we want that this happens before Aggregation runs, that's why
+// we use pre() here! The problem is that, in Get Tour Stats in Postman, we get aggregation for
+// 10 tours, but one of them is secret and hast not to be included in this tour aggregation.
+// In Get ALL Tours, we have only 9 tours which is correct and one is hidden.
+// That's why we have to do this aggregation middleware before aggregation happens to exclude
+// the sectret tour and then aggregation can executes on the tour!
+
+tourSchema.pre('aggregate', function (next) {
+   console.log(this.pipeline()); // "this" point to the current aggregation Object!
+   // this.pipeline() gives us the three stages that we had before: match, group and sort
+   // it shows us here this as pipeline!
+   next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
