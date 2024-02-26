@@ -111,6 +111,12 @@ tourSchema.pre('save', function (next) {
 // NOTE: Query Middleware - second category of Mongoose middleware after Document Middleware!
 // find point out to the current Query Middleware and not current document middleware anymore!
 tourSchema.pre('find', function (next) {
+   this.find({
+      // NOTE: this doesn't work: secretTour: false, // find the tours in which
+      // secretTour is not equal true.
+      secretTour: { $ne: true }, // find the tours in which secretTour is not equal true.
+      // or it is false, or other tours don't have such field!
+   });
    next();
 });
 
