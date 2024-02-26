@@ -422,7 +422,13 @@ exports.getMonthlyPlan = async (req, res) => {
                // we want to have more information, not only how many tours, rather, which tours:
                // we push the name of the Tours in an array: specify two three different tours in
                // one place: we use array!
-               tourName: { $push: '$name' },
+               tourNames: { $push: '$name' },
+            },
+         },
+         {
+            // NOTE: this stage add fields
+            $addFields: {
+               month: '$_id',
             },
          },
       ]);
