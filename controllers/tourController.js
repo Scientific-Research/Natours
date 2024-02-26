@@ -405,7 +405,10 @@ exports.getMonthlyPlan = async (req, res) => {
                startDates: {
                   // we want to see our Tours in One year => 365 days! between first and last day
                   // of current year!
-                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2021
+                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2021 => 18 Tours
+                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2022 => 8 Tours
+                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2023 => 1 Tour
+                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2024 => NO Tour => empty Array
                   $gte: new Date(`${year}-01-01`), // 01.01.2021
                   $lte: new Date(`${year}-12-31`), // 31.12.2021
                },
