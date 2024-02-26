@@ -444,7 +444,8 @@ exports.getMonthlyPlan = async (req, res) => {
          },
          {
             // this stage allows us to have only 6 outputs => we will have 6 objects at output!
-            $limit: 6,
+            // $limit: 6, it doesn't show us the complete list of numbers of tours
+            $limit: 12,
          },
       ]);
       res.status(200).json({
