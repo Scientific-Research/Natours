@@ -390,7 +390,7 @@ exports.getTourStats = async (req, res) => {
 // NOTE: we have a new function here to get the monthly plan according to the year!
 exports.getMonthlyPlan = async (req, res) => {
    try {
-      const year = req.params.year * 1; // getting year parameter from URL and covert it to number!
+      const year = req.params.year * 1; // => 2021 getting year parameter from URL and covert it to number!
 
       const plan = await Tour.aggregate([
          // define a new object and the corresponding stage:
@@ -399,10 +399,22 @@ exports.getMonthlyPlan = async (req, res) => {
          {
             $unwind: '$startDates',
          },
+         // match stage is used to select a date here => startDate
+         {
+            $match: {
+               startDates: {
+                  // we want to see our Tours in One year => 365 days! between first and last day
+                  // of current year!
+                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2021
+                  $gte: new Date(`${year}-01-01`), // 01.01.2021
+                  $lte: new Date(`${year}-12-31`), // 31.12.2021
+               },
+            },
+         },
       ]);
       res.status(200).json({
          status: 'success',
-         planLength: plan.length,
+         plan_Length: plan.length,
          Plan: plan,
       });
    } catch (err) {
