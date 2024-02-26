@@ -121,6 +121,13 @@ tourSchema.pre(/^find/, function (next) {
    next();
 });
 
+// NOTE: A post middleware for find() => this middleware will run after Query was executed!
+// that's why it has access to the documents which returned!
+tourSchema.post(/^find/, function (docs, next) {
+   console.log(docs);
+   next();
+});
+
 // NOTE: to get only one tour, we use findById(id) and this is synonyme of findOne when we
 // want to use it as Query Middleware and it works fine in Postman -
 // but there is another way => using Regular Expressions => /^find/ => ^ means all find =>
