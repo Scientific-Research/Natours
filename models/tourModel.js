@@ -56,6 +56,12 @@ const tourSchema = new mongoose.Schema(
          // of the tours!
       },
       startDates: [Date],
+      // This field is for Query Middleware => find, when tour is public, it would be open,
+      // otherwise: secret
+      secretTour: {
+         type: Boolean,
+         default: false,
+      },
    },
    {
       // NOTE: we have to say that we will need the Virtuals, when the data goes to be published at
@@ -101,6 +107,12 @@ tourSchema.pre('save', function (next) {
 //    // pre middleware!
 //    next();
 // });
+
+// NOTE: Query Middleware - second category of Mongoose middleware after Document Middleware!
+// find point out to the current Query Middleware and not current document middleware anymore!
+tourSchema.pre('find', function (next) {
+   next();
+});
 
 const Tour = mongoose.model('Tour', tourSchema);
 
