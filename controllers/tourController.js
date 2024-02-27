@@ -348,118 +348,118 @@ exports.deleteTour = catchAsync(async (req, res) => {
 // NOTE: Strat using aggregation Pipeline: a function does some statistics and we will create
 // a rour for that later!
 // Aggregation pipeline is a mongoDB feature which is accessible through mongoose driver!
-exports.getTourStats = async (req, res) => {
-   try {
-      const stats = await Tour.aggregate([
-         // we pass here an array of stages:
-         // first stage: match, each stage is an object:
-         {
-            $match: { ratingsAverage: { $gte: 4.5 } },
+exports.getTourStats = catchAsync(async (req, res) => {
+   // try {
+   const stats = await Tour.aggregate([
+      // we pass here an array of stages:
+      // first stage: match, each stage is an object:
+      {
+         $match: { ratingsAverage: { $gte: 4.5 } },
+      },
+      // second stage is group:
+      {
+         $group: {
+            // group the documents using accumulators:
+            // _id: null, // we want to calculate avarages for all groups, that's why is is null
+            _id: { $toUpper: '$difficulty' }, // we want to calculate avarages for all groups, that's why is is null
+            // _id: '$ratingsAverage', // we want to calculate avarages for all groups, that's why is is null
+            // and we don't write name of a document here!
+            numTours: { $sum: 1 }, // to calculate the number of Tours
+            numRatings: { $sum: '$ratingsQuantity' },
+            avgRating: { $avg: '$ratingsAverage' },
+            avgPrice: { $avg: '$price' },
+            minPrice: { $min: '$price' },
+            maxPrice: { $max: '$price' },
          },
-         // second stage is group:
-         {
-            $group: {
-               // group the documents using accumulators:
-               // _id: null, // we want to calculate avarages for all groups, that's why is is null
-               _id: { $toUpper: '$difficulty' }, // we want to calculate avarages for all groups, that's why is is null
-               // _id: '$ratingsAverage', // we want to calculate avarages for all groups, that's why is is null
-               // and we don't write name of a document here!
-               numTours: { $sum: 1 }, // to calculate the number of Tours
-               numRatings: { $sum: '$ratingsQuantity' },
-               avgRating: { $avg: '$ratingsAverage' },
-               avgPrice: { $avg: '$price' },
-               minPrice: { $min: '$price' },
-               maxPrice: { $max: '$price' },
-            },
-         },
-         // and the third stage is sort:
-         {
-            $sort: { avgPrice: 1 }, // 1: means Ascending and -1: means Descending
-         },
-         // {
-         //    // we can repeat the stage for second time like match here!
-         //    $match: { _id: { $ne: 'EASY' } }, // the id is difficulty above! ne: not equal to easy
-         //    // it means, it will select us the medium and difficult documents! is excluding easy doc.
-         // },
-      ]);
-      res.status(200).json({
-         status: 'success',
-         Statistics: stats,
-      });
-   } catch (err) {
-      console.log('Error getting Tour Statistics data! : ' + err.message);
-      res.status(400).json({ status: 'fail', message: err.message });
-   }
-};
+      },
+      // and the third stage is sort:
+      {
+         $sort: { avgPrice: 1 }, // 1: means Ascending and -1: means Descending
+      },
+      // {
+      //    // we can repeat the stage for second time like match here!
+      //    $match: { _id: { $ne: 'EASY' } }, // the id is difficulty above! ne: not equal to easy
+      //    // it means, it will select us the medium and difficult documents! is excluding easy doc.
+      // },
+   ]);
+   res.status(200).json({
+      status: 'success',
+      Statistics: stats,
+   });
+   // } catch (err) {
+   //    console.log('Error getting Tour Statistics data! : ' + err.message);
+   //    res.status(400).json({ status: 'fail', message: err.message });
+   // }
+});
 
 // NOTE: we have a new function here to get the monthly plan according to the year!
-exports.getMonthlyPlan = async (req, res) => {
-   try {
-      const year = req.params.year * 1; // => 2021 getting year parameter from URL and covert it to number!
+exports.getMonthlyPlan = catchAsync(async (req, res) => {
+   // try {
+   const year = req.params.year * 1; // => 2021 getting year parameter from URL and covert it to number!
 
-      const plan = await Tour.aggregate([
-         // define a new object and the corresponding stage:
-         // with this stage, we have 27 repeated Tour with separated startDates,
-         // it means: 9 Tour * 3 startDates for each of them.
-         {
-            $unwind: '$startDates',
-         },
-         // match stage is used to select a date here => startDate
-         {
-            $match: {
-               startDates: {
-                  // we want to see our Tours in One year => 365 days! between first and last day
-                  // of current year!
-                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2021 => 18 Tours
-                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2022 => 8 Tours
-                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2023 => 1 Tour
-                  // 127.0.0.1:3000/api/v1/tours/monthly-plan/2024 => NO Tour => empty Array
-                  $gte: new Date(`${year}-01-01`), // 01.01.2021
-                  $lte: new Date(`${year}-12-31`), // 31.12.2021
-               },
+   const plan = await Tour.aggregate([
+      // define a new object and the corresponding stage:
+      // with this stage, we have 27 repeated Tour with separated startDates,
+      // it means: 9 Tour * 3 startDates for each of them.
+      {
+         $unwind: '$startDates',
+      },
+      // match stage is used to select a date here => startDate
+      {
+         $match: {
+            startDates: {
+               // we want to see our Tours in One year => 365 days! between first and last day
+               // of current year!
+               // 127.0.0.1:3000/api/v1/tours/monthly-plan/2021 => 18 Tours
+               // 127.0.0.1:3000/api/v1/tours/monthly-plan/2022 => 8 Tours
+               // 127.0.0.1:3000/api/v1/tours/monthly-plan/2023 => 1 Tour
+               // 127.0.0.1:3000/api/v1/tours/monthly-plan/2024 => NO Tour => empty Array
+               $gte: new Date(`${year}-01-01`), // 01.01.2021
+               $lte: new Date(`${year}-12-31`), // 31.12.2021
             },
          },
-         {
-            $group: {
-               // we extract the month from start Date - we are grouping by the month
-               _id: { $month: '$startDates' },
-               numTourStarts: { $sum: 1 },
-               // we want to have more information, not only how many tours, rather, which tours:
-               // we push the name of the Tours in an array: specify two three different tours in
-               // one place: we use array!
-               tourNames: { $push: '$name' },
-            },
+      },
+      {
+         $group: {
+            // we extract the month from start Date - we are grouping by the month
+            _id: { $month: '$startDates' },
+            numTourStarts: { $sum: 1 },
+            // we want to have more information, not only how many tours, rather, which tours:
+            // we push the name of the Tours in an array: specify two three different tours in
+            // one place: we use array!
+            tourNames: { $push: '$name' },
          },
-         {
-            // NOTE: this stage add fields
-            $addFields: {
-               month: '$_id',
-            },
+      },
+      {
+         // NOTE: this stage add fields
+         $addFields: {
+            month: '$_id',
          },
-         {
-            // NOTE: the next stage is project: 0: it doesn't show value, 1: it shows the value!
-            $project: {
-               _id: 0,
-            },
+      },
+      {
+         // NOTE: the next stage is project: 0: it doesn't show value, 1: it shows the value!
+         $project: {
+            _id: 0,
          },
-         {
-            // i use already the sort and i use it again now!
-            $sort: { numTourStarts: -1 }, // -1 is for descending => starting with highest number
-            // result: July is busiest month with 3 Tours starts!
-         },
-         {
-            // this stage allows us to have only 6 outputs => we will have 6 objects at output!
-            // $limit: 6, it doesn't show us the complete list of numbers of tours
-            $limit: 12,
-         },
-      ]);
-      res.status(200).json({
-         status: 'success',
-         plan_Length: plan.length,
-         Plan: plan,
-      });
-   } catch (err) {
-      console.log('Error getting Monthly Plan Data: ' + err.message);
-      res.status(400).json({ status: 'fail', message: err.message });
-   }
-};
+      },
+      {
+         // i use already the sort and i use it again now!
+         $sort: { numTourStarts: -1 }, // -1 is for descending => starting with highest number
+         // result: July is busiest month with 3 Tours starts!
+      },
+      {
+         // this stage allows us to have only 6 outputs => we will have 6 objects at output!
+         // $limit: 6, it doesn't show us the complete list of numbers of tours
+         $limit: 12,
+      },
+   ]);
+   res.status(200).json({
+      status: 'success',
+      plan_Length: plan.length,
+      Plan: plan,
+   });
+   // } catch (err) {
+   //    console.log('Error getting Monthly Plan Data: ' + err.message);
+   //    res.status(400).json({ status: 'fail', message: err.message });
+   // }
+});
