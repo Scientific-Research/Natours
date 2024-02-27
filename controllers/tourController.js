@@ -196,7 +196,15 @@ exports.getTour = async (req, res) => {
    // }
 };
 
-exports.createTour = async (req, res) => {
+// NOTE: creating a global function for catch Async
+const catchAsync = (fn) => {
+   return (req, res, next) => {
+      // fn(req, res, next).catch((err) => next(err));
+      fn(req, res, next).catch(next);
+   };
+};
+
+exports.createTour = catchAsync(async (req, res, next) => {
    // const newTour = req.body;
    // console.log(newTour);
    // NOTE: THIS IS THE FIRST METHOD TO CREATE THE DATA. In this method, we make a new instance(object)
@@ -222,24 +230,27 @@ exports.createTour = async (req, res) => {
    // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA, when we use create() function, we
    // don't need to make a new instance(object) from Tour and also we don't need to use save()
    // function anymore. But in first method, we have to use both of them!
-   try {
-      // const newTour = await Tour.create({
-      //    name: 'Test Tour-6',
-      //    rating: 4.7,
-      //    price: 997,
-      // });
-      const newTour = await Tour.create(req.body); // recieve the data from Postman
-      // doc = await newTour.save();
-      console.log(newTour);
-      res.status(201).json({
-         status: 'success',
-         createdTour: newTour,
-      });
-   } catch (err) {
-      console.log(`Error creating the tour data on MongoDB: ${err.message}`);
-      // res.status(400).json({ status: 'fail', message: 'Error creating the tour data on MongoDB!' });
-      res.status(400).json({ status: 'fail', message: err.message });
-   }
+
+   // const newTour = await Tour.create({
+   //    name: 'Test Tour-6',
+   //    rating: 4.7,
+   //    price: 997,
+   // });
+   const newTour = await Tour.create(req.body); // recieve the data from Postman
+   // doc = await newTour.save();
+   console.log(newTour);
+   res.status(201).json({
+      status: 'success',
+      createdTour: newTour,
+   });
+
+   // try {
+
+   // } catch (err) {
+   //    console.log(`Error creating the tour data on MongoDB: ${err.message}`);
+   //    // res.status(400).json({ status: 'fail', message: 'Error creating the tour data on MongoDB!' });
+   //    res.status(400).json({ status: 'fail', message: err.message });
+   // }
 
    // const id_1 = tours.length - 1;
    // const newId = id_1 + 1;
@@ -253,7 +264,7 @@ exports.createTour = async (req, res) => {
    //       tours: newTour,
    //    })
    // );
-};
+});
 
 exports.updateTour = async (req, res) => {
    const id = req.params.id;
