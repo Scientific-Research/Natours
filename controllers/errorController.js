@@ -1,3 +1,23 @@
+const sendErrorDev = (err, res) => {
+   // NOTE: first of all, we see what is statusCode and after that, it gives us the related
+   // status and message for that error!
+   res.status(err.statusCode).json({
+      status: err.status,
+      error: err, // print the entire error
+      message: err.message,
+      stack: err.stack,
+   });
+};
+
+const sendErrorProd = (err, res) => {
+   // NOTE: first of all, we see what is statusCode and after that, it gives us the related
+   // status and message for that error!
+   res.status(err.statusCode).json({
+      status: err.status,
+      message: err.message,
+   });
+};
+
 const globalErrorHandler = (err, req, res, next) => {
    //    console.log(err.stack); // it shows us where the error happens!
 
@@ -10,12 +30,19 @@ const globalErrorHandler = (err, req, res, next) => {
    // it status is not defined, it would be 'error' which is for 500 statusCode!
    // and when it is 400 or 404 status Code, it would be 'fail' as we write it as status in our json!
 
-   // NOTE: first of all, we see what is statusCode and after that, it gives us the related
-   // status and message for that error!
-   res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-   });
+   if (process.env.NODE_ENV === 'development') {
+      sendErrorDev(err, res);
+      // NOTE: first of all, we see what is statusCode and after that, it gives us the related
+      // status and message for that error!
+      // res.status(err.statusCode).json({
+      //    status: err.status,
+      //    error: err, // print the entire error
+      //    message: err.message,
+      //    stack: err.stack,
+      // });
+   } else if (process.env.NODE_ENV === 'production') {
+      sendErrorProd(err, res);
+   }
 };
 
 module.exports = globalErrorHandler;
