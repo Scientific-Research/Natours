@@ -1,4 +1,5 @@
 const sendErrorDev = (err, res) => {
+   // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
    // status and message for that error!
    res.status(err.statusCode).json({
@@ -10,12 +11,26 @@ const sendErrorDev = (err, res) => {
 };
 
 const sendErrorProd = (err, res) => {
-   // NOTE: first of all, we see what is statusCode and after that, it gives us the related
-   // status and message for that error!
-   res.status(err.statusCode).json({
-      status: err.status,
-      message: err.message,
-   });
+   // NOTE: Operational, trusted error: send message to the client
+   if (err.isOperational) {
+      // NOTE: first of all, we see what is statusCode and after that, it gives us the related
+      // status and message for that error!
+      res.status(err.statusCode).json({
+         status: err.status,
+         message: err.message,
+      });
+
+      // NOTE: Programming or other unknown errors: don't leak error details to client
+   } else {
+      // 1) Log error to the console:
+      console.error('ERROR!!!', err);
+
+      // 2) Send generic message:
+      res.status(500).json({
+         status: 'error',
+         message: 'Something went very wrong!',
+      });
+   }
 };
 
 const globalErrorHandler = (err, req, res, next) => {
