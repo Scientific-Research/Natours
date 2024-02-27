@@ -16,7 +16,7 @@ exports.aliasTopTours = (req, res, next) => {
 
 // const getAllTours = (req, res,next) => {
 // 127.0.0.1:3000/api/v1/tours?difficulty=easy&sort=1&duration[gte]=5&price[lt]=1500&limit=5
-exports.getAllTours = catchAsync(async (req, res) => {
+exports.getAllTours = catchAsync(async (req, res, next) => {
    // try {
    console.log(req.query);
    // 1 - BUILD QUERY
@@ -162,7 +162,7 @@ exports.getAllTours = catchAsync(async (req, res) => {
    // // next();
 });
 
-exports.getTour = catchAsync(async (req, res) => {
+exports.getTour = catchAsync(async (req, res, next) => {
    const id = req.params.id;
    console.log(id);
 
@@ -260,7 +260,7 @@ exports.createTour = catchAsync(async (req, res, next) => {
    // );
 });
 
-exports.updateTour = catchAsync(async (req, res) => {
+exports.updateTour = catchAsync(async (req, res, next) => {
    const id = req.params.id;
 
    // try {
@@ -307,7 +307,7 @@ exports.updateTour = catchAsync(async (req, res) => {
    // }
 });
 
-exports.deleteTour = catchAsync(async (req, res) => {
+exports.deleteTour = catchAsync(async (req, res, next) => {
    const id = req.params.id;
 
    // try {
@@ -348,7 +348,7 @@ exports.deleteTour = catchAsync(async (req, res) => {
 // NOTE: Strat using aggregation Pipeline: a function does some statistics and we will create
 // a rour for that later!
 // Aggregation pipeline is a mongoDB feature which is accessible through mongoose driver!
-exports.getTourStats = catchAsync(async (req, res) => {
+exports.getTourStats = catchAsync(async (req, res, next) => {
    // try {
    const stats = await Tour.aggregate([
       // we pass here an array of stages:
@@ -393,7 +393,7 @@ exports.getTourStats = catchAsync(async (req, res) => {
 });
 
 // NOTE: we have a new function here to get the monthly plan according to the year!
-exports.getMonthlyPlan = catchAsync(async (req, res) => {
+exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
    // try {
    const year = req.params.year * 1; // => 2021 getting year parameter from URL and covert it to number!
 
