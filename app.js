@@ -50,6 +50,9 @@ app.use('/api/v1/tours', tourRouter);
 // Compiler checks our all above Routes and when it doesn't find a matched one, comes here finally
 // to this middleware and send the Error Message: `Can't find ${req.originalUrl} on this Server!`,
 // * means every URL => all of them
+// another important NOTE is that, this middleware must stay at the end and not before other
+// middleware or Routes! when i put it at the top, we will never reach other Routes and we
+// will receive always an Error Message!
 // req.originalUrl: means the requested URL
 app.all('*', (req, res, next) => {
    res.status(404).json({
