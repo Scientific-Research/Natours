@@ -45,5 +45,18 @@ app.use((req, res, next) => {
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 
+// NOTE: all means all the http Methods like get, post, ...
+// we write here a middleware for all invalid URL(Routes) which are not listed as our valid Routes
+// Compiler checks our all above Routes and when it doesn't find a matched one, comes here finally
+// to this middleware and send the Error Message: `Can't find ${req.originalUrl} on this Server!`,
+// * means every URL => all of them
+// req.originalUrl: means the requested URL
+app.all('*', (req, res, next) => {
+   res.status(404).json({
+      status: 'fail',
+      message: `Can't find ${req.originalUrl} on this Server!`,
+   });
+});
+
 // Export the app from here to the Server.js
 module.exports = app;
