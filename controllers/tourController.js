@@ -1,6 +1,7 @@
 // const fs = require('fs');
 const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
+const catchAsync = require('../utils/catchAsync');
 
 exports.aliasTopTours = (req, res, next) => {
    // All fields have to be in String format! here we have a prefilling process before
@@ -194,14 +195,6 @@ exports.getTour = async (req, res) => {
    //       message: err.message,
    //    });
    // }
-};
-
-// NOTE: creating a global function for catch Async
-const catchAsync = (fn) => {
-   return (req, res, next) => {
-      // fn(req, res, next).catch((err) => next(err));
-      fn(req, res, next).catch(next);
-   };
 };
 
 exports.createTour = catchAsync(async (req, res, next) => {
