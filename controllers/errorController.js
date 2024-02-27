@@ -32,14 +32,6 @@ const globalErrorHandler = (err, req, res, next) => {
 
    if (process.env.NODE_ENV === 'development') {
       sendErrorDev(err, res);
-      // NOTE: first of all, we see what is statusCode and after that, it gives us the related
-      // status and message for that error!
-      // res.status(err.statusCode).json({
-      //    status: err.status,
-      //    error: err, // print the entire error
-      //    message: err.message,
-      //    stack: err.stack,
-      // });
    } else if (process.env.NODE_ENV === 'production') {
       sendErrorProd(err, res);
    }
