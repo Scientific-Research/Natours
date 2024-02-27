@@ -279,6 +279,14 @@ exports.updateTour = catchAsync(async (req, res, next) => {
       new: true, // to send the new(updated) tour to the client.
       runValidators: true,
    });
+
+   if (!updatedTour) {
+      // when we give parameters to next(), it means an error happened and we give our global
+      // Error App => AppError() function as this parameter and it has itself two parameters:
+      // message and statusCode and we have to use return to send it back and not going forward!
+      return next(new AppError('No tour found with that ID', 404));
+   }
+
    console.log(updatedTour);
    res.status(200).json({
       status: 'success',
@@ -323,8 +331,17 @@ exports.deleteTour = catchAsync(async (req, res, next) => {
 
    // try {
    const deletedTour = await Tour.findByIdAndDelete(id);
+
+   if (!deletedTour) {
+      // when we give parameters to next(), it means an error happened and we give our global
+      // Error App => AppError() function as this parameter and it has itself two parameters:
+      // message and statusCode and we have to use return to send it back and not going forward!
+      return next(new AppError('No tour found with that ID', 404));
+   }
+
    if (!deletedTour) throw new Error('This Tour already deleted!');
    console.log(deletedTour);
+
    res.status(200).json({
       status: 'success',
       deletedTour: deletedTour,
