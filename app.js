@@ -55,10 +55,22 @@ app.use('/api/v1/tours', tourRouter);
 // will receive always an Error Message!
 // req.originalUrl: means the requested URL
 app.all('*', (req, res, next) => {
-   res.status(404).json({
-      status: 'fail',
-      message: `Can't find ${req.originalUrl} on this Server!`,
-   });
+   // res.status(404).json({
+   //    status: 'fail',
+   //    message: `Can't find ${req.originalUrl} on this Server!`,
+   // });
+
+   // we produce an error:
+   const err = new Error(`Can't find ${req.originalUrl} on this Server!`); // we use built-in error constructor
+   err.sttaus = 'fail';
+   err.statusCode = 404;
+   // when next() recieve a parameter, express understood that, an error happened!
+   // it doesn't matter which parameter, express consider it as an Error!
+   // and then express will skip all other middlewares in between and go straight to our
+   // global Error Handler for entire project which is located below!
+   // At the moment, there is no other middleware in between, but if would be somes,
+   // it will does the same! or even in other files in our project!
+   next(err);
 });
 
 // NOTE: defining a global Error Handler for entire project
