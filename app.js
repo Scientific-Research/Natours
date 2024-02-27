@@ -20,10 +20,11 @@ app.use(express.static(`${__dirname}/public`)); //=> http://127.0.0.1:3000/overv
 // OR: http://127.0.0.1:3000/img/pin.png
 
 // 1- create our own middleware function: => our global route handler before other ones:
-app.use((req, res, next) => {
-   console.log('Hello from our own middleware!');
-   next(); // calling the next() here!
-});
+// app.use((req, res, next) => {
+//    console.log('Hello from our own middleware!');
+//    next(); // calling the next() here!
+// });
+
 // 2- create our own middleware function: => our global route handler before other ones:
 app.use((req, res, next) => {
    req.requestTime = new Date().toISOString();
