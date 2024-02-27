@@ -15,5 +15,11 @@ class AppError extends Error {
       // NOTE: status can be 'fail' with 4* like 400 or 404 and 'error' with 5* like 500
       this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
       this.isOperational = true;
+
+      Error.captureStackTrace(this, this.constructor);
+      // when we create a new Object and the Error constructor is called, we will not be polluted
+      // with Strack Trace Informations in Terminal!
    }
 }
+
+module.exports = AppError;

@@ -79,6 +79,8 @@ app.all('*', (req, res, next) => {
 // when we have four parameters and err comes at the beginning, Express understand automatically
 // that this is an error handling middleware!
 app.use((err, req, res, next) => {
+   console.log(err.stack); // it shows us where the error happens!
+
    // we have different error status Codes like 400,404,500,..., that's why we have to get the
    // error from every occurred erorr and when there is no error code for the occurred error,
    // we consider it as Error with Code 500!
