@@ -2,6 +2,7 @@
 const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.aliasTopTours = (req, res, next) => {
    // All fields have to be in String format! here we have a prefilling process before
@@ -164,12 +165,22 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
 exports.getTour = catchAsync(async (req, res, next) => {
    const id = req.params.id;
+   const tour = await Tour.findById(id);
    console.log(id);
+
+   // NOTE: what we have to do if we have an invalid id => 404 => Page Not Found!
+   // There is no tour => it means null => In JS, null is falsy value and in if statement,
+   // it will convert to false value:
+   if (!tour) {
+      // when we give parameters to next(), it means an error happened and we give our global
+      // Error App => AppError() function as this parameter and it has itself two parameters:
+      // message and statusCode and we have to use return to send it back and not going forward!
+      return next(new AppError('No tour found with that ID', 404));
+   }
 
    // try {
    // NOTE: GETTING ONLY ONE TOUR USING findById(id)-- no need to make a new instance(object) and using
    // save() function too!
-   const tour = await Tour.findById(id);
    // NOTE: Tour.findOne({_id: req.params.id})
    console.log(tour);
    res.status(200).json({ status: 'success', OneTour: tour });
