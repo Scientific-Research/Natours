@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const AppError = require('./utils/appError');
 
 const app = express();
 
@@ -61,16 +62,21 @@ app.all('*', (req, res, next) => {
    // });
 
    // we produce an error:
-   const err = new Error(`Can't find ${req.originalUrl} on this Server!`); // we use built-in error constructor
-   err.sttaus = 'fail';
-   err.statusCode = 404;
+   // NOTE: I comment these part out, because i want to use our new created appError.js in next():
+   // const err = new Error(`Can't find ${req.originalUrl} on this Server!`); // we use built-in error constructor
+   // err.sttaus = 'fail';
+   // err.statusCode = 404;
    // when next() recieve a parameter, express understood that, an error happened!
    // it doesn't matter which parameter, express consider it as an Error!
    // and then express will skip all other middlewares in between and go straight to our
    // global Error Handler for entire project which is located below!
    // At the moment, there is no other middleware in between, but if would be somes,
    // it will does the same! or even in other files in our project!
-   next(err);
+   // next(err);
+   // NOTE: instead of using above err Code, we use our newly created AppError function in next():
+   next(new AppError(`Can't find ${req.originalUrl} on this Server!`, 404));
+   // the constructor in AppError function needs two oarameters: constructor(message, statusCode)
+   // and both of them are there now in AppError().
 });
 
 // NOTE: defining a global Error Handler for entire project
