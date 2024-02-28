@@ -10,6 +10,21 @@ const handleCastErrorDB = (err) => {
    // with isOperational set to true automatically!
 };
 
+const handleDuplicateFieldsDB = (err) => {
+   // NOTE: First method to get the name of the tour: but i didn't work for me!
+   // const value = err.errmsg.match(/(["'])(\\?.)*?\1/)[0];
+   // const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
+   // const value = res.message.match(/(["'])(\\?.)*?\1/)[0];
+
+   // NOTE: Second method to get the name of the tour: this works for me well!
+   // const value = err.keyValue.name;
+   const value = err.keyValue.name; // value has the name of the tour!
+   console.log('The name of the tour is: ' + value);
+   // const message = `Duplicate field value: x. Please use another value!`;
+   const message = `Duplicate field name: ${value}. Please use another name!`;
+   return new AppError(message, 400);
+};
+
 const sendErrorDev = (err, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
@@ -80,9 +95,26 @@ const globalErrorHandler = (err, req, res, next) => {
 
       // NOTE: but this one worked => // Create a deep copy using JSON.parse() and JSON.stringify()
       let error = JSON.parse(JSON.stringify(err)); // we make a hard copy of err object which created by mongoose!
+      // NOTE: This is how to handle the first error in Production mode and send a user-friendly
+      // message to the client, when we enter an invalid id in URL like this one:
+      // 127.0.0.1:3000/api/v1/tours/5624562645
       if (error.name === 'CastError') {
          error = handleCastErrorDB(error); // it will return error for us
          // produced by our AppError and with isOperational set to true!
+         console.log('error from appError: ' + error);
+      }
+
+      // NOTE: This is how to handle the second error in Production mode and send a user-friendly
+      // message to the client, when we create a new tour but with a duplicate name:
+      // the name of every tour has to be unique and not to be already existed!
+      // This error doesn't have any name, rather we use the code: 11000, because it was
+      // created by MongoDB and not Mongoose itself!
+      if (error.code === 11000) {
+         // NOTE: the unique feature is error.code which is 11000 and we can get it from
+         // error message in Postman.
+         error = handleDuplicateFieldsDB(error); // we will create this function at top
+         // response = handleDuplicateFieldsDB(res); // we will create this function at top
+         // and send error which has a deep copy of our Object => it contains all the information
          console.log('error from appError: ' + error);
       }
 
