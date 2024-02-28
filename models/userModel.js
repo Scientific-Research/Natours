@@ -1,26 +1,34 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
+// name, email, photo, password, passwordConfirm
 
-const userSchema = mongoose.Schema({
+// NOTE: Creating the Schema:
+const userSchema = new mongoose.Schema({
    name: {
       type: String,
-      required: true,
+      required: [true, 'Please tell us your name!'],
    },
    email: {
       type: String,
-      required: true,
+      required: [true, 'Please provide your email!'],
+      unique: true,
+      lowercase: true,
+      validate: [validator.isEmail, 'Please provide a valid email!'],
    },
    photo: {
       type: String,
    },
    password: {
       type: String,
-      reqired: true,
+      reqired: [true, 'Please provide a password!'],
+      minLength: 8,
    },
    passwordConfirm: {
       type: String,
-      required: true,
+      required: [true, ' Please confirm your password!'],
    },
 });
 
-const userModel = userSchema.Model('User');
-module.exports = userModel;
+// NOTE: Creating the model:
+const User = mongoose.model('User', userSchema);
+module.exports = User;
