@@ -25,6 +25,16 @@ const handleDuplicateFieldsDB = (err) => {
    return new AppError(message, 400);
 };
 
+const handleValidationErrorDB = (err) => {
+   // NOTE: Object.values() takes the errors object containing all the three other objects
+   // (name, difficulty, ratingsAverage) and then map() function will search in contents of
+   // every of these three objects to find respected message property!
+   const errors = Object.values(err.errors).map((el) => el.message);
+   const message = `Invalid input data: ${errors.join('. ')}`; //to make between all these
+   // error messages with dot and one space!
+   return new AppError(message, 400);
+};
+
 const sendErrorDev = (err, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
@@ -116,6 +126,17 @@ const globalErrorHandler = (err, req, res, next) => {
          // response = handleDuplicateFieldsDB(res); // we will create this function at top
          // and send error which has a deep copy of our Object => it contains all the information
          console.log('error from appError: ' + error);
+      }
+
+      // NOTE: This is how to handle the third error in Production mode and send a user-friendly
+      // message to the client, when we update a new tour but with three different error messages:
+      // 1. A tour name must have more or equal than 10 Characters!
+      // 2. Difficulty is either: easy, medium or difficult
+      // 3. Rating must be below 5.0
+
+      // This error is produced by Mongoose like the first error => CastError
+      if (error.name === 'ValidationError') {
+         error = handleValidationErrorDB(error);
       }
 
       sendErrorProd(error, res);
