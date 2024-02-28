@@ -13,7 +13,7 @@ const app = require('./app');
 // type this command in VSCode Terminal: NODE_ENV=development X=23 nodemon server.js
 // 4) START SERVER => now, our exntry point to start our application is server.js and no longer
 // app.js => i will change it in package.json for nodemon too.
-
+let server = '';
 const connect = async () => {
    try {
       const con = await mongoose.connect(process.env.DATABASE); // connect to MongoDB
@@ -24,7 +24,7 @@ const connect = async () => {
 
       console.log('MongoDB connection successful!');
       const PORT = process.env.PORT || 8000;
-      app.listen(PORT, () => {
+      server = app.listen(PORT, () => {
          console.log(`Server is listening on PORT ${PORT}`);
       });
    } catch (err) {
@@ -32,6 +32,20 @@ const connect = async () => {
    }
 };
 connect();
+
+// NOTE: when we have a problem to connect to DB or totally when we have unhandledRejection, we
+// can use the following process to handle it in our entire project:
+process.on('unhandledRejection', (err) => {
+   console.log(err.name, err.message);
+   console.log('UNHANDLED REJECTION! >>> Shutting down...');
+   // NOTE: At first, a gracefully shutdown: we give the server time to finish all requests and
+   // pending applications and only after than the server can be killed!
+   server.close(() => {
+      process.exit(1); // 1: means exit unsuccessfully and 0: means exit successfully! but this
+      // is the harsh shut down and before that we have to shutt down the server firstly as a
+      // gracefully shutdown and then process.exit(1);
+   });
+});
 
 // THIS WAS JUST FOR TESTING AND WE DON'T NEED IT ANYMORE!
 // /* Tour here as Model in Mongoose is like a class in JS and we define an instance(object) of it
