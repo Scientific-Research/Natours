@@ -2,6 +2,23 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 // const express = require('express');
 // dotenv.config({ path: './config.env' });
+
+// NOTE: How to catch the Sync unhandled requests:
+process.on('uncaughtException', (err) => {
+   console.log('UNCAUGHT EXCEPTION! >>> Shutting down...');
+   console.log(err.name, err.message);
+   process.exit(1); // 1: means exit unsuccessfully and 0: means exit successfully! but this
+
+   // console.log(err.name, err.message);
+   // NOTE: At first, a gracefully shutdown: we give the server time to finish all requests and
+   // pending applications and only after than the server can be killed!
+   // server.close(() => {
+   //    process.exit(1); // 1: means exit unsuccessfully and 0: means exit successfully! but this
+   //    // is the harsh shut down and before that we have to shutt down the server firstly as a
+   //    // gracefully shutdown and then process.exit(1);
+   // });
+});
+
 dotenv.config({ path: './.env' });
 
 // const app = express();
@@ -36,8 +53,9 @@ connect();
 // NOTE: when we have a problem to connect to DB or totally when we have unhandledRejection, we
 // can use the following process to handle it in our entire project:
 process.on('unhandledRejection', (err) => {
-   console.log(err.name, err.message);
    console.log('UNHANDLED REJECTION! >>> Shutting down...');
+   console.log(err.name, err.message);
+   // console.log(err.name, err.message);
    // NOTE: At first, a gracefully shutdown: we give the server time to finish all requests and
    // pending applications and only after than the server can be killed!
    server.close(() => {

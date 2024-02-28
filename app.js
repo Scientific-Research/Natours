@@ -30,6 +30,15 @@ app.use(express.static(`${__dirname}/public`)); //=> http://127.0.0.1:3000/overv
 // 2- create our own middleware function: => our global route handler before other ones:
 app.use((req, res, next) => {
    req.requestTime = new Date().toISOString();
+   // console.log(x); ONLY FOR TEST THE UNCAUGHT EXCEPTIONS IN SERVER.JS
+   // when we send a request in Postman and we are in Production mode, it goes to the globalErrorHandler
+   // and then production mode and this error doesn't belong to these three kinds of error => this
+   // is not a known error, it is not an operational error => it doesn't go to the appError and
+   // finally it goes to the else section which is for unknown errors and gives us such message
+   // in Terminal: ERROR!!! { statusCode: 500, status: 'error' } and in postman: status: 'error',
+   // message: 'Something went very wrong!',
+   // but in development mode: it gives us a long message in Postman with details and in Terminal:
+   // this message: GET /api/v1/tours 500 5.520 ms - 1294
    next();
 });
 
