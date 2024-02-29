@@ -79,6 +79,13 @@ userSchema.pre('save', async function (next) {
    next();
 });
 
+// NOTE: check if the entered password is the same with the stored one in database:
+// we use instance method:
+userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+   return await bcrypt.compare(candidatePassword, userPassword);
+   // if these two passwords are the same, return true, otherwise, return false!
+};
+
 // NOTE: Creating the model:
 const User = mongoose.model('User', userSchema);
 module.exports = User;

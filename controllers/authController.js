@@ -79,6 +79,19 @@ exports.login = catchAsync(async (req, res, next) => {
    const user = await User.findOne({ email }).select('+password');
    console.log(user); // now, our user has password, when we login: 127.0.0.1:3000/api/v1/users/login
 
+   // NOTE: and now, we have to check that if the password in DB is mached with entered password
+   // in Postman which user has already entered:
+   // how can we compare these two together:
+   // pass1234 === $2a$12$Y.2./ibZ6q2Cklhi3.y/q.WIXTibMRtRyQdm9NILGsdpwyOIncQqG
+   // the only solution is that: we encrypt the plain password too and compare both encrypted
+   // passwords together, //NOTE: we will do it in userModel.js and not here.
+
+   const correct = await user.correctPassword(password, user.password);
+   if (!user || !correct) {
+      const message = 'Incorrect email or password!';
+      return next(new AppError(message, 401)); 
+   }
+
    // 3) If everything is ok, send the token to the client:
 
    // this is our faked Token which send back to client and we get it in Postman, when we have
