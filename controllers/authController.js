@@ -3,6 +3,16 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+// NOTE: create a function for Token:
+const signToken = (id) => {
+   return jwt.sign({ id: id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+   });
+   // return jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+   //    expiresIn: process.env.JWT_EXPIRES_IN,
+   // });
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
    // NOTE: when we use catchAsync(), we don't need to use try() catch() anymore! that's why
    // i comment them out there!
@@ -31,9 +41,12 @@ exports.signup = catchAsync(async (req, res, next) => {
    // with these two, the token header will be created automatically!
    // options comes after that: expiration time, like this: JWT_EXPIRES_IN=90d 10h 5m 3s
    // the token is now ready and next step: is to send it to the client
-   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-   });
+
+   // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+   //    expiresIn: process.env.JWT_EXPIRES_IN,
+   // });
+   // here we use the newly created Token function:
+   const token = signToken(newUser._id);
 
    res.status(201).json({
       // 201 is used for creating the user!
@@ -86,17 +99,17 @@ exports.login = catchAsync(async (req, res, next) => {
    // the only solution is that: we encrypt the plain password too and compare both encrypted
    // passwords together, //NOTE: we will do it in userModel.js and not here.
 
-   const correct = await user.correctPassword(password, user.password);
-   if (!user || !correct) {
+   // const correct = await user.correctPassword(password, user.password);
+   if (!user || !(await user.correctPassword(password, user.password))) {
       const message = 'Incorrect email or password!';
       return next(new AppError(message, 401));
    }
 
    // 3) If everything is ok, send the token to the client:
-
    // this is our faked Token which send back to client and we get it in Postman, when we have
    // both email and password available! Otherwise, we will get the above error message in Postman!
-   const token = 'Our faked Token';
+   // const token = 'Our faked Token';
+   const token = signToken(user._id);
    res.status(200).json({
       status: 'success',
       token,
