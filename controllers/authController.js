@@ -50,7 +50,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 // NOTE: the next step to create the signup route in which this signup function can be called!
 
-exports.login = (req, res, next) => {
+exports.login = catchAsync(async (req, res, next) => {
    // const email = req.body.email;
    // const password = req.body.password;
    // NOTE: these are the credentials that a user send to the check...
@@ -73,7 +73,11 @@ exports.login = (req, res, next) => {
    // { email: email }: first email is the name of the variable and the second is the variable!
    // in ES6 we can write it as abbreviation: like this: { email }
    // const user = User.findOne({ email: email });
-   const user = User.findOne({ email });
+   // this below user doesn't contain password, that's why we have to explicitly select it
+   // using + operator. Now, we have the password in output as a feature belong to the user!
+
+   const user = await User.findOne({ email }).select('+password');
+   console.log(user); // now, our user has password, when we login: 127.0.0.1:3000/api/v1/users/login
 
    // 3) If everything is ok, send the token to the client:
 
@@ -84,6 +88,6 @@ exports.login = (req, res, next) => {
       status: 'success',
       token,
    });
-};
+});
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
 // module.exports = signup;
