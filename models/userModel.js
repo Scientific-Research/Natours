@@ -26,6 +26,15 @@ const userSchema = new mongoose.Schema({
    passwordConfirm: {
       type: String,
       required: [true, ' Please confirm your password!'],
+      validate: {
+         // NOTE: This works only on SAVE()!!! and CREATE()!!! => save() function, when we
+         // want to update the user we have to use save() and not findOneAndUpdate().
+         // like this:  const newUser = await User.create(req.body);
+         // and like this:  const updateUser = await User.save();
+         validator: function (el) {
+            return el === this.password; // abc === abc => return true! otherwise, it would be false!
+         },
+      },
    },
 });
 

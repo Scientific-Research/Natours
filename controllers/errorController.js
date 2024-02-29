@@ -18,10 +18,11 @@ const handleDuplicateFieldsDB = (err) => {
 
    // NOTE: Second method to get the name of the tour: this works for me well!
    // const value = err.keyValue.name;
-   const value = err.keyValue.name; // value has the name of the tour!
-   console.log('The name of the tour is: ' + value);
+   // const value = err.keyValue.name; // value has the name of the tour!
+   const value = err.keyValue.name || err.keyValue.email; // value has the name of the tour!
+   console.log('The duplicate field is: ' + value);
    // const message = `Duplicate field value: x. Please use another value!`;
-   const message = `Duplicate field name: ${value}. Please use another name!`;
+   const message = `Duplicate field: ${value}. Please pick up a new one!`;
    return new AppError(message, 400);
 };
 
