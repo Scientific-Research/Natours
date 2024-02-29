@@ -22,9 +22,23 @@ exports.signup = catchAsync(async (req, res, next) => {
       */
    });
 
+   // NOTE: first of all, we have installed the jsonwebtoken and now, we will use sign function
+   // to create atoken:
+   // first parameter in sign() function is payload as an object which is id here and we will
+   // take it from newUser which we created already!
+   // the next part of jwt is secret which we get it from .env file!
+   // with these two, the token header will be created automatically!
+   // options comes after that: expiration time, like this: JWT_EXPIRES_IN=90d 10h 5m 3s
+   // the token is now ready and next step: is to send it to the client
+   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+   });
+
    res.status(201).json({
       // 201 is used for creating the user!
       status: 'success',
+      // NOTE: and now, the token is ready and we have to send it to the client before user:
+      token,
       User: newUser,
    });
    //    } catch (err) {
