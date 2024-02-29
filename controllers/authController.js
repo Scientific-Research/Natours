@@ -68,6 +68,12 @@ exports.login = (req, res, next) => {
    }
 
    // 2) Check if user exists && password is correct:
+   // first of all, we check, if there is an email for the user which posted:
+   // we search for this user not according to its id, rather, its email.
+   // { email: email }: first email is the name of the variable and the second is the variable!
+   // in ES6 we can write it as abbreviation: like this: { email }
+   // const user = User.findOne({ email: email });
+   const user = User.findOne({ email });
 
    // 3) If everything is ok, send the token to the client:
 
