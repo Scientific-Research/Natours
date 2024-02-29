@@ -61,14 +61,19 @@ exports.login = (req, res, next) => {
       // we use next() to declare a new error as a parameter inside it and then send it to AppError
       // function
       const message = 'Please provide email and password!';
-      next(new AppError(message, 400));
+      // return here is very important, otherwise, it goes to the res.status()... and gives
+      // us the error in VSCode Terminal that it can not send two responses header at the same
+      // time to the client!
+      return next(new AppError(message, 400));
    }
 
    // 2) Check if user exists && password is correct:
 
    // 3) If everything is ok, send the token to the client:
 
-   const token = '';
+   // this is our faked Token which send back to client and we get it in Postman, when we have
+   // both email and password available! Otherwise, we will get the above error message in Postman!
+   const token = 'Our faked Token';
    res.status(200).json({
       status: 'success',
       token,
