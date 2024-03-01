@@ -40,7 +40,7 @@ app.use((req, res, next) => {
    // but in development mode: it gives us a long message in Postman with details and in Terminal:
    // this message: GET /api/v1/tours 500 5.520 ms - 1294
 
-   console.log(req.headers);
+   // console.log(req.headers);
    // NOTE: in Postman => 127.0.0.1:3000/api/v1/tours => we set the test-header = maximilian
    // and when we hit the Send => it gives us the following information:
    // {

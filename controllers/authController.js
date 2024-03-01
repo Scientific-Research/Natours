@@ -127,7 +127,20 @@ exports.protect = catchAsync(async (req, res, next) => {
    // we write in headers section in Postman => key: Authorization and value: Bearer asgfasgdfagsdfh
    // and then Send => in Terminal, we will see: {authorization: 'Bearer asgfasgdfagsdfh',...}
    // Actually this piece of header value is token: asgfasgdfagsdfh
-
+   // if header exists and it starts with Bearer word:
+   let token;
+   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      // how to get the second part of the authorization: I mean asgfasgdfagsdfh
+      // we have to use split() function which create an array with single quotation in it
+      // because there is a space between Bearer and asgfasgdfagsdfh as token and this token
+      // is the second part of authorization.
+      // that's why we use [1]. [0] is the Bearer itself.
+      // split function with a single quotation in it in JS convert a string into an array with
+      // several parts which we can access to these parts using indexes in this array.
+      token = req.headers.authorization.split(' ')[1];
+   }
+   console.log(token);
+   
    // 2) Validate token => Verification
 
    // 3) Check if user still exists
