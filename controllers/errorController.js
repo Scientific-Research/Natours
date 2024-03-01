@@ -36,6 +36,10 @@ const handleValidationErrorDB = (err) => {
    return new AppError(message, 400);
 };
 
+const handleJsonWebTokenError = (err) => {
+   return new AppError('Invalid token. Please log in again!', 401);
+};
+
 const sendErrorDev = (err, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
@@ -138,6 +142,11 @@ const globalErrorHandler = (err, req, res, next) => {
       // This error is produced by Mongoose like the first error => CastError
       if (error.name === 'ValidationError') {
          error = handleValidationErrorDB(error);
+      }
+      // This error comes from invalid signature from decodedPayload in authController.js
+      // is produced by Mongoose like two other above errors:
+      if (error.name === 'JsonWebTokenError') {
+         error = handleJsonWebTokenError(error);
       }
 
       sendErrorProd(error, res);
