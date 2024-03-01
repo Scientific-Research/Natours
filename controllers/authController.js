@@ -115,5 +115,14 @@ exports.login = catchAsync(async (req, res, next) => {
       token,
    });
 });
+
+// NOTE: creating the protect middleware to preventing the unauthorized access(not logged in user)
+// to the router.route('/').get(getAllTours) => it means not logged user can not see the list of
+// all the tours!
+// NOTE: when we use catchAsync(), then we don't need to use try()-catch() anymore!
+exports.protect = catchAsync((req, res, next) => {
+   next();
+});
+
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
 // module.exports = signup;
