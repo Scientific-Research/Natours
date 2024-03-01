@@ -140,7 +140,24 @@ exports.protect = catchAsync(async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
    }
    console.log(token);
-   
+
+   // NOTE: when there is no Token, we issue an error: when there is an error, next() will take
+   // us direclty to the our global Error handling middleware => AppError which we imported
+   // above!
+
+   // NOTE: how we test the error function: just remove the authorization header check mark in
+   // postman and hit the Send => it runs the route for GetAllTours and firstly see the protect
+   // function and then run this function, but we have already removed the auhorization header
+   // it means there is no authorization header => it doesn't exist => the above if() will not
+   // work, therefore, it doesn't go into it and then there will be no token => it comes to
+   // this if() below and go inside and issue an error in our global error handling middleware
+   // and then we will see a detailed error in Postman with below message content!
+   if (!token) {
+      message = 'You are not logged in! Please log in to get access.';
+      // 401 statusCode means unauthorized access!
+      return next(new AppError(message, 401));
+   }
+
    // 2) Validate token => Verification
 
    // 3) Check if user still exists
