@@ -37,7 +37,8 @@ const handleValidationErrorDB = (err) => {
 };
 
 const handleJsonWebTokenError = (err) => {
-   return new AppError('Invalid token. Please log in again!', 401);
+   const message = `${err.message} (invalid token). Please log in again!`;
+   return new AppError(message, 401);
 };
 
 const sendErrorDev = (err, res) => {
@@ -146,6 +147,7 @@ const globalErrorHandler = (err, req, res, next) => {
       // This error comes from invalid signature from decodedPayload in authController.js
       // is produced by Mongoose like two other above errors:
       if (error.name === 'JsonWebTokenError') {
+         // console.log('error:' + error);
          error = handleJsonWebTokenError(error);
       }
 
