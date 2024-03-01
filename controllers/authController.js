@@ -120,7 +120,22 @@ exports.login = catchAsync(async (req, res, next) => {
 // to the router.route('/').get(getAllTours) => it means not logged user can not see the list of
 // all the tours!
 // NOTE: when we use catchAsync(), then we don't need to use try()-catch() anymore!
-exports.protect = catchAsync((req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
+   // 1) Getting token and check if it's there => if it exists
+   // first test done in app.js => console.log(req.headers);
+   // To send a jsonwebtoken as a header, there is a standard to doing that:
+   // we write in headers section in Postman => key: Authorization and value: Bearer asgfasgdfagsdfh
+   // and then Send => in Terminal, we will see: {authorization: 'Bearer asgfasgdfagsdfh',...}
+   // Actually this piece of header value is token: asgfasgdfagsdfh
+
+   // 2) Validate token => Verification
+
+   // 3) Check if user still exists
+
+   // 4) Check if user changed the password after the token was issued!
+
+   // when there is no proplem with any of these above steps, then next() will be called and will be
+   // accessed to the route which will be protected => getAllTours()
    next();
 });
 
