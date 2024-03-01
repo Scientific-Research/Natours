@@ -1,3 +1,4 @@
+const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
@@ -139,7 +140,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       // several parts which we can access to these parts using indexes in this array.
       token = req.headers.authorization.split(' ')[1];
    }
-   console.log(token);
+   // console.log(token);
 
    // NOTE: when there is no Token, we issue an error: when there is an error, next() will take
    // us direclty to the our global Error handling middleware => AppError which we imported
@@ -159,6 +160,18 @@ exports.protect = catchAsync(async (req, res, next) => {
    }
 
    // 2) Validate token => Verification
+   // NOTE: In this step, we have to verify if token is already manipulated or it is the
+   // right token and also if token is already expired!
+   // we used the jwt.sign already and now, we use jwt.verify:
+   // NOTE: we need to promisify the jsw.verify and after that, like always, await it.
+   // NOTE: Our decoded Payload is here our user._id => id: '65e0fd7a89e6afc71ed7fc9f'
+   const decodedPayload = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+   console.log(decodedPayload);
+   // when i copy and paste the token in jwt.io website, and then try to manipulate id
+   // and finally copy and paste the new token in Authorization header in 127.0.0.1:3000/api/v1/tours
+   // Bearer ey...
+   // at the end, i will get the "message": "invalid signature", in Postman!
+   // the next step is to show this error to the client properly!
 
    // 3) Check if user still exists
 
