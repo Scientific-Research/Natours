@@ -37,6 +37,10 @@ const handleValidationErrorDB = (err) => {
 };
 
 const handleJsonWebTokenError = (err) => {
+   /**
+    * when user in production mode tries to log in with an invalid token =>
+    * will get this error message: "invalid signature (invalid token). Please log in again!"
+    */
    const message = `${err.message} (invalid token). Please log in again!`;
    return new AppError(message, 401);
 };
