@@ -86,6 +86,18 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
    // if these two passwords are the same, return true, otherwise, return false!
 };
 
+// NOTE: create another static instance method:
+// Check if user changed the password after the token was created!
+// JWTTimestamp say when the token was created?
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+   // "this" points to the current document. Now, we have to create a field now in our Schema
+   // for that date where the password has been changed!
+   if (this)
+      // by default, we return false from this method. It means the user has not chnaged the
+      // password, after the token was created!
+      return false;
+};
+
 // NOTE: Creating the model:
 const User = mongoose.model('User', userSchema);
 module.exports = User;

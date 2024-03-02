@@ -197,14 +197,20 @@ exports.protect = catchAsync(async (req, res, next) => {
       return next(new AppError('The user belonging to this token does no longer exist.', 401));
    }
 
-   // NOTE: 3-2:
+   // 4) Check if user changed the password after the token was created!
+   // NOTE: 4-1:
    // what if the user has chnaged his password after the token has benn created? that should
    // also not work! for example, imagine that someone stole the token from the user, then in
    // order to protect against that, the user changes his password. and of course, the old token
    // that has been created before changing the password, should no longer be valid!
    // this must no be accepted to access the protected route!
 
-   // 4) Check if user changed the password after the token was issued!
+   // To implement this task, we have to create another instance method, a method that will be
+   // available on all documents, documents are instances of a model and this part of code belong
+   // to the userModel and not here, that's why we will move to the userModel.js to write this
+   // part of code in this Model like another static instance method:correctPassword in
+   // userSchema.methods.correctPassword which is already there!
+   // NOTE: so => we go to the userModel.js ...
 
    // when there is no proplem with any of these above steps, then next() will be called and will be
    // accessed to the route which will be protected => getAllTours()
