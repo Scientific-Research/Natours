@@ -234,6 +234,9 @@ exports.protect = catchAsync(async (req, res, next) => {
    // router.route('/').get(protect, getAllTours).post(createTour);
    // and also when all above processes passed successfully, we can do the following:
    // at the end, we put the entire user data on the request(req):
+   // NOTE: when we assign a value to req, we can access to this value in all other middlewares!
+   // when we want to pass the data from one middleware to the next one, we can put the data
+   // on req.
    req.user = currentUser;
    next();
 });
