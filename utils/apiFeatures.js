@@ -20,11 +20,11 @@ class APIFeatures {
       // we can do all these using replace() => gte, gt, lte, lt using regular expression
       // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
       // In VSCode Terminal:console.log(req.query)=>{ difficulty: 'easy', duration: { gte: '5' } }
-      console.log('queryObj' + queryObj);
+      // console.log('queryObj' + queryObj);
       let queryStr = JSON.stringify(queryObj);
-      console.log('queryStr' + queryStr);
+      // console.log('queryStr' + queryStr);
       queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-      console.log(JSON.parse(queryStr)); // we want the Object here!
+      // console.log(JSON.parse(queryStr)); // we want the Object here!
 
       // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
       // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,

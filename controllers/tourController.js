@@ -19,7 +19,7 @@ exports.aliasTopTours = (req, res, next) => {
 // 127.0.0.1:3000/api/v1/tours?difficulty=easy&sort=1&duration[gte]=5&price[lt]=1500&limit=5
 exports.getAllTours = catchAsync(async (req, res, next) => {
    // try {
-   console.log(req.query);
+   // console.log(req.query);
    // 1 - BUILD QUERY
    // 1A) Filtering
    // const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!

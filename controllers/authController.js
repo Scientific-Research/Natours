@@ -166,7 +166,7 @@ exports.protect = catchAsync(async (req, res, next) => {
    // NOTE: we need to promisify the jsw.verify and after that, like always, await it.
    // NOTE: Our decoded Payload is here our user._id => id: '65e0fd7a89e6afc71ed7fc9f'
    const decodedPayload = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-   console.log(decodedPayload);
+   // console.log(decodedPayload);
    // when i copy and paste the token in jwt.io website, and then try to manipulate id
    // and finally copy and paste the new token in Authorization header in 127.0.0.1:3000/api/v1/tours
    // Bearer ey...

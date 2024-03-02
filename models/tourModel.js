@@ -155,7 +155,7 @@ tourSchema.pre(/^find/, function (next) {
 // NOTE: A post middleware for find() => this middleware will run after Query was executed!
 // that's why it has access to the documents which returned!
 tourSchema.post(/^find/, function (docs, next) {
-   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+   // console.log(`Query took ${Date.now() - this.start} milliseconds!`);
    // Query took 41 milliseconds!
    // console.log(docs); // it shows us the matched data to the console!
    // I comment docs out due to not polluting my VSCode Terminal!
