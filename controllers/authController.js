@@ -176,10 +176,26 @@ exports.protect = catchAsync(async (req, res, next) => {
    // 3) Check if user still exists
    // NOTE: 3-1:
    // what if the user has been deleted in the meantime, token will still exist,
-   // but when the user doesn't exist anymore, we don't want to let him login and therefore,
-   // we don't need to keep the related user token anymore!
+   // but when the user doesn't exist anymore, we don't want to let somebody login with this token,
+   // and therefore, we issue a new error message and he can not see all of our tours.
 
    // first of all, we check, if the user still exists: we use the id available in payload:
+   // freshUser: it means, he is a new User, it means, we got this user from id in Payload!
+   const freshUser = await User.findById(decodedPayload.id);
+   // NOTE: when i sign a new user up, then i will have a new token for this use,
+   // after that i will delete this user from Databank and will paste this new token in
+   // authorization header in 127.0.0.1:3000/api/v1/tours with a Bearer prefix like this:
+   // Authorization Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTMxOTA5MDUyNTQ1MD
+   // Y4NWEyYmNlNyIsImlhdCI6MTcwOTM4MTg5OCwiZXhwIjoxNzE3MTU3ODk4fQ.Uv97tP-TSymBUox7mgPcX0tvu3S
+   // fQxZE2VOropH5TE8
+   // then, when i hit the send button, the Postman follow this route: 127.0.0.1:3000/api/v1/tours
+   // and comes to the protect function and after verification, find no id for this user in
+   // payload, because this user was already deleted in database => that's why will issue an
+   // error message.
+
+   if (!freshUser) {
+      return next(new AppError('The user belonging to this token does no longer exist.', 401));
+   }
 
    // NOTE: 3-2:
    // what if the user has chnaged his password after the token has benn created? that should
