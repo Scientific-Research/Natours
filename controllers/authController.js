@@ -174,6 +174,19 @@ exports.protect = catchAsync(async (req, res, next) => {
    // the next step is to show this error to the client properly!
 
    // 3) Check if user still exists
+   // NOTE: 3-1:
+   // what if the user has been deleted in the meantime, token will still exist,
+   // but when the user doesn't exist anymore, we don't want to let him login and therefore,
+   // we don't need to keep the related user token anymore!
+
+   // first of all, we check, if the user still exists: we use the id available in payload:
+
+   // NOTE: 3-2:
+   // what if the user has chnaged his password after the token has benn created? that should
+   // also not work! for example, imagine that someone stole the token from the user, then in
+   // order to protect against that, the user changes his password. and of course, the old token
+   // that has been created before changing the password, should no longer be valid!
+   // this must no be accepted to access the protected route!
 
    // 4) Check if user changed the password after the token was issued!
 
