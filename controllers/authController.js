@@ -212,8 +212,13 @@ exports.protect = catchAsync(async (req, res, next) => {
    // we don't need to import it here from userModel.js.
    // Now, we can test it and we will see the results in Terminal!
    // we will send decodedPayload.iat as parameter to changedPasswordAfter as static instance method
-   // and 
-   freshUser.changedPasswordAfter(decodedPayload.iat);
+   // and
+   // 4) Check if user changed the password after the token was created!
+   if (freshUser.changedPasswordAfter(decodedPayload.iat)) {
+      return next(new AppError('User recently changed the password! Please log in again', 401));
+      // when i change the password, i have to log in again, because the last token is no
+      // longer valid!
+   }
 
    // To implement this task, we have to create another instance method, a method that will be
    // available on all documents, documents are instances of a model and this part of code belong
@@ -224,6 +229,9 @@ exports.protect = catchAsync(async (req, res, next) => {
 
    // when there is no proplem with any of these above steps, then next() will be called and will be
    // accessed to the route which will be protected => getAllTours()
+   // NOTE: and after that all these above proccesses passed, next() GRANT ACCESS TO PROTECTED
+   // ROUTE => getAllTours in below route:
+   // router.route('/').get(protect, getAllTours).post(createTour);
    next();
 });
 

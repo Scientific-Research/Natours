@@ -110,12 +110,20 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
       console.log(changedTimestamp, JWTTimestamp);
       // console.log(this.passwordChangedAt, JWTTimestamp);
+      return JWTTimestamp < changedTimestamp; // this means NOT changed!
+      // JWTTimestamp: the time or date in which token was created!
+      // changedTimestamp:the time in which password was changed!
+      // for example, we have created the token in time 100 and then changed the password in 200
+      // 100 < 200 => this is true => it means, the password was changed after!
+      // but if password was changed last time in 200 and only after that we created a token
+      // => 300 < 200 => this is false => False means Nothing changed! => we return false!
    }
 
    // NOTE: to see that if it works, we have to call this method => we will do it in step 4
    // in authController.js => we go now to authController.js!
    // by default, we return false from this method. It means the user has not chnaged the
    // password, after the token was created!
+   // False means NOT changed!
    return false;
 };
 
