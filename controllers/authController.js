@@ -229,9 +229,12 @@ exports.protect = catchAsync(async (req, res, next) => {
 
    // when there is no proplem with any of these above steps, then next() will be called and will be
    // accessed to the route which will be protected => getAllTours()
-   // NOTE: and after that all these above proccesses passed, next() GRANT ACCESS TO PROTECTED
-   // ROUTE => getAllTours in below route:
+   // NOTE: and after that all these above proccesses passed successfully, next() GRANT
+   // ACCESS TO PROTECTED ROUTE => getAllTours in below route:
    // router.route('/').get(protect, getAllTours).post(createTour);
+   // and also when all above processes passed successfully, we can do the following:
+   // at the end, we put the entire user data on the request(req):
+   req.user = freshUser;
    next();
 });
 

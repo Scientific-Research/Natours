@@ -108,7 +108,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       // it means we have to convert passwordChangedAt to second like JWTTimestamp.
       // getTime(); gives us the time in miliseconds and we have to divide it by 1000 for second
       const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
-      console.log(changedTimestamp, JWTTimestamp);
+      // console.log(changedTimestamp, JWTTimestamp);
       // console.log(this.passwordChangedAt, JWTTimestamp);
       return JWTTimestamp < changedTimestamp; // this means NOT changed!
       // JWTTimestamp: the time or date in which token was created!
@@ -124,6 +124,11 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
    // by default, we return false from this method. It means the user has not chnaged the
    // password, after the token was created!
    // False means NOT changed!
+
+   // NOTE: I changed the date in which the password was created for one month later in
+   // Compass and the token was created before this date, that's why this token is old
+   // now and we have to log in again to have a new token and hacker can not do anything
+   // with this old token!
    return false;
 };
 
