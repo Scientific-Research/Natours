@@ -206,6 +206,15 @@ exports.protect = catchAsync(async (req, res, next) => {
    // that has been created before changing the password, should no longer be valid!
    // this must no be accepted to access the protected route!
 
+   // we are backed from userModel.js here in part 4 - we can call this instance method on a User:
+   // the parameter is payload and we need the iat(issued at) from this payload.
+   // changedPasswordAfter is a static instance method which is available on all documents and
+   // we don't need to import it here from userModel.js.
+   // Now, we can test it and we will see the results in Terminal!
+   // we will send decodedPayload.iat as parameter to changedPasswordAfter as static instance method
+   // and 
+   freshUser.changedPasswordAfter(decodedPayload.iat);
+
    // To implement this task, we have to create another instance method, a method that will be
    // available on all documents, documents are instances of a model and this part of code belong
    // to the userModel and not here, that's why we will move to the userModel.js to write this

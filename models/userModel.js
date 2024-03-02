@@ -103,8 +103,17 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
    // otherwise, it will return false => it means user has not chnaged the password after this
    // time stamp!
    if (this.passwordChangedAt) {
-      console.log(this.passwordChangedAt, JWTTimestamp);
+      // NOTE: we have now this at output: 2024-03-03T00:00:00.000Z 1709405591
+      // and we have to convert this 2024-03-03T00:00:00.000Z to seconds like another one!
+      // it means we have to convert passwordChangedAt to second like JWTTimestamp.
+      // getTime(); gives us the time in miliseconds and we have to divide it by 1000 for second
+      const changedTimestamp = (this.passwordChangedAt.getTime() / 1000);
+      console.log(changedTimestamp, JWTTimestamp);
+      // console.log(this.passwordChangedAt, JWTTimestamp);
    }
+
+   // NOTE: to see that if it works, we have to call this method => we will do it in step 4
+   // in authController.js => we go now to authController.js!
    // by default, we return false from this method. It means the user has not chnaged the
    // password, after the token was created!
    return false;
