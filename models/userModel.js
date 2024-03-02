@@ -40,6 +40,13 @@ const userSchema = new mongoose.Schema({
          message: 'Passwords are not the same!',
       },
    },
+   // NOTE: we need to add a date field here to show the time in which the passowrd has been
+   // changed!
+   passwordChangedAt: {
+      type: Date,
+      // Date,
+      // type: new Date('2024-03-01'),
+   },
 });
 
 // NOTE: keep always fat Model and thin Controller philosophy in mind, that's why I write the
@@ -92,10 +99,15 @@ userSchema.methods.correctPassword = async function (candidatePassword, userPass
 userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
    // "this" points to the current document. Now, we have to create a field now in our Schema
    // for that date where the password has been changed!
-   if (this)
-      // by default, we return false from this method. It means the user has not chnaged the
-      // password, after the token was created!
-      return false;
+   // if passwordChangedAt exists, it means sombody changed the password already,
+   // otherwise, it will return false => it means user has not chnaged the password after this
+   // time stamp!
+   if (this.passwordChangedAt) {
+      console.log(this.passwordChangedAt, JWTTimestamp);
+   }
+   // by default, we return false from this method. It means the user has not chnaged the
+   // password, after the token was created!
+   return false;
 };
 
 // NOTE: Creating the model:

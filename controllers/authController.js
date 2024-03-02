@@ -20,12 +20,13 @@ exports.signup = catchAsync(async (req, res, next) => {
    //    try {
    // const newUser = await User.create(req.body);
    // NOTE: using deconstructuring:
-   const { name, email, password, passwordConfirm } = req.body;
+   const { name, email, password, passwordConfirm, passwordChangedAt } = req.body;
    const newUser = await User.create({
       name,
       email,
       password,
       passwordConfirm,
+      passwordChangedAt,
       /*
       name: req.body.name,
       email: req.body.name,
