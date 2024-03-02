@@ -107,7 +107,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       // and we have to convert this 2024-03-03T00:00:00.000Z to seconds like another one!
       // it means we have to convert passwordChangedAt to second like JWTTimestamp.
       // getTime(); gives us the time in miliseconds and we have to divide it by 1000 for second
-      const changedTimestamp = (this.passwordChangedAt.getTime() / 1000);
+      const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
       console.log(changedTimestamp, JWTTimestamp);
       // console.log(this.passwordChangedAt, JWTTimestamp);
    }
