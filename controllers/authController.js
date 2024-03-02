@@ -181,8 +181,8 @@ exports.protect = catchAsync(async (req, res, next) => {
    // and therefore, we issue a new error message and he can not see all of our tours.
 
    // first of all, we check, if the user still exists: we use the id available in payload:
-   // freshUser: it means, he is a new User, it means, we got this user from id in Payload!
-   const freshUser = await User.findById(decodedPayload.id);
+   // currentUser: it means, he is a new User, it means, we got this user from id in Payload!
+   const currentUser = await User.findById(decodedPayload.id);
    // NOTE: when i sign a new user up, then i will have a new token for this use,
    // after that i will delete this user from Databank and will paste this new token in
    // authorization header in 127.0.0.1:3000/api/v1/tours with a Bearer prefix like this:
@@ -194,7 +194,7 @@ exports.protect = catchAsync(async (req, res, next) => {
    // payload, because this user was already deleted in database => that's why will issue an
    // error message.
 
-   if (!freshUser) {
+   if (!currentUser) {
       return next(new AppError('The user belonging to this token does no longer exist.', 401));
    }
 
@@ -214,7 +214,7 @@ exports.protect = catchAsync(async (req, res, next) => {
    // we will send decodedPayload.iat as parameter to changedPasswordAfter as static instance method
    // and
    // 4) Check if user changed the password after the token was created!
-   if (freshUser.changedPasswordAfter(decodedPayload.iat)) {
+   if (currentUser.changedPasswordAfter(decodedPayload.iat)) {
       return next(new AppError('User recently changed the password! Please log in again', 401));
       // when i change the password, i have to log in again, because the last token is no
       // longer valid!
@@ -234,7 +234,7 @@ exports.protect = catchAsync(async (req, res, next) => {
    // router.route('/').get(protect, getAllTours).post(createTour);
    // and also when all above processes passed successfully, we can do the following:
    // at the end, we put the entire user data on the request(req):
-   req.user = freshUser;
+   req.user = currentUser;
    next();
 });
 
