@@ -48,7 +48,9 @@ const handleJsonWebTokenError = (err) => {
 const handleTokenExpiredError = (err) => {
    /**
     * when user in production mode tries to log in with an expired token =>
-    * will get this error message: "invalid signature (invalid token). Please log in again!"
+    * will get this error message: "jwt expired (Your token has expired). Please log in again!"
+    * I set the expiration time in .env file for 5000, meaning it is for 5 seconds!
+    * JWT_EXPIRES_IN=5000
     */
    const message = `${err.message} (Your token has expired). Please log in again!`;
    return new AppError(message, 401);
