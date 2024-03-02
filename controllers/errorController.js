@@ -45,6 +45,15 @@ const handleJsonWebTokenError = (err) => {
    return new AppError(message, 401);
 };
 
+const handleTokenExpiredError = (err) => {
+   /**
+    * when user in production mode tries to log in with an expired token =>
+    * will get this error message: "invalid signature (invalid token). Please log in again!"
+    */
+   const message = `${err.message} (Your token has expired). Please log in again!`;
+   return new AppError(message, 401);
+};
+
 const sendErrorDev = (err, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
@@ -153,6 +162,10 @@ const globalErrorHandler = (err, req, res, next) => {
       if (error.name === 'JsonWebTokenError') {
          // console.log('error:' + error);
          error = handleJsonWebTokenError(error);
+      }
+      // This error happens when the token is already expired:
+      if (error.name === 'TokenExpiredError') {
+         error = handleTokenExpiredError(error);
       }
 
       sendErrorProd(error, res);
