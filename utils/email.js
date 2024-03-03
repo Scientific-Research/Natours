@@ -3,7 +3,7 @@
 // the name nodemailer says: node + mailer => making the mail using node
 const nodemailer = require('nodemailer');
 
-const sendEmail = (options) => {
+const sendEmail = async (options) => {
    // 1) Create a transporter
    const transporter = nodemailer.createTransport({
       //   service: 'Gmail',
@@ -31,5 +31,7 @@ const sendEmail = (options) => {
    };
 
    // 3) Actually send the email
-   transporter.sendMail(mailOptions);
+   await transporter.sendMail(mailOptions);
 };
+
+module.exports = sendEmail; // export as default from this module
