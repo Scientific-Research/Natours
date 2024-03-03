@@ -269,8 +269,10 @@ exports.restrictTo = (...roles) => {
 // first of all, we write these two function and after that, we will register them in
 // userRoutes.js
 
+// The forgot password which will only recieve the email address,
 exports.forgotPassword = (req, res, next) => {};
 
+// The resetPassword which will receive the token as well as new passowrd
 exports.resetPassword = (req, res, next) => {};
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...

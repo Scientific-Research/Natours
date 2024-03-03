@@ -16,6 +16,11 @@ const { signup, login } = authController;
 router.post('/signup', signup);
 router.post('/login', login);
 
+// NOTE: these two routes for forgotPassword and resetPassword functions!
+// first of all, we will start to implement forgotPassword:
+router.post('/forgotPassword', signup);
+router.post('/resetPassword', login);
+
 // Route for users:
 router.route('/').get(getAllUsers).post(createUser);
 // userRouter.route('/').get(getAllUsers).post(createUser);
