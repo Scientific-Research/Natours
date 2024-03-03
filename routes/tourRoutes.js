@@ -17,7 +17,7 @@ const authController = require('../controllers/authController');
 const { getAllTours, getTour, createTour, updateTour, deleteTour, aliasTopTours, getTourStats, getMonthlyPlan } =
    tourController;
 
-const { protect } = authController;
+const { protect, restrictTo } = authController;
 
 // 127.0.0.1:3000/api/v1/tours/top-5-cheap
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
@@ -46,7 +46,18 @@ router.route('/').get(protect, getAllTours).post(createTour);
 // tourRouter.route('/').get(getAllTours).post(createTour);
 // this only for get() => one item, patch() and delete()
 // tourRouter.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
-router.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+router
+   .route('/:id')
+   .get(getTour)
+   .patch(updateTour)
+   // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
+   // as our middleware here! => this is authentication
+   // after that when a person is already logged in, we check if he is allowed to delete a tour or
+   // not? we say here only admin can do that, that's why it is only restricted to admin!
+   .delete(protect, 
+      // restrictTo('admin'), 
+      deleteTour);
 // tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 module.exports = router;
