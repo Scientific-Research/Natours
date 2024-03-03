@@ -265,5 +265,13 @@ exports.restrictTo = (...roles) => {
    };
 };
 
+// NOTE: How to reset a password, when we forgot it. first step:
+// first of all, we write these two function and after that, we will register them in
+// userRoutes.js
+
+exports.forgotPassword = (req, res, next) => {};
+
+exports.resetPassword = (req, res, next) => {};
+
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
 // module.exports = signup;
