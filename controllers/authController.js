@@ -279,6 +279,14 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       return next(new AppError('There is no user with this email address!', 404));
    }
    // 2) Generate the random reset token:
+   // we need to create an instance method on the user to generate the random token,
+   // I will continue to write the code for this section in userModel.js
+   const resetToken = user.createPasswordResetToken();
+   console.log({ randomResetToken: resetToken });
+
+   await user.save({ validateBeforeSave: false }); // this will deactivate all the validators
+   // in our schema!
+
    // 3) Send it to user's email:
 });
 

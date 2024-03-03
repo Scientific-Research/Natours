@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -52,6 +53,15 @@ const userSchema = new mongoose.Schema({
       type: Date,
       // Date,
       // type: new Date('2024-03-01'),
+   },
+   // store the encrypted reset token in database:
+   passwordResetToken: {
+      type: String,
+   },
+   // store the Reset time expiration in database as well
+   // because of security measure => user have only for example 10 minutes to change the password!
+   passwordResetExpires: {
+      type: Date,
    },
 });
 
@@ -136,6 +146,29 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
    // now and we have to log in again to have a new token and hacker can not do anything
    // with this old token!
    return false;
+};
+
+// NOTE: create an static instance method on the user to generate the random token - Part 2 fogotPassword
+userSchema.methods.createPasswordResetToken = function () {
+   // this is a randowm password but not as strong as encrypted password itself which we did
+   // before => we use the built-in crypto randomBytes in Node!
+   const resetToken = crypto.randomBytes(32).toString('hex'); // we convert it at the end to
+   // hexadecimal string!
+
+   // NOTE: how to encrypt it? we use again crypto algorithm:
+   this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+   // we will store this encrypted reset token in database to compare it later with the token
+   // that user provide!
+
+   console.log({ randomResetToken: resetToken }, { encryptedPasswordResetToken: this.passwordResetToken });
+
+   // NOTE: 10 min add to current time:
+   this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // => 10 * 60 * 1000 milisecond
+   // 60 * 1000 = 60000 ms => 60 seconds = 1 min * 10 => 10min
+
+   // NOTE: we need also the plain text token to send it throgh email:(not encrypted one)
+   // => passwordResetToken
+   return resetToken;
 };
 
 // NOTE: Creating the model:
