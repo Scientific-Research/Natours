@@ -21,6 +21,14 @@ const sendEmail = (options) => {
    });
 
    // 2) Define the email options
+   const mailOptions = {
+      from: 'Code With Maximilian <creativemind309@gmail.com>',
+      to: options.email,
+      subject: options.subject,
+      text: options.message,
+      // html:
+      // we simply leave it now as text!
+   };
 
    // 3) Actually send the email
 };
