@@ -270,7 +270,17 @@ exports.restrictTo = (...roles) => {
 // userRoutes.js
 
 // The forgot password which will only recieve the email address,
-exports.forgotPassword = (req, res, next) => {};
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+   // 1) Get user based on POSTed email:
+   // In this point, we don't know the id of User and we know only email from user!
+   // that's why we use findOne() instaed of findById().
+   const user = await User.findOne({ email: req.body.email });
+   if (!user) {
+      return next(new AppError('There is no user with this email address!', 404));
+   }
+   // 2) Generate the random reset token:
+   // 3) Send it to user's email:
+});
 
 // The resetPassword which will receive the token as well as new passowrd
 exports.resetPassword = (req, res, next) => {};
