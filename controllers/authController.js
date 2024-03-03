@@ -285,9 +285,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
    console.log({ randomResetToken: resetToken });
 
    await user.save({ validateBeforeSave: false }); // this will deactivate all the validators
-   // in our schema!
+   // await user.save({ validateBeforeSave: false }); // this will deactivate all the validators
+   // in our schema! without this, Postman gives us all the required fields as error! but with
+   // this we can deactivate all the required fields and prevent from issuing the error!
 
    // 3) Send it to user's email:
+   // NOW, we need to send the password reset token which is already stored in database via email
+   // to the user => we will use a popular solution: Nodemailer
 });
 
 // The resetPassword which will receive the token as well as new passowrd
