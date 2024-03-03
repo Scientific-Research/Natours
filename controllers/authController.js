@@ -238,9 +238,32 @@ exports.protect = catchAsync(async (req, res, next) => {
    // NOTE: when we assign a value to req, we can access to this value in all other middlewares!
    // when we want to pass the data from one middleware to the next one, we can put the data
    // on req.
+   // NOTE: this below statement: req.user = currentUser; is very very important, because we
+   // need it for the next middleware => restrictTo() to extract the role of the logged in
+   // person
    req.user = currentUser;
    next();
 });
+
+// NOTE: implementing the Authorisation middleware for 'admin' and 'lead-guide':
+exports.restrictTo = (...roles) => {
+   return (req, res, next) => {
+      // roles is an array and we use spread operator here: ['admin', 'lead-guide']
+      // if role='user', he doesn't have any permission to delete any thing!
+      // NOTE: in line 241, we have currentUser in req.user, it means we can access the role
+      // property which is in userSchema and it would be this: req.user.role
+      // another important note is: protect middleware is already finished before restrictTo
+      // therefore, currenUser which can be one of the 'user', 'guide', 'lead-guide', 'admin'
+      // is already in req.user.
+      if (!roles.includes(req.user.role)) {
+         // statusCode 403: means forbidden!
+         return next(new AppError('You do not have permission to perform this action', 403));
+      }
+      // NOTE: if user is admin or lead-guide, we will not get any error => we will go to
+      // the next step using below next(), which is middleware handling itself => deleteTour
+      next();
+   };
+};
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
 // module.exports = signup;
