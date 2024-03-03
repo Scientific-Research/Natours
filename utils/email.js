@@ -6,7 +6,10 @@ const nodemailer = require('nodemailer');
 const sendEmail = (options) => {
    // 1) Create a transporter
    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      //   service: 'Gmail',
+      // we use all the following data from mailtrap.io => https://mailtrap.io/inboxes/2651998/messages
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
       auth: {
          user: process.env.EMAIL_USERNAME,
          password: process.env.EMAIL_PASSWORD,
