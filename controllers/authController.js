@@ -393,6 +393,31 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     status: 'success',
     token,
   });
+
+  // NOTE: NOTE: NOTE: HOW WE TEST ALL THE ABOVE PROCEDURES:
+  // 1- In forgotPassword tab: {{URL}}api/v1/users/forgotPassword
+  // , in Postman, we enter the valid email which is available in database and then Send: we will get the success message as following:
+  //   {
+  //    "status": "success",
+  //    "message": "Token sent to email!"
+  // }
+
+  // 2- then we go to the mailtrap.com and my account, i got already an email in inbox, I need to copy the token: b5b53a21f79ee09ac235b36940cf9ec51a757746f50e87c664a842096adfd58f from here: http://127.0.0.1:3000/api/v1/users/resetPassword/b5b53a21f79ee09ac235b36940cf9ec51a757746f50e87c664a842096adfd58f
+
+  // 3- and then, in Postman in Reset Password tab:
+  // I will paste the copied password in URL and SEND, of course with the following info in body:
+  //   {
+  //     "password":"newpass12345",
+  //     "passwordConfirm":"newpass12345"
+  //    }
+
+  // 4- in the below window in Postman, i will get the following info too:
+  //    {
+  //     "status": "success",
+  //     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTQ3N2Q1MzlkOTMxMTIzMzBkNmJmMCIsImlhdCI6MTcwOTU4NTA1OCwiZXhwIjoxNzE3MzYxMDU4fQ.-lIvdt8_tC8F1e6Imx67BFF1rdyT-EniEu7uK3kvdsM"
+  // }
+
+  // 5- this new token will be in Authorization automatically and i don't need to copy and paste it manually! I go to the Get All Tours tab and the token is already there, i just need to click SEND and then all the Tours will be listed in below Window in Psotman.
 });
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
