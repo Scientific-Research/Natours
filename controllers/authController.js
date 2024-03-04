@@ -436,6 +436,14 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     return next(new AppError('The entered password is wrong!', 401));
   }
   // 3) If so, update password
+  // NOTE: when the entered password is correct => we can now update it!
+  // Validation for both of the below passowrd are done automatically in userSchema
+  // Of course, it will be done, when we save the user => await user.save();
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // NOTE: the User.findByIdAndUpdate will not work as intended!
+  // We will not deactivate the validation, because we need it now to check whether password and passwordConfirm are the same or not!
   // 4) Log user in with the new password that was just updated, send JWT
 });
 
