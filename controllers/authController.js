@@ -421,7 +421,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 // NOTE: we want to allow a logged in user to update his password:
-exports.updatePassword = async (req, res, next) => {
+exports.updatePassword = catchAsync(async (req, res, next) => {
   // the user has to enter his current password to make sure this user posseses the accont and not another person wants to update the password!
   // 1) Get user from collection
   // line 263: req.user = currentUser => req.user.id means currentUser.id
@@ -429,9 +429,15 @@ exports.updatePassword = async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
   // NOTE: we need the password here, because we want to compare it with the one which is already stored in the database
   // 2) Check if posted current password is correct
+  // NOTE: we use the static instance method which is called => correctPassword and is available in userModel.js. This method has two inputs: candidatePassword and userPassword
+  // NOTE: this mthod: correctPassword is available on all user documents and we can use it here too: candidatePassword => req.body.passwordCurrent , userPassword => user.password
+  // StatusCode 401: unauthorized!
+  if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
+    return next(new AppError('The entered password is wrong!', 401));
+  }
   // 3) If so, update password
   // 4) Log user in with the new password that was just updated, send JWT
-};
+});
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
 // module.exports = signup;
