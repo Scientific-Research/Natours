@@ -366,7 +366,22 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   });
 
   // 2) If token has not expired, and there is user, set the new password:
- 
+  // if there is no user, it means the token has been already expired!
+  // 400 is bad request!
+  if (!user) {
+    return next(new AppError('The token is invalid or has expired!', 400));
+  }
+
+  // NOW, if there is no errors in all above steps => we can now set the password for the user:
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+
+  // and now let us delete the reset token and reset expires:
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+
+  // and now, we have to save the above values in database:
+  await user.save(); // we don't want to deactivate the validator now, because we want that validator validate our above parameters!
 
   // 3) Update changedPasswordAt property for the user:
   // 4) Log the user in, send JWT
