@@ -384,6 +384,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save(); // we don't want to deactivate the validator now, because we want that validator validate our above parameters!
 
   // 3) Update changedPasswordAt property for the user:
+  // we will do this section in userModel.js as a pre save method.
 
   // 4) Log the user in, send JWT:
   const token = signToken(user._id);
