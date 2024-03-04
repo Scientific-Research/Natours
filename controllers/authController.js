@@ -461,7 +461,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // NOTE: this mthod: correctPassword is available on all user documents and we can use it here too: candidatePassword => req.body.passwordCurrent , userPassword => user.password
   // StatusCode 401: unauthorized!
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
-    return next(new AppError('The entered password is wrong!', 401));
+    return next(new AppError('The current password is wrong!', 401));
   }
 
   // 3) If so, update password
