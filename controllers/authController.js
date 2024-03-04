@@ -384,7 +384,14 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save(); // we don't want to deactivate the validator now, because we want that validator validate our above parameters!
 
   // 3) Update changedPasswordAt property for the user:
-  // 4) Log the user in, send JWT
+
+  // 4) Log the user in, send JWT:
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
 });
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
