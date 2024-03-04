@@ -420,5 +420,18 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 5- this new token will be in Authorization automatically and i don't need to copy and paste it manually! I go to the Get All Tours tab and the token is already there, i just need to click SEND and then all the Tours will be listed in below Window in Psotman.
 });
 
+// NOTE: we want to allow a logged in user to update his password:
+exports.updatePassword = async (req, res, next) => {
+  // the user has to enter his current password to make sure this user posseses the accont and not another person wants to update the password!
+  // 1) Get user from collection
+  // line 263: req.user = currentUser => req.user.id means currentUser.id
+  // in userModel.js in Schema => select: false, that's why we have to include it explicitly in below statement! otherwise, we will not get it at output!
+  const user = await User.findById(req.user.id).select('+password');
+  // NOTE: we need the password here, because we want to compare it with the one which is already stored in the database
+  // 2) Check if posted current password is correct
+  // 3) If so, update password
+  // 4) Log user in with the new password that was just updated, send JWT
+};
+
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
 // module.exports = signup;
