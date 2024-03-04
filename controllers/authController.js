@@ -423,11 +423,13 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 // NOTE: we want to allow a logged in user to update his password:
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // the user has to enter his current password to make sure this user posseses the accont and not another person wants to update the password!
+
   // 1) Get user from collection
   // line 263: req.user = currentUser => req.user.id means currentUser.id
   // in userModel.js in Schema => select: false, that's why we have to include it explicitly in below statement! otherwise, we will not get it at output!
   const user = await User.findById(req.user.id).select('+password');
   // NOTE: we need the password here, because we want to compare it with the one which is already stored in the database
+
   // 2) Check if posted current password is correct
   // NOTE: we use the static instance method which is called => correctPassword and is available in userModel.js. This method has two inputs: candidatePassword and userPassword
   // NOTE: this mthod: correctPassword is available on all user documents and we can use it here too: candidatePassword => req.body.passwordCurrent , userPassword => user.password
@@ -435,6 +437,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   if (!(await user.correctPassword(req.body.passwordCurrent, user.password))) {
     return next(new AppError('The entered password is wrong!', 401));
   }
+
   // 3) If so, update password
   // NOTE: when the entered password is correct => we can now update it!
   // Validation for both of the below passowrd are done automatically in userSchema
@@ -444,7 +447,13 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
   // NOTE: the User.findByIdAndUpdate will not work as intended!
   // We will not deactivate the validation, because we need it now to check whether password and passwordConfirm are the same or not!
+
   // 4) Log user in with the new password that was just updated, send JWT
+  const token = signToken(user._id);
+  res.status(200).json({
+    status: 'success',
+    token,
+  });
 });
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
