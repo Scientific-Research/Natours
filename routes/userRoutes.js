@@ -6,8 +6,16 @@ const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
 // using deconstructuring:
-const { getAllUsers, getUser, createUser, updateUser, deleteUser } = userController;
-const { signup, login, forgotPassword, resetPassword } = authController;
+const { getAllUsers, getUser, createUser, updateUser, deleteUser } =
+  userController;
+const {
+  protect,
+  signup,
+  login,
+  forgotPassword,
+  resetPassword,
+  updatePassword,
+} = authController;
 
 // Route for auths:
 // NOTE: for signup only 'post' (send the user data) make sense and 'get' or 'patch'
@@ -20,6 +28,9 @@ router.post('/login', login);
 // first of all, we will start to implement forgotPassword:
 router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
+
+// updateMyPassword works only for logged in users, that's why we have to put protect in the route which puts the user object on our request object!
+router.patch('/updateMyPassword', protect, updatePassword);
 
 // Route for users:
 router.route('/').get(getAllUsers).post(createUser);
