@@ -19,7 +19,7 @@ router.post('/login', login);
 // NOTE: these two routes for forgotPassword and resetPassword functions!
 // first of all, we will start to implement forgotPassword:
 router.post('/forgotPassword', forgotPassword);
-router.post('/resetPassword', resetPassword);
+router.patch('/resetPassword/:token', resetPassword);
 
 // Route for users:
 router.route('/').get(getAllUsers).post(createUser);

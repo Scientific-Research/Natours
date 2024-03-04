@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const sendEmail = require('../utils/email');
 
 // NOTE: create a function for Token:
 const signToken = (id) => {
@@ -292,6 +293,35 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
    // 3) Send it to user's email:
    // NOW, we need to send the password reset token which is already stored in database via email
    // to the user => we will use a popular solution: Nodemailer
+   // NOTE: here we send the plain original resetToken and not the encrypted one!
+   const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword/${resetToken}`;
+
+   const message = `Forgot your password? Submit a PATCH request with your new password and 
+   passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+
+   try {
+      await sendEmail({
+         email: user.email,
+         // or below parameter => these are the same!
+         // email: req.body.email,
+         subject: 'Your password reset token (valid for 10 min)',
+         message,
+      });
+
+      res.status(200).json({
+         status: 'success',
+         message: 'Token sent to email!',
+      });
+   } catch (err) {
+      console.log(err.message);
+
+      // NOTE: we reset both the token and expires properties here!
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false }); // this will deactivate all the validators
+
+      return next(new AppError('There was an error sending the email. Try again later!'), 500);
+   }
 });
 
 // The resetPassword which will receive the token as well as new passowrd
