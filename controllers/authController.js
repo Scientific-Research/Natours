@@ -16,17 +16,19 @@ const signToken = (id) => {
   // });
 };
 
-// NOTE: create
+// NOTE: create a complete function which takes three parameters: user, statusCode, res
+// to log user in with the new password that was just updated and then send JWT
+// user has id, different statusCodes and res to send the response to the user!
+// NOTE: we go now to other middleware functions and replace according to this three parameters!
 const createSendToken = (user, statusCode, res) => {
-     // here we use the newly created Token function:
-  const token = signToken(newUser._id);
+  const token = signToken(user._id);
 
-  res.status(201).json({
+  res.status(statusCode).json({
     // 201 is used for creating the user!
     status: 'success',
     // NOTE: and now, the token is ready and we have to send it to the client before user:
     token,
-    User: newUser,
+    user,
   });
 };
 
@@ -65,16 +67,19 @@ exports.signup = catchAsync(async (req, res, next) => {
   // const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
   //    expiresIn: process.env.JWT_EXPIRES_IN,
   // });
-//   // here we use the newly created Token function:
-//   const token = signToken(newUser._id);
+  // here we use the newly created Token function:
 
-//   res.status(201).json({
-//     // 201 is used for creating the user!
-//     status: 'success',
-//     // NOTE: and now, the token is ready and we have to send it to the client before user:
-//     token,
-//     User: newUser,
-//   });
+  // NOTE: we replace the below statements with above createSendToken function, and then we will get ride of these statements!
+  createSendToken(newUser, 201, res);
+  //   const token = signToken(newUser._id);
+
+  //   res.status(201).json({
+  //     // 201 is used for creating the user!
+  //     status: 'success',
+  //     // NOTE: and now, the token is ready and we have to send it to the client before user:
+  //     token,
+  //     User: newUser,
+  //   });
   //    } catch (err) {
   //       status: 'fail';
   //       message: 'Error creating a new User' + err.message;
@@ -128,12 +133,16 @@ exports.login = catchAsync(async (req, res, next) => {
   // 3) If everything is ok, send the token to the client:
   // this is our faked Token which send back to client and we get it in Postman, when we have
   // both email and password available! Otherwise, we will get the above error message in Postman!
-  // const token = 'Our faked Token';
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+
+  // NOTE: we replace the below statements with above createSendToken function, and then we will get ride of these statements!
+  createSendToken(user, 200, res);
+
+  //   // const token = 'Our faked Token';
+  //   const token = signToken(user._id);
+  //   res.status(200).json({
+  //     status: 'success',
+  //     token,
+  //   });
 });
 
 // NOTE: creating the protect middleware to preventing the unauthorized access(not logged in user)
@@ -401,12 +410,15 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // we will do this section in userModel.js as a pre save method.
 
   // 4) Log the user in, send JWT:
-  const token = signToken(user._id);
+  // NOTE: we replace the below statements with above createSendToken function, and then we will get ride of these statements!
+  createSendToken(user, 200, res);
 
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  //   const token = signToken(user._id);
+
+  //   res.status(200).json({
+  //     status: 'success',
+  //     token,
+  //   });
 
   // NOTE: NOTE: NOTE: HOW WE TEST ALL THE ABOVE PROCEDURES:
   // 1- In forgotPassword tab: {{URL}}api/v1/users/forgotPassword
@@ -463,11 +475,14 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // We will not deactivate the validation, because we need it now to check whether password and passwordConfirm are the same or not!
 
   // 4) Log user in with the new password that was just updated, send JWT
-  const token = signToken(user._id);
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+
+  // NOTE: we replace the below statements with above createSendToken function, and then we will get ride of these statements!
+  createSendToken(user, 200, res);
+  //   const token = signToken(user._id);
+  //   res.status(200).json({
+  //     status: 'success',
+  //     token,
+  //   });
 });
 
 // NOTE: this module.exports = signup doesn't work here, we have use exports.signup = ...
