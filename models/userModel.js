@@ -63,6 +63,13 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: {
     type: Date,
   },
+  active: {
+    type: Boolean,
+    // every new created user is active as default! => an active user as default!
+    default: true,
+    // and we don't want to show it at output! => we don't want to show it to the user!
+    select: false,
+  },
 });
 
 // NOTE: keep always fat Model and thin Controller philosophy in mind, that's why I write the
