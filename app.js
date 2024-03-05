@@ -19,6 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // NOTE: we start by creating a limiter:
+// this will deny some services and especially is useful when a hacker tries to guess our credientials data like password from some yousers after too many requests! We can change the value for max to get the right one for our application.
 const limiter = rateLimit({
   // we specify here how many requests per IP we are going to allow in a certain amount of time:
   // below settings allows 100 requests from same IP in one hour:
@@ -26,6 +27,7 @@ const limiter = rateLimit({
   // Window milisecond:
   windowMs: 60 * 60 * 1000,
   // when it is more than 100 requests in one hour => we will receive an error message:
+  // StatusCode for Too many Requests is: 429 => Postman shows us this StatusCode
   message: 'Too many requests from this IP, please try again in an hour!',
 });
 
