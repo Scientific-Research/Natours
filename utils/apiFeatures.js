@@ -56,6 +56,7 @@ class APIFeatures {
       // split can works only on string and not array, that's why we receive an error in Postman.
       // Hackers make use of that: they enter two times this word: sort and postman undesrtand that as an array, split does not understand array and at the end, we will have an error!
       // NOTE: we will use a package to remove such duplicate fields!
+      // this package called: hpp => Http Parameter Polution
 
       // how to bring the search query items together with space instead of comma:
       // const sortBy = req.query.sort.split(',').join(' ');
