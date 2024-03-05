@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -60,6 +61,11 @@ app.use(mongoSanitize());
 // NOTE: Data sanitization against XSS
 // we have to install this package: $ npm i xss-clean =>conver html symbols to html entities, for example in Postman:  "name":"<div id='bad-code'>Name</div>", =>  "name": "&lt;div id='bad-code'>Name&lt;/div>",
 app.use(xss());
+
+// NOTE: hpp package => Http Parameter Pollution => to remove the duplication of fields problem in URL:
+// Prevent Parameter Pollution => we have to use it at the end of other middlewares, because it clear up query string:
+// {{URL}}api/v1/tours?sort=duration&sort=price => this solution takes only the last one and sort the prices ascendly and doesn't consider the first sort which is for duration, and therfore, the error will be gone!
+app.use(hpp());
 
 // how to show the static files using middleware in express:
 // Serving static files:
