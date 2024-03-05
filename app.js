@@ -42,10 +42,19 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // our first built-in middleware function
-// Body parser, reading data from body into req.body:
 // NOTE: when the body is larger than 10 kilo bytes, it will not be accepted! => limit amounts of the data that comes into body:
+// Body parser, reading data from body into req.body:
 // app.use(express.json());
 app.use(express.json({ limit: '10kb' }));
+
+// NOTE: Data sanitization against NoSQL query injection:
+
+// {
+//    "email": {"$gt":""}, => this gives true, that's why we can login when there is email.
+//    "password": "newPassword123"
+// }
+
+// NOTE: Data sanitization against XSS
 
 // how to show the static files using middleware in express:
 // Serving static files:
