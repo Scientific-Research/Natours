@@ -29,6 +29,9 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour!',
 });
 
+// NOTE: we want to only apply this limiter to the routes starts with /api
+app.use('/api', limiter);
+
 // our first built-in middleware function
 app.use(express.json());
 // how to show the static files using middleware in express:
