@@ -55,9 +55,11 @@ app.use(express.json({ limit: '10kb' }));
 //    "email": {"$gt":""}, => this {"$gt":""} gives always true, that's why we can login when there is no email. it means we need to know only password, then we can loggin and we don't need to know the email.
 //    "password": "newPassword123"
 // }
+app.use(mongoSanitize());
 
 // NOTE: Data sanitization against XSS
-// we have to install this package: $ npm i xss-clean
+// we have to install this package: $ npm i xss-clean =>conver html symbols to html entities, for example in Postman:  "name":"<div id='bad-code'>Name</div>", =>  "name": "&lt;div id='bad-code'>Name&lt;/div>",
+app.use(xss());
 
 // how to show the static files using middleware in express:
 // Serving static files:
