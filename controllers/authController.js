@@ -23,6 +23,22 @@ const signToken = (id) => {
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
+  const cookieOptions = {
+    // we have to convert the 90 days to milisecond:
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    // secure: true, //=> it will send the data when the communication is encrypted!
+    httpOnly: true, // Browser receives the cookie, stores and send it back with every request
+  };
+  // NOTE: we are now in development mode, that's why secure would be set to false!
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
+  }
+
+  // NOTE: to create Cookie and send it to the Client
+  res.cookie('jwt', token, cookieOptions);
+
   res.status(statusCode).json({
     // 201 is used for creating the user!
     status: 'success',
