@@ -70,6 +70,19 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+// NOTE: to delete the user, only thing that we have to do is to set the active flag to the false! we have created this active feature already in userSchema and is active as default!
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  // NOTE: for deleting an account, we have to be already logged in! that's why id belong to the user is already stored conveniently in req.user.id.
+  // we add also the data that we want to update here: { active: false }
+  const deleteMe = await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(200).json({
+    status: 'success',
+    deletedUser: deleteMe,
+  });
+});
+
 exports.getUser = (req, res) => {
   res.status(500).json({
     data: {
