@@ -2,6 +2,23 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
+// NOTE: Implementing this function to keep only name and email and filter out all the rest!
+// it takes obj as object and allowedFields: other filelds as an array containing name and email!
+// NOTE: obj is an Object and allowedFields is an array!
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  // we have to loop through object => req.body and check if the field is an allowed filed => and if it is, simply add it to the new object and at the end, we will return that object!
+  // NOTE: easiest way to loop through an object in JS is to use:
+  // Object.keys(obj).forEach((el)=> {} - this Object.keys(obj) gives us all the keys of Obj as our object, which will be fields for forEach() to go through them!
+  // newObj[el] = obj[el]; it means, we make the new field with the same name in newObj[] and with the same name in our obj[]
+  Object.keys(obj).forEach((el) => {
+    if (allowedFields.includes(el)) {
+      newObj[el] = obj[el];
+    }
+  });
+  return newObj;
+};
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   // res.status(500).json({
   //    data: {
@@ -36,6 +53,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // x would be only the name and email and nothing else!!! - To do that, we have to use filter to allow only these two parameters to chnage and not other parameters!
   // NOTE: with filterObj, we want to keep only name and email and filter out all the rest!
   const filteredBody = filterObj(req.body, 'name', 'email');
+
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true, // send the new updated results back not the old one!
     runValidators: true, // Mongoose validate our input data like password,...
