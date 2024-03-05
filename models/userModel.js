@@ -121,6 +121,19 @@ userSchema.pre('save', function (next) {
   next();
 });
 
+// NOTE: we want that the deleted user not be displayed in Postman, after it is deleted!
+// actually it will not be deleted in database, the active will be set to false in database!
+// we will use pre query here! => something happens before the query take palce!
+// we want that this query applies to every middleware starts with find for eaxmple: findByIdAndUpdate, findAndDelete, find, ...
+// ^ means words or strings start with find.
+userSchema.pre(/^find/, function (next) {
+  // this is a query middleware => it means it points to the current query
+  // for example in getAllUsers() we use find() query and before it search for all users, we want to add something and say that: search only for the user with active : true, don't serach for those with active: false => Postman will display users only with active : true which is default!
+  // This is a pre query => it will take into consideration to search for the users with active:true and then start to search!
+  this.find({ active: true });
+  next();
+});
+
 // NOTE: check if the entered password is the same with the stored one in database:
 // we use instance method:
 userSchema.methods.correctPassword = async function (
