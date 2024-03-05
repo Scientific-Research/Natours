@@ -22,7 +22,7 @@ const signToken = (id) => {
 // NOTE: we go now to other middleware functions and replace according to this three parameters!
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
-
+  // NOTE: here is to create some options for Cookie:
   const cookieOptions = {
     // we have to convert the 90 days to milisecond:
     expires: new Date(
@@ -31,12 +31,13 @@ const createSendToken = (user, statusCode, res) => {
     // secure: true, //=> it will send the data when the communication is encrypted!
     httpOnly: true, // Browser receives the cookie, stores and send it back with every request
   };
+
   // NOTE: we are now in development mode, that's why secure would be set to false!
   if (process.env.NODE_ENV === 'production') {
     cookieOptions.secure = true;
   }
 
-  // NOTE: to create Cookie and send it to the Client
+  // NOTE: here is to create Cookie itself: to create Cookie and send it to the Client
   res.cookie('jwt', token, cookieOptions);
 
   res.status(statusCode).json({
