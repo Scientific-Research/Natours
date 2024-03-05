@@ -46,7 +46,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
       )
     );
   }
-  // 2) Update user document
+  // 2) Filtered out unwanted fields names that are not allowed to be updated!
   // for non-sensitive data like name and email, we can use findByIdAndUpdate.
   // but for password as sensitive data, we use findOne() and then user.save()!
   // NOTE: x means we don't want to update all the data in body, for example: body.role:'admin' and it would be a catastrophe, when somebody can change his rule from a normal user to admin.
@@ -54,6 +54,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   // NOTE: with filterObj, we want to keep only name and email and filter out all the rest!
   const filteredBody = filterObj(req.body, 'name', 'email');
 
+  // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true, // send the new updated results back not the old one!
     runValidators: true, // Mongoose validate our input data like password,...
@@ -65,7 +66,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: '',
+    updatedUser: updatedUser,
   });
 });
 
