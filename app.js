@@ -50,9 +50,10 @@ app.use(express.json({ limit: '10kb' }));
 // NOTE: Data sanitization against NoSQL query injection:
 
 // {
-//    "email": {"$gt":""}, => this gives true, that's why we can login when there is email.
+//    "email": {"$gt":""}, => this {"$gt":""} gives always true, that's why we can login when there is no email. it means we need to know only password, then we can loggin and we don't need to know the email.
 //    "password": "newPassword123"
 // }
+// we have to install this package:express-mongo-sanitize
 
 // NOTE: Data sanitization against XSS
 
