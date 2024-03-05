@@ -130,7 +130,10 @@ userSchema.pre(/^find/, function (next) {
   // this is a query middleware => it means it points to the current query
   // for example in getAllUsers() we use find() query and before it search for all users, we want to add something and say that: search only for the user with active : true, don't serach for those with active: false => Postman will display users only with active : true which is default!
   // This is a pre query => it will take into consideration to search for the users with active:true and then start to search!
-  this.find({ active: true });
+  // NOTE: we have to use this regular expression:{ $ne: false }, this { active: true } will not work, because in database, we didn't mention explicitly which one has { active: true }
+  // this.find({ active: true });
+  // NOTE: we are not deleting any document, we are just marking them as inactive!
+  this.find({ active: { $ne: false } });
   next();
 });
 
