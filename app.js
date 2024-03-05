@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -10,16 +11,22 @@ const globalErrorHandler = require('./controllers/errorController');
 const app = express();
 
 // 1) GLOBAL MIDDLEWARES
+// NOTE: to set some security for headers: I put it here at the beginning of the middlewares, where all the other comes later and get the security headers!
+// Set Security HTTP headers:
+app.use(helmet());
+
 console.log(process.env.NODE_ENV);
 
 // WHEN WE ARE ONLY AND ONLY IN DEVELOPMENT MODE; MORGAN WILL SHOW US THIS INFO: GET /api/v1/tours/9 200 5.404 ms - 142
 // IN VSCODE TERMINAL. WHEN I CHANGE IT TO PRODUCTION; IT WILL NOT SHOW US SUCH INFO.
+// Development logging:
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
 }
 
 // NOTE: we start by creating a limiter:
 // this will deny some services and especially is useful when a hacker tries to guess our credientials data like password from some yousers after too many requests! We can change the value for max to get the right one for our application.
+// Limit requests from same API:
 const limiter = rateLimit({
   // we specify here how many requests per IP we are going to allow in a certain amount of time:
   // below settings allows 100 requests from same IP in one hour:
@@ -35,8 +42,13 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 
 // our first built-in middleware function
-app.use(express.json());
+// Body parser, reading data from body into req.body:
+// NOTE: when the body is larger than 10 kilo bytes, it will not be accepted! => limit amounts of the data that comes into body:
+// app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
+
 // how to show the static files using middleware in express:
+// Serving static files:
 app.use(express.static(`${__dirname}/public`)); //=> http://127.0.0.1:3000/overview.html
 // OR: http://127.0.0.1:3000/img/pin.png
 
@@ -47,6 +59,7 @@ app.use(express.static(`${__dirname}/public`)); //=> http://127.0.0.1:3000/overv
 // });
 
 // 2- create our own middleware function: => our global route handler before other ones:
+// Test middleware:
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   // console.log(x); ONLY FOR TEST THE UNCAUGHT EXCEPTIONS IN SERVER.JS
