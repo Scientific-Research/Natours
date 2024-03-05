@@ -1,5 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
@@ -7,14 +9,26 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 
-// 1) MIDDLEWARES
+// 1) GLOBAL MIDDLEWARES
 console.log(process.env.NODE_ENV);
 
 // WHEN WE ARE ONLY AND ONLY IN DEVELOPMENT MODE; MORGAN WILL SHOW US THIS INFO: GET /api/v1/tours/9 200 5.404 ms - 142
 // IN VSCODE TERMINAL. WHEN I CHANGE IT TO PRODUCTION; IT WILL NOT SHOW US SUCH INFO.
 if (process.env.NODE_ENV === 'development') {
-   app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
+  app.use(morgan('dev')); // one output as an example: GET /api/v1/tours/9 200 5.404 ms - 142
 }
+
+// NOTE: we start by creating a limiter:
+const limiter = rateLimit({
+  // we specify here how many requests per IP we are going to allow in a certain amount of time:
+  // below settings allows 100 requests from same IP in one hour:
+  max: 100,
+  // Window milisecond:
+  windowMs: 60 * 60 * 1000,
+  // when it is more than 100 requests in one hour => we will receive an error message:
+  message: 'Too many requests from this IP, please try again in an hour!',
+});
+
 // our first built-in middleware function
 app.use(express.json());
 // how to show the static files using middleware in express:
@@ -29,31 +43,31 @@ app.use(express.static(`${__dirname}/public`)); //=> http://127.0.0.1:3000/overv
 
 // 2- create our own middleware function: => our global route handler before other ones:
 app.use((req, res, next) => {
-   req.requestTime = new Date().toISOString();
-   // console.log(x); ONLY FOR TEST THE UNCAUGHT EXCEPTIONS IN SERVER.JS
-   // when we send a request in Postman and we are in Production mode, it goes to the globalErrorHandler
-   // and then production mode and this error doesn't belong to these three kinds of error => this
-   // is not a known error, it is not an operational error => it doesn't go to the appError and
-   // finally it goes to the else section which is for unknown errors and gives us such message
-   // in Terminal: ERROR!!! { statusCode: 500, status: 'error' } and in postman: status: 'error',
-   // message: 'Something went very wrong!',
-   // but in development mode: it gives us a long message in Postman with details and in Terminal:
-   // this message: GET /api/v1/tours 500 5.520 ms - 1294
+  req.requestTime = new Date().toISOString();
+  // console.log(x); ONLY FOR TEST THE UNCAUGHT EXCEPTIONS IN SERVER.JS
+  // when we send a request in Postman and we are in Production mode, it goes to the globalErrorHandler
+  // and then production mode and this error doesn't belong to these three kinds of error => this
+  // is not a known error, it is not an operational error => it doesn't go to the appError and
+  // finally it goes to the else section which is for unknown errors and gives us such message
+  // in Terminal: ERROR!!! { statusCode: 500, status: 'error' } and in postman: status: 'error',
+  // message: 'Something went very wrong!',
+  // but in development mode: it gives us a long message in Postman with details and in Terminal:
+  // this message: GET /api/v1/tours 500 5.520 ms - 1294
 
-   // console.log(req.headers);
-   // NOTE: in Postman => 127.0.0.1:3000/api/v1/tours => we set the test-header = maximilian
-   // and when we hit the Send => it gives us the following information:
-   // {
-   //    'test-header': 'maximilian',
-   //    'user-agent': 'PostmanRuntime/7.36.3',
-   //    accept: '*/*',
-   //    'postman-token': 'ccac21cf-9dae-4507-b362-99dd1d66908c',
-   //    host: '127.0.0.1:3000',
-   //    'accept-encoding': 'gzip, deflate, br',
-   //    connection: 'keep-alive'
-   // }
+  // console.log(req.headers);
+  // NOTE: in Postman => 127.0.0.1:3000/api/v1/tours => we set the test-header = maximilian
+  // and when we hit the Send => it gives us the following information:
+  // {
+  //    'test-header': 'maximilian',
+  //    'user-agent': 'PostmanRuntime/7.36.3',
+  //    accept: '*/*',
+  //    'postman-token': 'ccac21cf-9dae-4507-b362-99dd1d66908c',
+  //    host: '127.0.0.1:3000',
+  //    'accept-encoding': 'gzip, deflate, br',
+  //    connection: 'keep-alive'
+  // }
 
-   next();
+  next();
 });
 
 // Refactoring
@@ -80,27 +94,27 @@ app.use('/api/v1/tours', tourRouter);
 // will receive always an Error Message!
 // req.originalUrl: means the requested URL
 app.all('*', (req, res, next) => {
-   // res.status(404).json({
-   //    status: 'fail',
-   //    message: `Can't find ${req.originalUrl} on this Server!`,
-   // });
+  // res.status(404).json({
+  //    status: 'fail',
+  //    message: `Can't find ${req.originalUrl} on this Server!`,
+  // });
 
-   // we produce an error:
-   // NOTE: I comment these part out, because i want to use our new created appError.js in next():
-   // const err = new Error(`Can't find ${req.originalUrl} on this Server!`); // we use built-in error constructor
-   // err.sttaus = 'fail';
-   // err.statusCode = 404;
-   // when next() recieve a parameter, express understood that, an error happened!
-   // it doesn't matter which parameter, express consider it as an Error!
-   // and then express will skip all other middlewares in between and go straight to our
-   // global Error Handler for entire project which is located below!
-   // At the moment, there is no other middleware in between, but if would be somes,
-   // it will does the same! or even in other files in our project!
-   // next(err);
-   // NOTE: instead of using above err Code, we use our newly created AppError function in next():
-   next(new AppError(`Can't find ${req.originalUrl} on this Server!`, 404));
-   // the constructor in AppError function needs two oarameters: constructor(message, statusCode)
-   // and both of them are there now in AppError().
+  // we produce an error:
+  // NOTE: I comment these part out, because i want to use our new created appError.js in next():
+  // const err = new Error(`Can't find ${req.originalUrl} on this Server!`); // we use built-in error constructor
+  // err.sttaus = 'fail';
+  // err.statusCode = 404;
+  // when next() recieve a parameter, express understood that, an error happened!
+  // it doesn't matter which parameter, express consider it as an Error!
+  // and then express will skip all other middlewares in between and go straight to our
+  // global Error Handler for entire project which is located below!
+  // At the moment, there is no other middleware in between, but if would be somes,
+  // it will does the same! or even in other files in our project!
+  // next(err);
+  // NOTE: instead of using above err Code, we use our newly created AppError function in next():
+  next(new AppError(`Can't find ${req.originalUrl} on this Server!`, 404));
+  // the constructor in AppError function needs two oarameters: constructor(message, statusCode)
+  // and both of them are there now in AppError().
 });
 
 // NOTE: defining a global Error Handler for entire project
