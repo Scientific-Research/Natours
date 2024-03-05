@@ -6,8 +6,9 @@ const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
 // using deconstructuring:
-const { getAllUsers, getUser, createUser, updateUser, deleteUser } =
+const { getAllUsers, getUser, createUser, updateUser, deleteUser, updateMe } =
   userController;
+
 const {
   protect,
   signup,
@@ -39,5 +40,8 @@ router.route('/').get(getAllUsers).post(createUser);
 router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 // userRouter.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 // app.route('/api/v1/users/:id').get(getUser).patch(updateUser).delete(deleteUser);
+
+// NOTE: protect: it means only logged in users can update the user information!
+router.patch('/updateMe', protect, updateMe);
 
 module.exports = router;
