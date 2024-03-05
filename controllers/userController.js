@@ -18,7 +18,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 // NOTE: we want to update the currently logged in User: => updating name and email address:
-exports.updateMe = (req, res, next) => {
+exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
   // 400 is for bad request!
   if (req.body.password || req.body.passwordConfirm) {
@@ -30,11 +30,26 @@ exports.updateMe = (req, res, next) => {
     );
   }
   // 2) Update user document
+  // for non-sensitive data like name and email, we can use findByIdAndUpdate.
+  // but for password as sensitive data, we use findOne() and then user.save()!
+  // NOTE: x means we don't want to update all the data in body, for example: body.role:'admin' and it would be a catastrophe, when somebody can change his rule from a normal user to admin.
+  // x would be only the name and email and nothing else!!! - To do that, we have to use filter to allow only these two parameters to chnage and not other parameters!
+  // NOTE: with filterObj, we want to keep only name and email and filter out all the rest!
+  const filteredBody = filterObj(req.body, 'name', 'email');
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true, // send the new updated results back not the old one!
+    runValidators: true, // Mongoose validate our input data like password,...
+  });
+
+  //   user.name = 'maximilian';
+  // await user.save({ validateBeforeSave: false }); // this will deactivate all the validators
+  //   await user.save();
+
   res.status(200).json({
     status: 'success',
     message: '',
   });
-};
+});
 
 exports.getUser = (req, res) => {
   res.status(500).json({
