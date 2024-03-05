@@ -2,6 +2,8 @@ const express = require('express');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -48,14 +50,14 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10kb' }));
 
 // NOTE: Data sanitization against NoSQL query injection:
-
+// we have to install this package:express-mongo-sanitize
 // {
 //    "email": {"$gt":""}, => this {"$gt":""} gives always true, that's why we can login when there is no email. it means we need to know only password, then we can loggin and we don't need to know the email.
 //    "password": "newPassword123"
 // }
-// we have to install this package:express-mongo-sanitize
 
 // NOTE: Data sanitization against XSS
+// we have to install this package: $ npm i xss-clean
 
 // how to show the static files using middleware in express:
 // Serving static files:
