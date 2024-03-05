@@ -40,6 +40,9 @@ const createSendToken = (user, statusCode, res) => {
   // NOTE: here is to create Cookie itself: to create Cookie and send it to the Client
   res.cookie('jwt', token, cookieOptions);
 
+  // Remove password from output => it means we don't see it in Postman anymore, when we signing up.
+  user.password = undefined;
+
   res.status(statusCode).json({
     // 201 is used for creating the user!
     status: 'success',
