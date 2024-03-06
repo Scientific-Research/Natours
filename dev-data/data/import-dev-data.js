@@ -43,7 +43,9 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/tours.json`, 'utf-8')
 );
 
-// IMPORT DATA INTO MONGODB:
+// IMPORT DATA INTO MONGODB: => first of all, we have to delete the old data and then load or import the new data in MongoDB!
+// NOTE: This is the command in Terminal to import the data after deleting them in database:
+// node ./dev-data/data/import-dev-data.js --import
 const importData = async () => {
   try {
     const importedData = await Tour.create(tours);
@@ -61,7 +63,9 @@ const importData = async () => {
 };
 // importData();
 
-// DELETE ALL DATA FROM DB:
+// DELETE ALL DATA FROM DB: => first of all, we have to delete the old data and then load or import the new data in MongoDB!
+// NOTE: this is the command in Terminal to delete the data:
+// node ./dev-data/data/import-dev-data.js --delete
 const deleteAllDataFromDB = async () => {
   try {
     await Tour.deleteMany();
