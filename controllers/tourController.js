@@ -112,7 +112,21 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   // NOTE: we can write the methods like chain here because of "this" word in => return this,
   // it sends always entire object to the next method and at the end we have the entire processed
   // Object after filtering, sorting, limitfields and pagination:
-  const features = new APIFeatures(Tour.find(), req.query)
+  //   const features = new APIFeatures(Tour.find(), req.query)
+  // NOTE: I only added this section to above code, to display complete info for every user and not only _id:
+  /**
+   * .populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+  });
+   */
+  const features = new APIFeatures(
+    Tour.find().populate({
+      path: 'guides',
+      select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+    }),
+    req.query
+  )
     .filter()
     .sort()
     .limitFields()
