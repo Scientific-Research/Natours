@@ -65,7 +65,12 @@ app.use(xss());
 // NOTE: hpp package => Http Parameter Pollution => to remove the duplication of fields problem in URL:
 // Prevent Parameter Pollution => we have to use it at the end of other middlewares, because it clear up query string:
 // {{URL}}api/v1/tours?sort=duration&sort=price => this solution takes only the last one and sort the prices ascendly and doesn't consider the first sort which is for duration, and therfore, the error will be gone!
-app.use(hpp());
+app.use(hpp({ whitelist: ['duration'] }));
+
+// NOTE: what we have to do if we want to get two fields at the same time: for example:
+// {{URL}}api/v1/tours?duration=5&duration=9
+// when i remove this app.use(hpp());, it works, but with this, will not work.
+// Solution: I have to add some parameters in form of Object to hpp => using whitelist and make exceptions for some fields.
 
 // how to show the static files using middleware in express:
 // Serving static files:
