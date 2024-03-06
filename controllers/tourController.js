@@ -174,7 +174,12 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // NOTE: our current guides filed has only our ref to User which show us the IDs from users but with populate we want to fill it up with actuall data and it would be only in the query and not in the database!
   // In Postman => Get with Id => {{URL}}api/v1/tours/65e8788d29cf25cffa22716c
   // and then we will get the Info about users with these two IDs in details.
-  const tour = await Tour.findById(id).populate('guides');
+  // const tour = await Tour.findById(id).populate('guides');
+  // NOTE: when we want to say, we want some fields and we don't want some other fields:
+  const tour = await Tour.findById(id).populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+  });
   // const tour = await Tour.findById(id);
   console.log(id);
 
