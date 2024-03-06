@@ -125,6 +125,8 @@ const tourSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId, // type is actually mongoDB ID
         ref: 'User', // and thid is the magic behind the scence => ref for Referencing the Tour and User by Id.
+        // here we create a reference to another Model => User!
+        // In this way, i create effectively a relationship between these two datasets!
       },
     ],
   },
@@ -211,7 +213,7 @@ tourSchema.pre(/^find/, function (next) {
 tourSchema.pre(/^find/, function (next) {
   // NOTE: In query middleware, this always point to the current query, therefore, all the queries will then automatically populate the guides field with the reference users!
   this.populate({
-    path: 'guides',
+    path: 'guides', // we populate guides field that we just specified before!
     select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
   });
   next();
