@@ -116,9 +116,9 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
-    // NOTE: this is for CONNECT TOUR AND USER BY EMBEDDING
+    // NOTE: this is for CONNECT TOUR AND USER BY EMBEDDING: WE NEED PRE SAVE MIDDLEWARE wHICH IS BELOW AND COMMENTED OUT ALREADY DUE TO TEST THE REFERENCING METHOD!
     //  guides: Array,
-    // NOTE: this is for CONNECT TOUR AND USER BY REFERENCING
+    // NOTE: this is for CONNECT TOUR AND USER BY REFERENCING: NO NEED TO PRE SAVE MIDDLEWARE
     // By referencing, we don't need the pre save middleware anymore and we need only the following guides array.
     // NOTE: unlike the embedding method, we don't get all the infor about the users, rather, we get only the IDs for the users that we send as an array in Postman!
     guides: [
