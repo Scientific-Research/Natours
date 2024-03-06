@@ -15,6 +15,19 @@ const reviewSchema = mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  // NOTE: writing the PARENT REFERENCING:
+  // Each review document now knows exactly to which tour belong to!
+  tour: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Tour',
+    required: [true, 'Review must belong to a tour!'],
+  },
+  // who wrote this review => we need to write the Parent referencing for the user too!
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Review must belong to a user!'],
+  },
 });
 
 const Review = mongoose.model('Review', reviewSchema);
