@@ -1,28 +1,23 @@
 const mongoose = require('mongoose');
 
-// review / rating / createAt / ref to tour / ref to user
-const tourReview = mongoose.Schema({
+// review / rating / createdAt / ref to tour / ref to user
+const reviewSchema = mongoose.Schema({
   review: {
     type: String,
-    terim: true,
-    maxLength: [40, 'A tour name must have less or equal than 40 Characters'],
-    minLength: [10, 'A tour name must have more or equal than 10 Characters'],
+    required: [true, 'Review can not be empty!'],
   },
   rating: {
     type: Number,
+    min: 1,
+    max: 5,
   },
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now(),
     select: false,
   },
-  guides: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Tour',
-    ref: 'User',
-  },
 });
 
-const tour = mongoose.model(tourReview, 'Review');
+const Review = mongoose.model('Review', reviewSchema);
 
-module.exports = tour;
+module.exports = Review;
