@@ -101,6 +101,20 @@ const tourSchema = new mongoose.Schema(
       address: String,
       description: String,
     },
+    locations: [
+      // we created here embedded documents:
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+        day: Number,
+      },
+    ],
   },
   {
     // NOTE: we have to say that we will need the Virtuals, when the data goes to be published at
