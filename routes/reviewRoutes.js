@@ -4,8 +4,9 @@ const router = express.Router();
 
 const reviewController = require('../controllers/reviewController');
 
-const { getAllReviews } = reviewController;
+const { getAllReviews, createReview } = reviewController;
 
 router.route('/').get(getAllReviews);
+router.route('/').post(createReview);
 
 module.exports = router;
