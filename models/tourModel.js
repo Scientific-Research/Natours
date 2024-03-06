@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
-const validator = require('validator');
+const User = require('./userModel');
+// const validator = require('validator');
 
 const tourSchema = new mongoose.Schema(
   {
@@ -115,6 +116,7 @@ const tourSchema = new mongoose.Schema(
         day: Number,
       },
     ],
+    guides: Array,
   },
   {
     // NOTE: we have to say that we will need the Virtuals, when the data goes to be published at
@@ -147,6 +149,21 @@ tourSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
   next(); // but actually, we don't have the next middleware to call it, anyway, it's good practice
   // to put it there!
+});
+
+// NOTE: again a pre save middleware, each time that a new tour saves, the user documents corresponding the IDs will retrieve behind the scene automatically!
+tourSchema.pre('save', async function (next) {
+  // as we defined it above, the guides is an array of all the user IDs=> therefore, we can map between its items
+  // NOTE: guides receives user corresponding to evvery ID but with many resolved Promises and we have to await this array to get the correct results at the end! => therefore, we need Promise.all()
+  //   const guides = this.guides.map(
+  //     async (id) => await User.find((user) => user.id === id)
+  //   );
+  // OR THIS ONE:
+  // NOTE: using map => from guides array, we get the id and from User, we get the user corresponding to this Id.
+  const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+  // we have to use await Promise.all() because the guidesPromises is full of resolved Promises and to get the correct results in guides as an array.
+  this.guides = await Promise.all(guidesPromises);
+  next();
 });
 
 // tourSchema.pre('save', function (next) {
