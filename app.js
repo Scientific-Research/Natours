@@ -8,6 +8,7 @@ const hpp = require('hpp');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
@@ -137,6 +138,7 @@ app.use((req, res, next) => {
 // 3) ROUTES
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/reviews', reviewRouter);
 
 // NOTE: all means all the http Methods like get, post, ...
 // we write here a middleware for all invalid URL(Routes) which are not listed as our valid Routes
