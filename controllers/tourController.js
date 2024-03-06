@@ -112,21 +112,22 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   // NOTE: we can write the methods like chain here because of "this" word in => return this,
   // it sends always entire object to the next method and at the end we have the entire processed
   // Object after filtering, sorting, limitfields and pagination:
-  //   const features = new APIFeatures(Tour.find(), req.query)
   // NOTE: I only added this section to above code, to display complete info for every user and not only _id:
+  // NOTE: I commented this out, because I want to do that using query middleware in tourModel.js - it will prevent us from repeating the code! DRY = Don't repeat Yourself!
   /**
    * .populate({
-    path: 'guides',
-    select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
-  });
-   */
-  const features = new APIFeatures(
-    Tour.find().populate({
-      path: 'guides',
-      select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
-    }),
-    req.query
-  )
+  path: 'guides',
+  select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+});
+*/
+  //   const features = new APIFeatures(
+  //     Tour.find().populate({
+  //       path: 'guides',
+  //       select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+  //     }),
+  //     req.query
+  //   )
+  const features = new APIFeatures(Tour.find(), req.query)
     .filter()
     .sort()
     .limitFields()
@@ -188,13 +189,14 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // NOTE: our current guides filed has only our ref to User which show us the IDs from users but with populate we want to fill it up with actuall data and it would be only in the query and not in the database!
   // In Postman => Get with Id => {{URL}}api/v1/tours/65e8788d29cf25cffa22716c
   // and then we will get the Info about users with these two IDs in details.
-  // const tour = await Tour.findById(id).populate('guides');
   // NOTE: when we want to say, we want some fields and we don't want some other fields:
-  const tour = await Tour.findById(id).populate({
-    path: 'guides',
-    select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
-  });
-  // const tour = await Tour.findById(id);
+  // const tour = await Tour.findById(id).populate('guides');
+  //   const tour = await Tour.findById(id).populate({
+  //     path: 'guides',
+  //     select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+  //   });
+  // NOTE: WE DON'T NEED TO ABOVE POPULATE STATEMENTS ANYMORE; BECAUSE I DEFINED IT AS A QUERY MIDDLEWARE IN tourModel.js AND GET ALL TOUR USE THAT TOO. SO, I DON'T NEED TO REAPEAT IT AGAIN! I WROTE IT AS QUERY MIDDLEWARE ONLY ONE TIME AND ALL OTHER QUERY CAN USE IT! SO, I BACK TO THE BELOW STATEMENT WITHOUT POPULATE:
+  const tour = await Tour.findById(id);
   console.log(id);
 
   // NOTE: what we have to do if we have an invalid id => 404 => Page Not Found!

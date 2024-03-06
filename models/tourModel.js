@@ -206,6 +206,17 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
+// NOTE: we can also use query middleware and don't repeat again the populate code:
+// this query will run when we a find query => find all Tours, find a tour with Id,....
+tourSchema.pre(/^find/, function (next) {
+  // NOTE: In query middleware, this always point to the current query, therefore, all the queries will then automatically populate the guides field with the reference users!
+  this.populate({
+    path: 'guides',
+    select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+  });
+  next();
+});
+
 // NOTE: A post middleware for find() => this middleware will run after Query was executed!
 // that's why it has access to the documents which returned!
 tourSchema.post(/^find/, function (docs, next) {
