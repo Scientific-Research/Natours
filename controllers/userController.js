@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
 // it takes obj as object and allowedFields: other filelds as an array containing name and email!
@@ -110,11 +111,13 @@ exports.updateUser = (req, res) => {
   });
 };
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    data: {
-      status: 'error',
-      message: 'This route is not yet defined! - deleteUser',
-    },
-  });
-};
+// exports.deleteUser = (req, res) => {
+//   res.status(500).json({
+//     data: {
+//       status: 'error',
+//       message: 'This route is not yet defined! - deleteUser',
+//     },
+//   });
+// };
+
+exports.deleteUser = factory.deleteOne(User);
