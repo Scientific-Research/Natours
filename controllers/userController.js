@@ -84,20 +84,24 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    data: {
-      status: 'error',
-      message: 'This route is not yet defined! - getUser',
-    },
-  });
-};
+// NOTE: i replace this getUser with getOne() from handlerFactoty function:
+exports.getUser = factory.getOne(User); // we don't have any populate here!
+
+// exports.getUser = (req, res) => {
+//   res.status(500).json({
+//     data: {
+//       status: 'error',
+//       message: 'This route is not yet defined! - getUser',
+//     },
+//   });
+// };
 
 exports.createUser = (req, res) => {
   res.status(500).json({
     data: {
       status: 'error',
-      message: 'This route is not yet defined! - createUser',
+      message:
+        'This route is not yet defined! - createUser - Please use /signup instead!',
     },
   });
 };
