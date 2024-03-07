@@ -46,4 +46,5 @@ exports.createReview = catchAsync(async (req, res, next) => {
 // NOTE: That's all what we have to do to delete a review using factory general function!
 // we use this factory function to delete all kinds of documents: tour, review, user ...
 // The next step is to create the route for this delete in reviewRoute.js
+exports.updateReview = factory.updateOne(Review);
 exports.deleteReview = factory.deleteOne(Review);
