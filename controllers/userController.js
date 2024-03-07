@@ -102,14 +102,20 @@ exports.createUser = (req, res) => {
   });
 };
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    data: {
-      status: 'error',
-      message: 'This route is not yet defined! - updateUser',
-    },
-  });
-};
+// exports.updateUser = (req, res) => {
+//   res.status(500).json({
+//     data: {
+//       status: 'error',
+//       message: 'This route is not yet defined! - updateUser',
+//     },
+//   });
+// };
+
+// NOTE: using factory updateOne to update the user instead of updateUser function here:
+// that's whx i comment it out above.
+// NOTE: updateUser is only for admin and not for other users!
+// DO NOT update passwords with this!
+exports.updateUser = factory.updateOne(User);
 
 // exports.deleteUser = (req, res) => {
 //   res.status(500).json({
