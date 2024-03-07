@@ -26,25 +26,37 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createReview = catchAsync(async (req, res, next) => {
-  // NOTE: Allow nested routes:
-  // req.body.tour => tour here means id from this tour
-  // req.body.user => user here means id from this user
-  // both of these two fields: tour and user as IDs are required fields in Postman, as we specified them as required in reviewModel.js and when we want to create a review!
+// NOTE: first of all, we have to create a middleware to run before our createOne in handlerFactory executes. This middleware is for these two statements, because they run before Review.create() function runs! this two below statements are not available in createOne in handlerFactory, that's why we have to run them separately in a function before the createTour function runs!
+// if (!req.body.tour) req.body.tour = req.params.tourId;
+// if (!req.body.user) req.body.user = req.user.id;
+// we will add this function in reviewRoutes.js
+exports.setTourUserIds = (req, res, next) => {
   if (!req.body.tour) req.body.tour = req.params.tourId;
-  if (!req.body.user) req.body.user = req.user.id; // in protect function, req takes the id from current user! =>  req.user = currentUser;
-  // NOTE: when we don't assign IDs to tour and user in Postman or there is no IDs for them at all, they will get them from tourId and id!
+  if (!req.body.user) req.body.user = req.user.id;
+  next();
+};
 
-  const newReview = await Review.create(req.body);
+// exports.createReview = catchAsync(async (req, res, next) => {
+//   // NOTE: Allow nested routes:
+//   // req.body.tour => tour here means id from this tour
+//   // req.body.user => user here means id from this user
+//   // both of these two fields: tour and user as IDs are required fields in Postman, as we specified them as required in reviewModel.js and when we want to create a review!
+//   // if (!req.body.tour) req.body.tour = req.params.tourId;
+//   // if (!req.body.user) req.body.user = req.user.id; // in protect function, req takes the id from current user! =>  req.user = currentUser;
 
-  res.status(201).json({
-    status: 'success',
-    newReview: newReview,
-  });
-});
+//   // NOTE: when we don't assign IDs to tour and user in Postman or there is no IDs for them at all, they will get them from tourId and id!
+
+//   const newReview = await Review.create(req.body);
+
+//   res.status(201).json({
+//     status: 'success',
+//     newReview: newReview,
+//   });
+// });
 
 // NOTE: That's all what we have to do to delete a review using factory general function!
 // we use this factory function to delete all kinds of documents: tour, review, user ...
 // The next step is to create the route for this delete in reviewRoute.js
+exports.createReview = factory.createOne(Review); // I commented the above createReview function out to use the general createOne() function in factory file.
 exports.updateReview = factory.updateOne(Review);
 exports.deleteReview = factory.deleteOne(Review);

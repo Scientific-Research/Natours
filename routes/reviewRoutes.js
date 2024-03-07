@@ -15,15 +15,22 @@ const router = express.Router({ mergeParams: true });
 const reviewController = require('../controllers/reviewController');
 const authController = require('../controllers/authController');
 
-const { getAllReviews, createReview, deleteReview, updateReview } =
-  reviewController;
+const {
+  getAllReviews,
+  createReview,
+  deleteReview,
+  updateReview,
+  setTourUserIds,
+} = reviewController;
 const { protect, restrictTo } = authController;
 
 // POST /tour/65342wer/reviews
 // GET /tour/65342wer/reviews
 router.route('/').get(getAllReviews);
 // NOTE: we want that only logged in users and also regular users(not admin or guide users) post a review!
-router.route('/').post(protect, restrictTo('user'), createReview);
+router
+  .route('/')
+  .post(protect, restrictTo('user'), setTourUserIds, createReview);
 
 router.route('/:id').patch(protect, updateReview);
 
