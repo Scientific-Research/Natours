@@ -23,3 +23,24 @@ exports.deleteOne = (Model) =>
       deletedDocument: doc,
     });
   });
+
+exports.updateOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const id = req.params.id;
+
+    // try {
+    const updatedDocument = await Model.findByIdAndUpdate(id, req.body, {
+      new: true, // to send the new(updated) tour to the client.
+      runValidators: true,
+    });
+
+    if (!updatedDocument) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+
+    console.log(updatedDocument);
+    res.status(200).json({
+      status: 'success',
+      updatedDocument: updatedDocument,
+    });
+  });
