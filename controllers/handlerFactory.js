@@ -1,5 +1,6 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
 exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -74,4 +75,21 @@ exports.getOne = (Model, popOptions) =>
     }
     console.log(doc);
     res.status(200).json({ status: 'success', OneDocument: doc });
+  });
+
+// NOTE: replacing all getAllTour/User/Review with just one general function here:
+exports.getAll = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const features = new APIFeatures(Model.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .pagination();
+
+    const docs = await features.query; // We have to write it in this way, otherwise, it
+    const Result = docs.length;
+
+    res
+      .status(200)
+      .json({ status: 'success', Results: Result, AllDocuments: docs });
   });

@@ -18,170 +18,174 @@ exports.aliasTopTours = (req, res, next) => {
 
 // const getAllTours = (req, res,next) => {
 // 127.0.0.1:3000/api/v1/tours?difficulty=easy&sort=1&duration[gte]=5&price[lt]=1500&limit=5
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  // try {
-  // console.log(req.query);
-  // 1 - BUILD QUERY
-  // 1A) Filtering
-  // const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
-  // const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
-  // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
-  // excludedFields.forEach((el) => delete queryObj[el]);
+// NOTE: replacing the getAllTours with a generalfunction from handlerFactory.js
+// that's why i commented the below function out!
+exports.getAllTours = factory.getAll(Tour);
+// exports.getAllTours = catchAsync(async (req, res, next) => {
+//   // try {
+//   // console.log(req.query);
+//   // 1 - BUILD QUERY
+//   // 1A) Filtering
+//   // const queryObj = { ...req.query }; // we made a copy of the req.query and converted it to an Object!
+//   // const excludedFields = ['page', 'sort', 'limit', 'fields'];
 
-  // 1B) Advanced filtering:
-  // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
-  // we can do all these using replace() => gte, gt, lte, lt using regular expression
-  // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
-  // In VSCode Terminal:console.log(req.query)=>{ difficulty: 'easy', duration: { gte: '5' } }
-  // console.log('queryObj' + queryObj);
-  // let queryStr = JSON.stringify(queryObj);
-  // console.log('queryStr' + queryStr);
-  // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-  // console.log(JSON.parse(queryStr)); // we want the Object here!
+//   // Remove all these excluded fields from queryObj: => we don't need to have a new array, that's why we use FOREACH:
+//   // excludedFields.forEach((el) => delete queryObj[el]);
 
-  // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
-  // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
-  // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
-  // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
-  // let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
-  // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
+//   // 1B) Advanced filtering:
+//   // NOTE: Exercise: {difficulty:'easy', duration:{$gte:5}}
+//   // we can do all these using replace() => gte, gt, lte, lt using regular expression
+//   // In Postman: 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5
+//   // In VSCode Terminal:console.log(req.query)=>{ difficulty: 'easy', duration: { gte: '5' } }
+//   // console.log('queryObj' + queryObj);
+//   // let queryStr = JSON.stringify(queryObj);
+//   // console.log('queryStr' + queryStr);
+//   // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+//   // console.log(JSON.parse(queryStr)); // we want the Object here!
 
-  // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
-  // we can also add more search query to the URL like price in Postman URL
-  // 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500
+//   // NOTE: THIS IS THE THIRD METHOD TO WRITE A SEARCH QUERY:
+//   // const tours = await Tour.find(req.query); // We don't set the parameters here in find() function, rather,
+//   // const tours = await Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+//   // const query = Tour.find(queryObj); // We don't set the parameters here in find() function, rather,
+//   // let query = Tour.find(JSON.parse(queryStr)); // We don't set the parameters here in find() function, rather,
+//   // all the search query parameters are available in URL in Postman. From there, we can set all the parameters!
 
-  // Regular expression: \b: means we want only these
-  // four word and not these four words inside other words!
-  // g means it replace for all these four word and not only the first one!
+//   // NOTE: we added now the price less than 1500 to the URL Search Query and it works fine
+//   // we can also add more search query to the URL like price in Postman URL
+//   // 127.0.0.1:3000/api/v1/tours?difficulty=easy&duration[gte]=5&price[lt]=1500
 
-  // // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
-  // // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
-  // if (req.query.sort) {
-  //    // how to bring the search query items together with space instead of comma:
-  //    const sortBy = req.query.sort.split(',').join(' ');
-  //    console.log(sortBy); // -price -ratingsAverage
-  //    // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
-  //    // query = query.sort(req.query.sort);
-  //    query = query.sort(sortBy);
-  //    // console.log(query);
+//   // Regular expression: \b: means we want only these
+//   // four word and not these four words inside other words!
+//   // g means it replace for all these four word and not only the first one!
 
-  //    // sort('price ratingsAverage')
-  // } else {
-  //    query = query.sort('-createdAt');
-  // }
+//   // // 2) Sorting in an Ascending Order: 127.0.0.1:3000/api/v1/tours?sort=price
+//   // // Sorting in a descending Order: 127.0.0.1:3000/api/v1/tours?sort=-price
+//   // if (req.query.sort) {
+//   //    // how to bring the search query items together with space instead of comma:
+//   //    const sortBy = req.query.sort.split(',').join(' ');
+//   //    console.log(sortBy); // -price -ratingsAverage
+//   //    // 127.0.0.1:3000/api/v1/tours?sort=-price,-ratingsAverage
+//   //    // query = query.sort(req.query.sort);
+//   //    query = query.sort(sortBy);
+//   //    // console.log(query);
 
-  // // 3) Field limiting
-  // // NOTE: this is our URL in Postman:
-  // // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
-  // // 127.0.0.1:3000/api/v1/tours?fields=-name,-duration => it gives us all the items in
-  // // a tour except name and duration in Postman, because they are minus signs beside them.
-  // // and we see only these four fields in Postman as result plus _id and without --v.
-  // // when we remove all the search queries and our URL in postman is like this:
-  // // 127.0.0.1:3000/api/v1/tours => the compiler goes to the else section and we will
-  // // not have the --v anymore!
-  // if (req.query.fields) {
-  //    const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
-  //    // query = query.select('name duration price');
-  //    query = query.select(fields); // to use this field!
-  // } else {
-  //    query = query.select('-__v'); // we exclude this item(version=> __v)
-  // }
+//   //    // sort('price ratingsAverage')
+//   // } else {
+//   //    query = query.sort('-createdAt');
+//   // }
 
-  // // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
-  // const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
-  // const limit = req.query.limit * 1 || 100; // default value for limit would be 100!
-  // const skip = (page - 1) * limit; // for page No.3 => skip = (3-1)*10=20 and we skip 20 results
-  // // and page No.3 starts from result 21.
-  // // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
-  // // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
-  // // skip(10) means 10 items in first page has to be skipped to arrive to the second page!
-  // // but when we say page=3&limit=10, we have to set skip for 20 => skip(20), after 20 items
-  // // we will achieve third page!
-  // // query = query.skip(10).limit(10);
-  // query = query.skip(skip).limit(limit);
+//   // // 3) Field limiting
+//   // // NOTE: this is our URL in Postman:
+//   // // 127.0.0.1:3000/api/v1/tours?fields=name,duration,difficulty,price
+//   // // 127.0.0.1:3000/api/v1/tours?fields=-name,-duration => it gives us all the items in
+//   // // a tour except name and duration in Postman, because they are minus signs beside them.
+//   // // and we see only these four fields in Postman as result plus _id and without --v.
+//   // // when we remove all the search queries and our URL in postman is like this:
+//   // // 127.0.0.1:3000/api/v1/tours => the compiler goes to the else section and we will
+//   // // not have the --v anymore!
+//   // if (req.query.fields) {
+//   //    const fields = req.query.fields.split(',').join(' '); //this will produce:name duration price
+//   //    // query = query.select('name duration price');
+//   //    query = query.select(fields); // to use this field!
+//   // } else {
+//   //    query = query.select('-__v'); // we exclude this item(version=> __v)
+//   // }
 
-  // if (req.query.page) {
-  //    const numTours = await Tour.countDocuments();
-  //    if (skip >= numTours) throw new Error('This page does not exist!');
-  //    // NOTE: as soon as we get an Error, it goes out of try() block that we are now there
-  //    // and will be in catch() section and shows the user the Error message!
-  // }
+//   // // 4) Pagination: 127.0.0.1:3000/api/v1/tours?page=2&limit=10
+//   // const page = req.query.page * 1 || 1; // we say page number one is default value in JS!
+//   // const limit = req.query.limit * 1 || 100; // default value for limit would be 100!
+//   // const skip = (page - 1) * limit; // for page No.3 => skip = (3-1)*10=20 and we skip 20 results
+//   // // and page No.3 starts from result 21.
+//   // // NOTE: page=2&limit=10 => user wants page Number 2 and 10 results per page!
+//   // // 1-10 => page 1, 11-20 => page 2, 21-30 => page 3, ...
+//   // // skip(10) means 10 items in first page has to be skipped to arrive to the second page!
+//   // // but when we say page=3&limit=10, we have to set skip for 20 => skip(20), after 20 items
+//   // // we will achieve third page!
+//   // // query = query.skip(10).limit(10);
+//   // query = query.skip(skip).limit(limit);
 
-  // EXECUTE QUERY
-  // make new instance(Object) from class and send two parameters: query and queryStr to constructor!
-  // NOTE: we can write the methods like chain here because of "this" word in => return this,
-  // it sends always entire object to the next method and at the end we have the entire processed
-  // Object after filtering, sorting, limitfields and pagination:
-  // NOTE: I only added this section to above code, to display complete info for every user and not only _id:
-  // NOTE: I commented this out, because I want to do that using query middleware in tourModel.js - it will prevent us from repeating the code! DRY = Don't repeat Yourself!
-  /**
-   * .populate({
-  path: 'guides',
-  select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
-});
-*/
-  //   const features = new APIFeatures(
-  //     Tour.find().populate({
-  //       path: 'guides',
-  //       select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
-  //     }),
-  //     req.query
-  //   )
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .pagination();
-  // features.filter();
-  // features.sort();
-  // const tours = await query; // We have to write it in this way, otherwise, it will not work!
-  const tours = await features.query; // We have to write it in this way, otherwise, it will not work!
-  // query.sort().select().skip().limit()
-  // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
-  // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
-  // { duration: '5', difficulty: 'easy' }
-  // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
-  // save() function too!
-  // const tours = await Tour.find();
+//   // if (req.query.page) {
+//   //    const numTours = await Tour.countDocuments();
+//   //    if (skip >= numTours) throw new Error('This page does not exist!');
+//   //    // NOTE: as soon as we get an Error, it goes out of try() block that we are now there
+//   //    // and will be in catch() section and shows the user the Error message!
+//   // }
 
-  // NOTE: THE FIRST METHOD TO WRITE THE SEARCH QUERY:
-  // const tours = await Tour.find({
-  //    duration: 5,
-  //    difficulty: 'easy',
-  // });
+//   // EXECUTE QUERY
+//   // make new instance(Object) from class and send two parameters: query and queryStr to constructor!
+//   // NOTE: we can write the methods like chain here because of "this" word in => return this,
+//   // it sends always entire object to the next method and at the end we have the entire processed
+//   // Object after filtering, sorting, limitfields and pagination:
+//   // NOTE: I only added this section to above code, to display complete info for every user and not only _id:
+//   // NOTE: I commented this out, because I want to do that using query middleware in tourModel.js - it will prevent us from repeating the code! DRY = Don't repeat Yourself!
+//   /**
+//    * .populate({
+//   path: 'guides',
+//   select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+// });
+// */
+//   //   const features = new APIFeatures(
+//   //     Tour.find().populate({
+//   //       path: 'guides',
+//   //       select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+//   //     }),
+//   //     req.query
+//   //   )
+//   const features = new APIFeatures(Tour.find(), req.query)
+//     .filter()
+//     .sort()
+//     .limitFields()
+//     .pagination();
+//   // features.filter();
+//   // features.sort();
+//   // const tours = await query; // We have to write it in this way, otherwise, it will not work!
+//   const tours = await features.query; // We have to write it in this way, otherwise, it will not work!
+//   // query.sort().select().skip().limit()
+//   // console.log(req.query, queryObj); // what we have in URL as SEARCH QUERY:
+//   // 127.0.0.1:3000/api/v1/tours?duration=5&difficulty=easy
+//   // { duration: '5', difficulty: 'easy' }
+//   // NOTE: GETTING ALL TOURS USING find()-- no need to make a new instance(object) and using
+//   // save() function too!
+//   // const tours = await Tour.find();
 
-  // NOTE: THE SECOND METHOD TO WRITE THE SEARCH QUERY:
-  // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
-  // const query = Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
+//   // NOTE: THE FIRST METHOD TO WRITE THE SEARCH QUERY:
+//   // const tours = await Tour.find({
+//   //    duration: 5,
+//   //    difficulty: 'easy',
+//   // });
 
-  const Result = tours.length;
-  // console.log(tours);
-  // NOTE: 5) The best and cheap five tours:
-  // 127.0.0.1:3000/api/v1/tours?limit=5&sort=-ratingsAverage,price
-  // ratingsAverage is sorted descending due to -(minus) sign from biggest to smallest!
-  // NOTE: 6) The cheapest and best five tours:
-  // 127.0.0.1:3000/api/v1/tours?limit=5&sort=price,-ratingsAverage
-  // price is sorted in Ascending manner => from smallest price to highest price!
-  // -ratingsAverage doesn't work anymore, because price comes first.
+//   // NOTE: THE SECOND METHOD TO WRITE THE SEARCH QUERY:
+//   // const tours = await Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
+//   // const query = Tour.find().where('duration').equals(5).where('difficulty').equals('easy');
 
-  // 3 - SEND RESPONSE
-  res.status(200).json({ status: 'success', Results: Result, AllTours: tours });
-  // }
-  // catch (err) {
-  //    console.log('Error to get all the tours from MongoDB!' + err.message);
-  //    res.status(400).json({ status: 'fail', message: err.message });
-  // }
+//   const Result = tours.length;
+//   // console.log(tours);
+//   // NOTE: 5) The best and cheap five tours:
+//   // 127.0.0.1:3000/api/v1/tours?limit=5&sort=-ratingsAverage,price
+//   // ratingsAverage is sorted descending due to -(minus) sign from biggest to smallest!
+//   // NOTE: 6) The cheapest and best five tours:
+//   // 127.0.0.1:3000/api/v1/tours?limit=5&sort=price,-ratingsAverage
+//   // price is sorted in Ascending manner => from smallest price to highest price!
+//   // -ratingsAverage doesn't work anymore, because price comes first.
 
-  // console.log(req.requestTime);
-  // res.status(200).json({
-  //    status: 'success',
-  //    requestedAt: req.requestTime,
-  //    // results: tours.length,
-  //    // tours,
-  // });
-  // // next();
-});
+//   // 3 - SEND RESPONSE
+//   res.status(200).json({ status: 'success', Results: Result, AllTours: tours });
+//   // }
+//   // catch (err) {
+//   //    console.log('Error to get all the tours from MongoDB!' + err.message);
+//   //    res.status(400).json({ status: 'fail', message: err.message });
+//   // }
+
+//   // console.log(req.requestTime);
+//   // res.status(200).json({
+//   //    status: 'success',
+//   //    requestedAt: req.requestTime,
+//   //    // results: tours.length,
+//   //    // tours,
+//   // });
+//   // // next();
+// });
 
 // NOTE: i use the getOne() function in handlerFactory.js here as a general function for all the documents, that's whx i cokment the below function out:
 
