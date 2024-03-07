@@ -57,6 +57,7 @@ exports.setTourUserIds = (req, res, next) => {
 // NOTE: That's all what we have to do to delete a review using factory general function!
 // we use this factory function to delete all kinds of documents: tour, review, user ...
 // The next step is to create the route for this delete in reviewRoute.js
+exports.getReview = factory.getOne(Review);
 exports.createReview = factory.createOne(Review); // I commented the above createReview function out to use the general createOne() function in factory file.
 exports.updateReview = factory.updateOne(Review);
 exports.deleteReview = factory.deleteOne(Review);

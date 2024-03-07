@@ -17,6 +17,7 @@ const authController = require('../controllers/authController');
 
 const {
   getAllReviews,
+  getReview,
   createReview,
   deleteReview,
   updateReview,
@@ -27,6 +28,7 @@ const { protect, restrictTo } = authController;
 // POST /tour/65342wer/reviews
 // GET /tour/65342wer/reviews
 router.route('/').get(getAllReviews);
+router.route('/:id').get(getReview);
 // NOTE: we want that only logged in users and also regular users(not admin or guide users) post a review!
 router
   .route('/')
