@@ -131,12 +131,12 @@ const tourSchema = new mongoose.Schema(
     ],
     // NOTE: this is the child referencing => Tour referencing reviews! but we don't use it, instead, we use a new feature in mongoose, it called: virtual populate.
     // I will comment it out to implement the virtual populate!
-    review: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Review',
-      },
-    ],
+    // review: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'Review',
+    //   },
+    // ],
   },
   {
     // NOTE: we have to say that we will need the Virtuals, when the data goes to be published at

@@ -196,7 +196,10 @@ exports.getTour = catchAsync(async (req, res, next) => {
   //     select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
   //   });
   // NOTE: WE DON'T NEED TO ABOVE POPULATE STATEMENTS ANYMORE; BECAUSE I DEFINED IT AS A QUERY MIDDLEWARE IN tourModel.js AND GET ALL TOUR USE THAT TOO. SO, I DON'T NEED TO REAPEAT IT AGAIN! I WROTE IT AS QUERY MIDDLEWARE ONLY ONE TIME AND ALL OTHER QUERY CAN USE IT! SO, I BACK TO THE BELOW STATEMENT WITHOUT POPULATE:
-  const tour = await Tour.findById(id);
+  // const tour = await Tour.findById(id);
+  // NOTE: we add populate to display the reviews for every tour, when we get one tour in Postman!
+  // in Postman: {{URL}}api/v1/tours/5c88fa8cf4afda39709c2951
+  const tour = await Tour.findById(id).populate('reviews');
   console.log(id);
 
   // NOTE: what we have to do if we have an invalid id => 404 => Page Not Found!
