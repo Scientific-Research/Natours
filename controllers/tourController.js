@@ -3,6 +3,7 @@ const Tour = require('../models/tourModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const factory = require('./handlerFactory');
 
 exports.aliasTopTours = (req, res, next) => {
   // All fields have to be in String format! here we have a prefilling process before
@@ -360,52 +361,54 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   // }
 });
 
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
+// NOTE: we comment this delete middleware function here out and use our HANDLERFACTORY function here.
+exports.deleteTour = factory.deleteOne(Tour);
+// exports.deleteTour = catchAsync(async (req, res, next) => {
+//   const id = req.params.id;
 
-  // try {
-  const deletedTour = await Tour.findByIdAndDelete(id);
+//   // try {
+//   const deletedTour = await Tour.findByIdAndDelete(id);
 
-  if (!deletedTour) {
-    // when we give parameters to next(), it means an error happened and we give our global
-    // Error App => AppError() function as this parameter and it has itself two parameters:
-    // message and statusCode and we have to use return to send it back and not going forward!
-    return next(new AppError('No tour found with that ID', 404));
-  }
+//   if (!deletedTour) {
+//     // when we give parameters to next(), it means an error happened and we give our global
+//     // Error App => AppError() function as this parameter and it has itself two parameters:
+//     // message and statusCode and we have to use return to send it back and not going forward!
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
 
-  if (!deletedTour) throw new Error('This Tour already deleted!');
-  console.log(deletedTour);
+//   if (!deletedTour) throw new Error('This Tour already deleted!');
+//   console.log(deletedTour);
 
-  res.status(200).json({
-    status: 'success',
-    deletedTour: deletedTour,
-  });
-  // } catch (err) {
-  //    console.log('Error deleting the tour data: ' + err.message);
-  //    res.status(400).json({ status: 'fail', message: err.message });
-  // }
+//   res.status(200).json({
+//     status: 'success',
+//     deletedTour: deletedTour,
+//   });
+// } catch (err) {
+//    console.log('Error deleting the tour data: ' + err.message);
+//    res.status(400).json({ status: 'fail', message: err.message });
+// }
 
-  // try {
-  //    const tour = tours.find((item) => item.id === parseInt(id));
-  //    if (!tour) throw new Error('No tour with this ID anymore! pick a different one.');
+// try {
+//    const tour = tours.find((item) => item.id === parseInt(id));
+//    if (!tour) throw new Error('No tour with this ID anymore! pick a different one.');
 
-  //    let deletedTour = tours.filter((el) => el.id === parseInt(id));
-  //    let notDeletedTours = tours.filter((el) => el.id !== parseInt(id));
-  //    console.log(deletedTour);
-  //    tours = notDeletedTours;
-  //    fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
-  //       res.status(200).json({
-  //          status: 'success',
-  //          deletedTour: deletedTour,
-  //       })
-  //    );
-  // } catch (err) {
-  //    res.status(404).json({
-  //       status: 'fail',
-  //       message: err.message,
-  //    });
-  // }
-});
+//    let deletedTour = tours.filter((el) => el.id === parseInt(id));
+//    let notDeletedTours = tours.filter((el) => el.id !== parseInt(id));
+//    console.log(deletedTour);
+//    tours = notDeletedTours;
+//    fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
+//       res.status(200).json({
+//          status: 'success',
+//          deletedTour: deletedTour,
+//       })
+//    );
+// } catch (err) {
+//    res.status(404).json({
+//       status: 'fail',
+//       message: err.message,
+//    });
+// }
+// });
 
 // NOTE: Strat using aggregation Pipeline: a function does some statistics and we will create
 // a rour for that later!
