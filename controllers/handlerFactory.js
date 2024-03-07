@@ -57,3 +57,21 @@ exports.createOne = (Model) =>
       createdDocument: newDocument,
     });
   });
+
+// NOTE: we use popOptions in addition to the Model for populate(), because populate for different get() functions(for example getTour, getUser, ...) are different!
+exports.getOne = (Model, popOptions) =>
+  catchAsync(async (req, res, next) => {
+    const id = req.params.id;
+    let query = Model.findById(id);
+    if (popOptions) query = query.populate(popOptions);
+    const doc = await query;
+
+    // const doc = await Model.findById(id).populate(popOptions);
+    // console.log(id);
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID', 404));
+    }
+    console.log(doc);
+    res.status(200).json({ status: 'success', OneDocument: doc });
+  });
