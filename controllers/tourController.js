@@ -244,67 +244,70 @@ exports.getTour = catchAsync(async (req, res, next) => {
   // }
 });
 
-exports.createTour = catchAsync(async (req, res, next) => {
-  // const newTour = req.body;
-  // console.log(newTour);
-  // NOTE: THIS IS THE FIRST METHOD TO CREATE THE DATA. In this method, we make a new instance(object)
-  // from Tour but in the next method, we use Tour direct with create(), that's why don't need
-  // to create a new instance of Tour. In addition to that, we don't need to use save().
-  // try {
-  //    const tour = new Tour({
-  //       name: 'Test Tour-5',
-  //       rating: 4.7,
-  //       price: 997,
-  //    });
-  //    const doc = await tour.save();
-  //    console.log(doc);
-  //    res.status(201).json({
-  //       status: 'success',
-  //       createdTour: doc,
-  //    });
-  // } catch (err) {
-  //    console.log(`Error creating the tour data on MongoDB: ${err.message}`);
-  //    res.status(404).json({ message: 'Error creating the tour data on MongoDB!' });
-  // }
+// NOTE: using factoryHandlet to create the general createTour function here, that's why i commented the below create function out!
+exports.createTour = factory.createOne(Tour);
 
-  // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA, when we use create() function, we
-  // don't need to make a new instance(object) from Tour and also we don't need to use save()
-  // function anymore. But in first method, we have to use both of them!
+// exports.createTour = catchAsync(async (req, res, next) => {
+//   // const newTour = req.body;
+//   // console.log(newTour);
+//   // NOTE: THIS IS THE FIRST METHOD TO CREATE THE DATA. In this method, we make a new instance(object)
+//   // from Tour but in the next method, we use Tour direct with create(), that's why don't need
+//   // to create a new instance of Tour. In addition to that, we don't need to use save().
+//   // try {
+//   //    const tour = new Tour({
+//   //       name: 'Test Tour-5',
+//   //       rating: 4.7,
+//   //       price: 997,
+//   //    });
+//   //    const doc = await tour.save();
+//   //    console.log(doc);
+//   //    res.status(201).json({
+//   //       status: 'success',
+//   //       createdTour: doc,
+//   //    });
+//   // } catch (err) {
+//   //    console.log(`Error creating the tour data on MongoDB: ${err.message}`);
+//   //    res.status(404).json({ message: 'Error creating the tour data on MongoDB!' });
+//   // }
 
-  // const newTour = await Tour.create({
-  //    name: 'Test Tour-6',
-  //    rating: 4.7,
-  //    price: 997,
-  // });
-  const newTour = await Tour.create(req.body); // recieve the data from Postman
-  // doc = await newTour.save();
-  console.log(newTour);
-  res.status(201).json({
-    status: 'success',
-    createdTour: newTour,
-  });
+//   // NOTE: THIS IS THE SECOND METHOD TO CREATE THE DATA, when we use create() function, we
+//   // don't need to make a new instance(object) from Tour and also we don't need to use save()
+//   // function anymore. But in first method, we have to use both of them!
 
-  // try {
+//   // const newTour = await Tour.create({
+//   //    name: 'Test Tour-6',
+//   //    rating: 4.7,
+//   //    price: 997,
+//   // });
+//   const newTour = await Tour.create(req.body); // recieve the data from Postman
+//   // doc = await newTour.save();
+//   console.log(newTour);
+//   res.status(201).json({
+//     status: 'success',
+//     createdTour: newTour,
+//   });
 
-  // } catch (err) {
-  //    console.log(`Error creating the tour data on MongoDB: ${err.message}`);
-  //    // res.status(400).json({ status: 'fail', message: 'Error creating the tour data on MongoDB!' });
-  //    res.status(400).json({ status: 'fail', message: err.message });
-  // }
+//   // try {
 
-  // const id_1 = tours.length - 1;
-  // const newId = id_1 + 1;
-  // const newTour = req.body;
-  // newTour.id = newId;
-  // console.log(newTour);
-  // tours.push(newTour);
-  // fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
-  //    res.status(201).json({
-  //       status: 'success',
-  //       tours: newTour,
-  //    })
-  // );
-});
+//   // } catch (err) {
+//   //    console.log(`Error creating the tour data on MongoDB: ${err.message}`);
+//   //    // res.status(400).json({ status: 'fail', message: 'Error creating the tour data on MongoDB!' });
+//   //    res.status(400).json({ status: 'fail', message: err.message });
+//   // }
+
+//   // const id_1 = tours.length - 1;
+//   // const newId = id_1 + 1;
+//   // const newTour = req.body;
+//   // newTour.id = newId;
+//   // console.log(newTour);
+//   // tours.push(newTour);
+//   // fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
+//   //    res.status(201).json({
+//   //       status: 'success',
+//   //       tours: newTour,
+//   //    })
+//   // );
+// });
 
 // NOTE: using updateOne in general handlerFactory instead of this updateTour:
 exports.updateTour = factory.updateOne(Tour);
