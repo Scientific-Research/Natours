@@ -79,7 +79,7 @@ router
 // :tourId => 65342wer
 router
   .route('/:tourId/reviews')
-  .post(protect, restrictTo('users'), createReview);
+  .post(protect, restrictTo('user'), createReview);
 
 // NOTE: get all the reviews from this tour with this ID for us!
 // GET /tour/65342wer/reviews
