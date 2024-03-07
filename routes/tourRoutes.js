@@ -4,6 +4,7 @@ const router = express.Router();
 
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
+const reviewController = require('../controllers/reviewController');
 
 // router.param('id', tourController.checkID);
 
@@ -14,10 +15,19 @@ const authController = require('../controllers/authController');
 
 // using destructuring:
 // const { getAllTours, getTour, createTour, updateTour, deleteTour, checkBody } = tourController;
-const { getAllTours, getTour, createTour, updateTour, deleteTour, aliasTopTours, getTourStats, getMonthlyPlan } =
-   tourController;
+const {
+  getAllTours,
+  getTour,
+  createTour,
+  updateTour,
+  deleteTour,
+  aliasTopTours,
+  getTourStats,
+  getMonthlyPlan,
+} = tourController;
 
 const { protect, restrictTo } = authController;
+const { createReview } = reviewController;
 
 // 127.0.0.1:3000/api/v1/tours/top-5-cheap
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
@@ -48,16 +58,33 @@ router.route('/').get(protect, getAllTours).post(createTour);
 // tourRouter.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 router
-   .route('/:id')
-   .get(getTour)
-   .patch(updateTour)
-   // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
-   // as our middleware here! => this is authentication
-   // after that when a person is already logged in, we check if he is allowed to delete a tour or
-   // not? we say here only admin and lead-guide can do that, that's why it is only restricted
-   // to admin and lead-guide! A normal user or we say just a user is not in this list,
-   // therefore, he is not allowed to delete something!
-   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
+  .route('/:id')
+  .get(getTour)
+  .patch(updateTour)
+  // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
+  // as our middleware here! => this is authentication
+  // after that when a person is already logged in, we check if he is allowed to delete a tour or
+  // not? we say here only admin and lead-guide can do that, that's why it is only restricted
+  // to admin and lead-guide! A normal user or we say just a user is not in this list,
+  // therefore, he is not allowed to delete something!
+  .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 // tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+///////////////////////////////////////////NESTED ROUTES///////////////////
+// NOTE: this is an example of nested Route: to create a new Review, we need two IDs: one for user and the second one for tour: the first ID for user is there anyway, when user is logged in and the second one which is ID for tour, we write it in the Route as following:
+// There is a parent child relationship here: reviews is child of tour as parent here!
+// it means we access reviews on the tour!
+
+// NOTE: POST /tour/65342wer/reviews =>/tour is already mounted in app.js, we don't need to repeat it again here:
+// :tourId => 65342wer
+router
+  .route('/:tourId/reviews')
+  .post(protect, restrictTo('users'), createReview);
+
+// NOTE: get all the reviews from this tour with this ID for us!
+// GET /tour/65342wer/reviews
+
+// NOTE: one step further: we can get the specific review with its ID(095687lhjg) from a specific tour with its ID(65342wer).
+// GET /tour/65342wer/reviews/095687lhjg
 
 module.exports = router;
