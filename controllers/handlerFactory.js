@@ -44,3 +44,16 @@ exports.updateOne = (Model) =>
       updatedDocument: updatedDocument,
     });
   });
+
+exports.createOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const newDocument = await Model.create(req.body); // recieve the data from Postman
+    // doc = await newTour.save();
+
+    console.log(newDocument);
+
+    res.status(201).json({
+      status: 'success',
+      createdDocument: newDocument,
+    });
+  });
