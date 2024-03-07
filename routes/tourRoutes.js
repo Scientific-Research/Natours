@@ -4,7 +4,8 @@ const router = express.Router();
 
 const tourController = require('../controllers/tourController');
 const authController = require('../controllers/authController');
-const reviewController = require('../controllers/reviewController');
+// const reviewController = require('../controllers/reviewController');
+const reviewRouter = require('../routes/reviewRoutes');
 
 // router.param('id', tourController.checkID);
 
@@ -15,6 +16,13 @@ const reviewController = require('../controllers/reviewController');
 
 // using destructuring:
 // const { getAllTours, getTour, createTour, updateTour, deleteTour, checkBody } = tourController;
+
+////////////////////////////////////////// Using merge Params //////////////////////////
+// NOTE: whenever you find a route like this in Postmann, goes to reviewRouter function() and run this function!
+// POST /tour/65342wer/reviews => it goes first of all to => app.use('/api/v1/tours', tourRouter); because /tours is there and then goes to the => tourRouter, after that it goes comes to the => /:tourId/reviews and at the end, it goes to the => reviewRouter.
+// NOTE: we have to make it possible, that reviewRouter can access to the tourId => we have to go to the reviewRouter.js and then magic of merge params comes into play!
+router.use('/:tourId/reviews', reviewRouter);
+
 const {
   getAllTours,
   getTour,
@@ -27,7 +35,7 @@ const {
 } = tourController;
 
 const { protect, restrictTo } = authController;
-const { createReview } = reviewController;
+// const { createReview } = reviewController;
 
 // 127.0.0.1:3000/api/v1/tours/top-5-cheap
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
@@ -77,9 +85,11 @@ router
 
 // NOTE: POST /tour/65342wer/reviews =>/tour is already mounted in app.js, we don't need to repeat it again here:
 // :tourId => 65342wer
-router
-  .route('/:tourId/reviews')
-  .post(protect, restrictTo('user'), createReview);
+// NOTE: but anyway, we will use another new feature in Mongoose, it called merge params and we don't need to use below nested route anymore! That's why i will comment it out!
+// because actually below nested route is related to the review and not tour, that's why it is not a good place here to write this nested route here!
+// router
+//   .route('/:tourId/reviews')
+//   .post(protect, restrictTo('user'), createReview);
 
 // NOTE: get all the reviews from this tour with this ID for us!
 // GET /tour/65342wer/reviews
