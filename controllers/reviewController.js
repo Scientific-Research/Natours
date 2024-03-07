@@ -1,7 +1,6 @@
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 const Review = require('../models/reviewModel');
-const Tour = require('../models/tourModel');
+const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   // NOTE: GET /tour/5c88fa8cf4afda39709c2951/reviews
@@ -43,3 +42,8 @@ exports.createReview = catchAsync(async (req, res, next) => {
     newReview: newReview,
   });
 });
+
+// NOTE: That's all what we have to do to delete a review using factory general function!
+// we use this factory function to delete all kinds of documents: tour, review, user ...
+// The next step is to create the route for this delete in reviewRoute.js
+exports.deleteReview = factory.deleteOne(Review);
