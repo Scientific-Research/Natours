@@ -183,66 +183,70 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   // // next();
 });
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
-  // to populate a field, we have to add populate and the related filed:
-  // populate means to fill up the field guides in our model in tourModel.js
-  // NOTE: our current guides filed has only our ref to User which show us the IDs from users but with populate we want to fill it up with actuall data and it would be only in the query and not in the database!
-  // In Postman => Get with Id => {{URL}}api/v1/tours/65e8788d29cf25cffa22716c
-  // and then we will get the Info about users with these two IDs in details.
-  // NOTE: when we want to say, we want some fields and we don't want some other fields:
-  // const tour = await Tour.findById(id).populate('guides');
-  //   const tour = await Tour.findById(id).populate({
-  //     path: 'guides',
-  //     select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
-  //   });
-  // NOTE: WE DON'T NEED TO ABOVE POPULATE STATEMENTS ANYMORE; BECAUSE I DEFINED IT AS A QUERY MIDDLEWARE IN tourModel.js AND GET ALL TOUR USE THAT TOO. SO, I DON'T NEED TO REAPEAT IT AGAIN! I WROTE IT AS QUERY MIDDLEWARE ONLY ONE TIME AND ALL OTHER QUERY CAN USE IT! SO, I BACK TO THE BELOW STATEMENT WITHOUT POPULATE:
-  // const tour = await Tour.findById(id);
-  // NOTE: we add populate to display the reviews for every tour, when we get one tour in Postman!
-  // in Postman: {{URL}}api/v1/tours/5c88fa8cf4afda39709c2951
-  const tour = await Tour.findById(id).populate('reviews');
-  console.log(id);
+// NOTE: i use the getOne() function in handlerFactory.js here as a general function for all the documents, that's whx i cokment the below function out:
 
-  // NOTE: what we have to do if we have an invalid id => 404 => Page Not Found!
-  // There is no tour => it means null => In JS, null is falsy value and in if statement,
-  // it will convert to false value:
-  if (!tour) {
-    // when we give parameters to next(), it means an error happened and we give our global
-    // Error App => AppError() function as this parameter and it has itself two parameters:
-    // message and statusCode and we have to use return to send it back and not going forward!
-    return next(new AppError('No tour found with that ID', 404));
-  }
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 
-  // try {
-  // NOTE: GETTING ONLY ONE TOUR USING findById(id)-- no need to make a new instance(object) and using
-  // save() function too!
-  // NOTE: Tour.findOne({_id: req.params.id})
-  console.log(tour);
-  res.status(200).json({ status: 'success', OneTour: tour });
-  // } catch (err) {
-  //    console.log('Error to get one tour from MongoDB!' + err.message);
-  //    res.status(400).json({ status: 'fail', message: err.message });
-  // }
+// exports.getTour = catchAsync(async (req, res, next) => {
+//   const id = req.params.id;
+//   // to populate a field, we have to add populate and the related filed:
+//   // populate means to fill up the field guides in our model in tourModel.js
+//   // NOTE: our current guides filed has only our ref to User which show us the IDs from users but with populate we want to fill it up with actuall data and it would be only in the query and not in the database!
+//   // In Postman => Get with Id => {{URL}}api/v1/tours/65e8788d29cf25cffa22716c
+//   // and then we will get the Info about users with these two IDs in details.
+//   // NOTE: when we want to say, we want some fields and we don't want some other fields:
+//   // const tour = await Tour.findById(id).populate('guides');
+//   //   const tour = await Tour.findById(id).populate({
+//   //     path: 'guides',
+//   //     select: '-__v -passwordChangedAt', // - means deselect, but of course, only in guides array!
+//   //   });
+//   // NOTE: WE DON'T NEED TO ABOVE POPULATE STATEMENTS ANYMORE; BECAUSE I DEFINED IT AS A QUERY MIDDLEWARE IN tourModel.js AND GET ALL TOUR USE THAT TOO. SO, I DON'T NEED TO REAPEAT IT AGAIN! I WROTE IT AS QUERY MIDDLEWARE ONLY ONE TIME AND ALL OTHER QUERY CAN USE IT! SO, I BACK TO THE BELOW STATEMENT WITHOUT POPULATE:
+//   // const tour = await Tour.findById(id);
+//   // NOTE: we add populate to display the reviews for every tour, when we get one tour in Postman!
+//   // in Postman: {{URL}}api/v1/tours/5c88fa8cf4afda39709c2951
+//   const tour = await Tour.findById(id).populate('reviews');
+//   console.log(id);
 
-  // const id = req.params.id;
-  // console.log('id: ' + id);
+//   // NOTE: what we have to do if we have an invalid id => 404 => Page Not Found!
+//   // There is no tour => it means null => In JS, null is falsy value and in if statement,
+//   // it will convert to false value:
+//   if (!tour) {
+//     // when we give parameters to next(), it means an error happened and we give our global
+//     // Error App => AppError() function as this parameter and it has itself two parameters:
+//     // message and statusCode and we have to use return to send it back and not going forward!
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
 
-  // try {
-  //    // console.log('Tours length: ' + tours.length);
-  //    // const tour = tours.find((item) => item.id === parseInt(id));
-  //    // if (!tour) throw new Error('Invalid ID! Please try again later!');
-  //    // console.log(tour);
-  //    // res.status(200).json({
-  //    //    status: 'success',
-  //    //    tour,
-  //    // });
-  // } catch (err) {
-  //    res.status(404).json({
-  //       status: 'fail',
-  //       message: err.message,
-  //    });
-  // }
-});
+//   // try {
+//   // NOTE: GETTING ONLY ONE TOUR USING findById(id)-- no need to make a new instance(object) and using
+//   // save() function too!
+//   // NOTE: Tour.findOne({_id: req.params.id})
+//   console.log(tour);
+//   res.status(200).json({ status: 'success', OneTour: tour });
+//   // } catch (err) {
+//   //    console.log('Error to get one tour from MongoDB!' + err.message);
+//   //    res.status(400).json({ status: 'fail', message: err.message });
+//   // }
+
+//   // const id = req.params.id;
+//   // console.log('id: ' + id);
+
+//   // try {
+//   //    // console.log('Tours length: ' + tours.length);
+//   //    // const tour = tours.find((item) => item.id === parseInt(id));
+//   //    // if (!tour) throw new Error('Invalid ID! Please try again later!');
+//   //    // console.log(tour);
+//   //    // res.status(200).json({
+//   //    //    status: 'success',
+//   //    //    tour,
+//   //    // });
+//   // } catch (err) {
+//   //    res.status(404).json({
+//   //       status: 'fail',
+//   //       message: err.message,
+//   //    });
+//   // }
+// });
 
 // NOTE: using factoryHandlet to create the general createTour function here, that's why i commented the below create function out!
 exports.createTour = factory.createOne(Tour);
