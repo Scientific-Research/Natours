@@ -1,9 +1,24 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Review = require('../models/reviewModel');
+const Tour = require('../models/tourModel');
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
-  const reviews = await Review.find();
+  // NOTE: GET /tour/5c88fa8cf4afda39709c2951/reviews
+  // Something like this in Postman: {{URL}}api/v1/tours/5c88fa8cf4afda39709c2951/reviews
+  // This is tourId that I need: 5c88fa8cf4afda39709c2951 to put between /tours/ and
+  // /reviews
+
+  const tourId = req.params.tourId;
+  let filter;
+  if (tourId) {
+    // we need review in which tour: 5c88fa8cf4afda39709c2951 which is tourId!
+    filter = { tour: tourId };
+  }
+  // an then we say to find, please find this review with such tourId!
+  const reviews = await Review.find(filter);
+
+  // const reviews = await Review.find();
 
   res.status(200).json({
     status: 'success',
