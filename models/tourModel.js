@@ -129,6 +129,14 @@ const tourSchema = new mongoose.Schema(
         // In this way, i create effectively a relationship between these two datasets!
       },
     ],
+    // NOTE: this is the child referencing => Tour referencing reviews! but we don't use it, instead, we use a new feature in mongoose, it called: virtual populate.
+    // I will comment it out to implement the virtual populate!
+    review: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Review',
+      },
+    ],
   },
   {
     // NOTE: we have to say that we will need the Virtuals, when the data goes to be published at
@@ -147,6 +155,15 @@ tourSchema.virtual('durationWeeks').get(function () {
   // NOTE: "this" points to current document!
   // NOTE: we can not use the durationWeek as part of a query for example: Tour.find(durationWeek===1)
   // it will not work because durationWeek is not persistant( doesn't stay) in DB!
+});
+
+// NOTE: implementing the review for tours using virtual populate:
+// VIRTUAL POPULATE: I USED THE CHILD RFERENCING ABOVE, BUT I COMMENTED THAT OUT AND I USE NOW HERE VIRTUAL POPULATE!
+// NOTE: I will test the virtual populate in Postman, when we get only one tour => it means, we get reviews only for one tour. Reviews for all tours are too much information to send to the client => because we have all tours and the reviews comes in too! => too juch info! In Postman: {{URL}}api/v1/tours/5c88fa8cf4afda39709c2951
+tourSchema.virtual('reviews', {
+  ref: 'Review', // here we need the name of the model to that we reference!
+  foreignField: 'tour', // tour is located in reviewModel.js
+  localField: '_id', // these two fields, Review and tour are connected together via _id.
 });
 
 // NOTE: We define a Document middleware from Mongoose and not from Express and it must be
