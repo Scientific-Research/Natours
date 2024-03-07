@@ -306,60 +306,63 @@ exports.createTour = catchAsync(async (req, res, next) => {
   // );
 });
 
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const id = req.params.id;
+// NOTE: using updateOne in general handlerFactory instead of this updateTour:
+exports.updateTour = factory.updateOne(Tour);
 
-  // try {
-  const updatedTour = await Tour.findByIdAndUpdate(id, req.body, {
-    new: true, // to send the new(updated) tour to the client.
-    runValidators: true,
-  });
+// exports.updateTour = catchAsync(async (req, res, next) => {
+//   const id = req.params.id;
 
-  if (!updatedTour) {
-    // when we give parameters to next(), it means an error happened and we give our global
-    // Error App => AppError() function as this parameter and it has itself two parameters:
-    // message and statusCode and we have to use return to send it back and not going forward!
-    return next(new AppError('No tour found with that ID', 404));
-  }
+//   // try {
+//   const updatedTour = await Tour.findByIdAndUpdate(id, req.body, {
+//     new: true, // to send the new(updated) tour to the client.
+//     runValidators: true,
+//   });
 
-  console.log(updatedTour);
-  res.status(200).json({
-    status: 'success',
-    updatedTour: updatedTour,
-  });
-  // } catch (err) {
-  //    console.log('Error updating the Tour!' + err.message);
-  //    res.status(400).json({ status: 'fail', message: err.message });
-  // }
+//   if (!updatedTour) {
+//     // when we give parameters to next(), it means an error happened and we give our global
+//     // Error App => AppError() function as this parameter and it has itself two parameters:
+//     // message and statusCode and we have to use return to send it back and not going forward!
+//     return next(new AppError('No tour found with that ID', 404));
+//   }
 
-  // try {
-  //    const tour = tours.find((item) => item.id === parseInt(id));
-  //    if (!tour) throw new Error('Invalid ID! Please try again later!');
-  //    console.log('Before Patch => Updating');
-  //    console.log(tour);
+//   console.log(updatedTour);
+//   res.status(200).json({
+//     status: 'success',
+//     updatedTour: updatedTour,
+//   });
+//   // } catch (err) {
+//   //    console.log('Error updating the Tour!' + err.message);
+//   //    res.status(400).json({ status: 'fail', message: err.message });
+//   // }
 
-  //    const newTour = req.body;
+//   // try {
+//   //    const tour = tours.find((item) => item.id === parseInt(id));
+//   //    if (!tour) throw new Error('Invalid ID! Please try again later!');
+//   //    console.log('Before Patch => Updating');
+//   //    console.log(tour);
 
-  //    newTour.id = parseInt(id);
-  //    let toursId = tours.indexOf(tours[id]);
-  //    tours[toursId] = newTour;
+//   //    const newTour = req.body;
 
-  //    console.log('After Patch => Updating');
-  //    console.log(newTour);
+//   //    newTour.id = parseInt(id);
+//   //    let toursId = tours.indexOf(tours[id]);
+//   //    tours[toursId] = newTour;
 
-  //    fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
-  //       res.status(201).json({
-  //          status: 'success',
-  //          tours: newTour,
-  //       })
-  //    );
-  // } catch (err) {
-  //    res.status(404).json({
-  //       status: 'fail',
-  //       message: err.message,
-  //    });
-  // }
-});
+//   //    console.log('After Patch => Updating');
+//   //    console.log(newTour);
+
+//   //    fs.writeFile(`${__dirname}/../dev-data/data/tours-simple.json`, JSON.stringify(tours, null, 2), () =>
+//   //       res.status(201).json({
+//   //          status: 'success',
+//   //          tours: newTour,
+//   //       })
+//   //    );
+//   // } catch (err) {
+//   //    res.status(404).json({
+//   //       status: 'fail',
+//   //       message: err.message,
+//   //    });
+//   // }
+// });
 
 // NOTE: we comment this delete middleware function here out and use our HANDLERFACTORY function here.
 exports.deleteTour = factory.deleteOne(Tour);
