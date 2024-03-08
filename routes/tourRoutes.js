@@ -73,14 +73,17 @@ router
 
 router
   .route('/:id')
+  // here, everybody can show a single tour!
   .get(getTour)
-  .patch(updateTour)
+  // but only logged in persons that are admin or lead-guide, can edit the tour!
+  .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
   // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
   // as our middleware here! => this is authentication
   // after that when a person is already logged in, we check if he is allowed to delete a tour or
   // not? we say here only admin and lead-guide can do that, that's why it is only restricted
   // to admin and lead-guide! A normal user or we say just a user is not in this list,
   // therefore, he is not allowed to delete something!
+  // but only logged in persons that are admin or lead-guide can delete a tour!
   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 // tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
