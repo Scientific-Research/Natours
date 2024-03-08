@@ -38,6 +38,8 @@ exports.getAllUsers = factory.getAll(User);
 // });
 
 // The getMe comes before getOne in userRoutes.js because it is very similar to the getOne but only the difference is get One takes the req.params.id and get Me takes req.user.id, that's why with this statement: req.params.id = req.user.id; we assign the user.id to params.id and other things are exactly the same and we don't need to chnage them!
+// router.get('/me', protect, getMe, getUser);
+// when the getMe is before getUser, it means to execute getUser as getMe, after coming from protect(the user is logged already), we come to the getMe => params.id would be user.id, and this is what we need in getMe and at the end, getUser will be executed and because of we assigned the user.id to the params.id => the getUser would be actually getMe, because in getUser, we just need the params.id and not the user.id!
 exports.getMe = (req, res, next) => {
   req.params.id = req.user.id;
   next();
