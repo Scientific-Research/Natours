@@ -39,20 +39,34 @@ router.post('/forgotPassword', forgotPassword);
 router.patch('/resetPassword/:token', resetPassword);
 
 // updateMyPassword works only for logged in users, that's why we have to put protect in the route which puts the user object on our request object!
-router.patch('/updateMyPassword', protect, updatePassword);
+
+// NOTE: router.use(protect); means that all the routes after this point will be protected! because middleware runs in sequence! and we don't need to mention the protect word one by one for every route and the routes that had already protect middleware, we can just remove them! we use this middleware that comes before all other routes!
+
+// Protect all routes after this middleware!
+router.use(protect);
+// NOTE: from this point to the end, for every operation the user must be logged in!
+
+// router.patch('/updateMyPassword', protect, updatePassword);
+router.patch('/updateMyPassword', updatePassword);
 
 // NOTE: // The getMe comes before getOne in userRoutes.js because it is very similar to the getOne but only the difference is get One takes the req.params.id and get Me takes req.user.id, that's why with this statement: req.params.id = req.user.id; we assign the user.id to params.id and other things are exactly the same and we don't need to chnage them!
 // router.get('/me', protect, getMe, getUser);
 // when the getMe is before getUser, it means to execute getUser as getMe, after coming from protect(the user is logged already), we come to the getMe => params.id would be user.id, and this is what we need in getMe and at the end, getUser will be executed and because of we assigned the user.id to the params.id => the getUser would be actually getMe, because in getUser, we just need the params.id and not the user.id!
-router.get('/me', protect, getMe, getUser);
+
+// router.get('/me', protect, getMe, getUser);
+router.get('/me', getMe, getUser);
 
 // Route for users:
 // NOTE: protect: it means only logged in users can update or delete the user information!
 // NOTE: this route muss stay at the top of other routes which are only intended for users! otherwise, it will not work!
-router.patch('/updateMe', protect, updateMe);
+
+// router.patch('/updateMe', protect, updateMe);
+router.patch('/updateMe', updateMe);
 
 // NOTE: This will not delete the user from database, it will make it unaccessable only!
-router.delete('/deleteMe', protect, deleteMe);
+
+// router.delete('/deleteMe', protect, deleteMe);
+router.delete('/deleteMe', deleteMe);
 
 router.route('/').get(getAllUsers).post(createUser);
 // userRouter.route('/').get(getAllUsers).post(createUser);
