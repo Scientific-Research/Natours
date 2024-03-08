@@ -20,20 +20,22 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  // res.status(500).json({
-  //    data: {
-  //       status: 'error',
-  //       message: 'This route is not yet defined! - getAllUsers',
-  //    },
-  // });
+// NOTE: replacing this getAllUsers with getAll() function in handlerFactory.js and then i commented this function out!
+exports.getAllUsers = factory.getAll(User);
+// exports.getAllUsers = catchAsync(async (req, res, next) => {
+//   // res.status(500).json({
+//   //    data: {
+//   //       status: 'error',
+//   //       message: 'This route is not yet defined! - getAllUsers',
+//   //    },
+//   // });
 
-  // NOTE: because of select:false for password in userModel.js, we don't see the password in
-  // Postman, when we get all users with this command: 127.0.0.1:3000/api/v1/users
-  const users = await User.find();
-  const Result = users.length;
-  res.status(200).json({ status: 'success', Results: Result, AllUsers: users });
-});
+//   // NOTE: because of select:false for password in userModel.js, we don't see the password in
+//   // Postman, when we get all users with this command: 127.0.0.1:3000/api/v1/users
+//   const users = await User.find();
+//   const Result = users.length;
+//   res.status(200).json({ status: 'success', Results: Result, AllUsers: users });
+// });
 
 // NOTE: we want to update the currently logged in User: => updating name and email address:
 exports.updateMe = catchAsync(async (req, res, next) => {
