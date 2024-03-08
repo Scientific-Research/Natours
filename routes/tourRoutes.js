@@ -58,7 +58,13 @@ router.route('/monthly-plan/:year').get(getMonthlyPlan);
 // In this way, it will protect the route from unauthorized access!
 // NOW, we have to create this middleware in authController.js and then put it here beside
 // getAllTours => (THIS CREATED MIDDLEWARE => protect, getAllTours)
-router.route('/').get(protect, getAllTours).post(createTour);
+// router.route('/').get(protect, getAllTours).post(createTour);
+
+// NOTE: i removed the protect from below route to access any person from all over the world to see the list of all tours available in our website and not only the logged in people!
+router
+  .route('/')
+  .get(getAllTours)
+  .post(protect, restrictTo('admin', 'lead-guide'), createTour);
 // WHEN CHECKBODY IS TRUE, ROUTER GOES TO THE CREATETOUR(); OTHERWISE, IT SHOWS US THE
 // BODY CHECK ERROR!
 // tourRouter.route('/').get(getAllTours).post(createTour);
