@@ -147,7 +147,9 @@ const tourSchema = new mongoose.Schema(
 );
 
 // NOTE: specifying an index for price:
-tourSchema.index({ price: 1 }); // -1 for descending Order!
+// tourSchema.index({ price: 1 }); // -1 for descending Order!
+// NOTE: or using Compound indexing:
+tourSchema.index({ price: 1, ratingsAverage: -1 }); // -1 for descending Order!
 
 // NOTE: durationWeeks will not persist in DB, it will be there only when get the data and then
 // will be gone!
