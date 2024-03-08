@@ -38,13 +38,18 @@ const { protect, restrictTo } = authController;
 // const { createReview } = reviewController;
 
 // 127.0.0.1:3000/api/v1/tours/top-5-cheap
+// every one can see our top 5 tours - there is no restriction about that!
 router.route('/top-5-cheap').get(aliasTopTours, getAllTours);
 
 // NOTE: adding Tour for Statistics using Aggregation Pipeline:
+// everybody can see our tour-stats - there is no restriction about that!
 router.route('/tour-stats').get(getTourStats);
 
 // NOTE: adding a new route for getting monthly plan:
-router.route('/monthly-plan/:year').get(getMonthlyPlan);
+// our monthly plan info is restricted only for admin, lead-guide or guide - normal user can not see this info!
+router
+  .route('/monthly-plan/:year')
+  .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 // router.route('/').get(getAllTours).post(checkBody, createTour);
