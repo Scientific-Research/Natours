@@ -86,8 +86,10 @@ exports.getAll = (Model) =>
 
       const features = new APIFeatures(Model.find(filter), req.query).filter().sort().limitFields().pagination();
 
-      // const docs = await features.query; // We have to write it in this way, otherwise, it
-      const docs = await features.query.explain(); // We have to write it in this way, otherwise, it
+      const docs = await features.query; // We have to write it in this way, otherwise, it
+
+      //NOTE: we need the explain() here only for some info about indexing and we ahve now all the required indexing in MongoDB and we don't need the explain anymore, that's why i commented it out!
+      // const docs = await features.query.explain(); // We have to write it in this way, otherwise, it
       const Result = docs.length;
 
       res.status(200).json({ status: 'success', Results: Result, AllDocuments: docs });

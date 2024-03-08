@@ -151,6 +151,9 @@ const tourSchema = new mongoose.Schema(
 // NOTE: or using Compound indexing:
 tourSchema.index({ price: 1, ratingsAverage: -1 }); // -1 for descending Order!
 
+// NOTE: one index also for slug:
+tourSchema.index({ slug: 1 });
+
 // NOTE: durationWeeks will not persist in DB, it will be there only when get the data and then
 // will be gone!
 // defining virtual properties: we have to write regular function instead of arrow function here
