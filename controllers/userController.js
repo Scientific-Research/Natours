@@ -37,6 +37,12 @@ exports.getAllUsers = factory.getAll(User);
 //   res.status(200).json({ status: 'success', Results: Result, AllUsers: users });
 // });
 
+// The getMe comes before getOne in userRoutes.js because it is very similar to the getOne but only the difference is get One takes the req.params.id and get Me takes req.user.id, that's why with this statement: req.params.id = req.user.id; we assign the user.id to params.id and other things are exactly the same and we don't need to chnage them!
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
 // NOTE: we want to update the currently logged in User: => updating name and email address:
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create error if user POSTs password data
