@@ -25,6 +25,9 @@ const {
 } = reviewController;
 const { protect, restrictTo } = authController;
 
+// NOTE: we do the same exactly like what we have done for tour! from this point, no one can access any of these below routes unless this person is already logged in! I removed the protect from below routes because it is here!
+router.use(protect);
+
 // POST /tour/65342wer/reviews
 // GET /tour/65342wer/reviews
 router.route('/').get(getAllReviews);
@@ -32,10 +35,13 @@ router.route('/:id').get(getReview);
 // NOTE: we want that only logged in users and also regular users(not admin or guide users) post a review!
 router
   .route('/')
-  .post(protect, restrictTo('user'), setTourUserIds, createReview);
+  // .post(protect, restrictTo('user'), setTourUserIds, createReview);
+  .post(restrictTo('user'), setTourUserIds, createReview);
 
-router.route('/:id').patch(protect, updateReview);
+// router.route('/:id').patch(protect, updateReview);
+router.route('/:id').patch(updateReview);
 
-router.route('/:id').delete(protect, restrictTo('admin'), deleteReview);
+// router.route('/:id').delete(protect, restrictTo('admin'), deleteReview);
+router.route('/:id').delete(restrictTo('admin'), deleteReview);
 
 module.exports = router;
