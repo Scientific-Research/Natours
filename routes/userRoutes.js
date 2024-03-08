@@ -24,6 +24,7 @@ const {
   forgotPassword,
   resetPassword,
   updatePassword,
+  restrictTo,
 } = authController;
 
 // Route for auths:
@@ -67,6 +68,10 @@ router.patch('/updateMe', updateMe);
 
 // router.delete('/deleteMe', protect, deleteMe);
 router.delete('/deleteMe', deleteMe);
+
+////////////////////////////////////ONLY ADMIN PEOPLE CAN ACCESS THESE BELOW ROUTES/////////
+
+router.use(restrictTo('admin')); // ONLY ADMIN CAN DO THE FOLLOWING OPERATIONS IN THESE BELOW ROUTES! THEY ARE NOT ONLY PROTECTED, BUT ALSO RESTRICTED TO THE ADMIN! BUT FOR THE ROUTES BEFORE THAT, ALL LOGGED IN PEOPLE CAN ACCESS THEM AND NOT ONLY ADMIN!
 
 router.route('/').get(getAllUsers).post(createUser);
 // userRouter.route('/').get(getAllUsers).post(createUser);
