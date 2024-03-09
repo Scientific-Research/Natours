@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Tour = require('./tourModel');
 // review / rating / createdAt / ref to tour / ref to user
 const reviewSchema = mongoose.Schema(
    {
@@ -79,7 +79,22 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
          },
       },
    ]);
-  //  console.log(stats);
+   //  console.log(stats);
+
+   // NOTE: Persist the stats data in databas in its tour instead of current default value:
+   /**
+     * [
+  {
+    _id: new ObjectId('65eba37e2c068a52a29c7cc4'),
+    nRating: 3,
+    avgRating: 4.333333333333333
+  }
+]
+     */
+   await Tour.findByIdAndUpdate(tourId, {
+      ratingsQuantity: stats[0].nRating, // nRating is in null position
+      ratingsAverage: stats[0].avgRating, // avgRating is in null position too!
+   });
 };
 
 // NOTE: to call the above function whenever a new document is created! => we use pre function middleware!
