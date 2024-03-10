@@ -33,6 +33,7 @@ const {
    getTourStats,
    getMonthlyPlan,
    getToursWithin,
+   getDistances,
 } = tourController;
 
 const { protect, restrictTo } = authController;
@@ -57,6 +58,9 @@ router.route('/monthly-plan/:year').get(protect, restrictTo('admin', 'lead-guide
 router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin);
 // /tours-within?distance=233&center=-40,45&unit=mi => this is not so clean way
 // /tours-within/233/center/-40,45/unit/mi => we use this way which is more cleaner!
+
+// NOTE: to calculate the distance from a certain points to all of our tours!
+router.route('/distances/:latlng/unit/:unit').get(getDistances);
 
 // NOTE: we use a middleware function here to protect the route to run BEFORE each
 // of these handler functions here is: getAllTours =>
