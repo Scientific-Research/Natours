@@ -79,7 +79,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
          },
       },
    ]);
-   //  console.log(stats);
+   console.log(stats);
 
    // NOTE: Persist the stats data in databas in its tour instead of current default value:
    /**
