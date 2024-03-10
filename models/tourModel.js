@@ -156,6 +156,9 @@ tourSchema.index({ price: 1, ratingsAverage: -1 }); // -1 for descending Order!
 // NOTE: one index also for slug:
 tourSchema.index({ slug: 1 });
 
+// NOTE: another index for Geolocation:
+tourSchema.index({ startLocation: '2dsphere' });
+
 // NOTE: durationWeeks will not persist in DB, it will be there only when get the data and then
 // will be gone!
 // defining virtual properties: we have to write regular function instead of arrow function here
