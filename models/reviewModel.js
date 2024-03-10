@@ -108,26 +108,21 @@ reviewSchema.post('save', function () {
 // findByIdAndUpdate
 // findByIdAndDelete
 reviewSchema.pre(/^findOneAnd/, async function (next) {
-   // after mongoose version 6, we will get this error: MongooseError: Query was already executed! to avoid that, we can do one the following steps:
+   // NOTE: after mongoose version 6, we will get this error: MongooseError: Query was already executed! to avoid that, we can do one the following steps:
    // 1- downgrade the mongoose version for example to 5 => npm i mongoose@5 or
    // using the .clone() before .findOne()
-   const r = await this.clone().findOne();
-   console.log(r);
+   // NOTE: to pass the variable r from pre middleware to post middleware, we need to wrap r in a "this" => in this case we can access to that varibale with "this" again in a post middleware!
+   //  const r = await this.clone().findOne(); r is here a simple variable
+   this.r = await this.clone().findOne(); // we created a property on r variable
+   console.log(this.r);
+   next();
 });
 
-// reviewSchema.pre(/^findOneAnd/, function (next) {
-//    this.findOne()
-//       .then((r) => {
-//          console.log(r);
-//          next();
-//       })
-//       .clone()
-//       .exec()
-//       .catch((error) => {
-//          console.error('Error fetching data:', error);
-//          next(error);
-//       });
-// });
+reviewSchema.post(/^findOneAnd/, async function () {
+   // NOTE: to call the calcAverageRatings function, we have to use this.r.constructor
+   // this.r = await this.clone().findOne(); doesn't NOT work here, query has already executed!
+   await this.r.constructor.calcAverageRatings(this.r.tour);
+});
 
 const Review = mongoose.model('Review', reviewSchema);
 module.exports = Review;
