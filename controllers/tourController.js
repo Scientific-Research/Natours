@@ -546,6 +546,9 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 // NOTE: we want to pass the coordinates where you are!
 router.route('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
 // /tours-within/233/center/34.111745,-118.113491/unit/mi => we use this way which is more cleaner! */
+// TWO ROUTE EXAMPLES IN POSTMAN:
+// {{URL}}api/v1/tours/tours-within/400/center/34.111745,-118.113491/unit/mi => 400 miles from Los Angeles
+// {{URL}}api/v1/tours/tours-within/200/center/34.111745,-118.113491/unit/mi => 200 miles from Los Angeles
 exports.getToursWithin = catchAsync(async (req, res, next) => {
    const { distance, latlng, unit } = req.params;
 
