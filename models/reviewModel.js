@@ -38,6 +38,10 @@ const reviewSchema = mongoose.Schema(
    }
 );
 
+// NOTE: we want that one user can send only one comment for one tour!
+// we use index feature in mongoose!
+reviewSchema.index({ tour: 1, user: 1 }, { unique: true });
+
 // NOTE: we can also use pre query middleware and don't repeat again the populate code:
 // this middleware populate the name and tour instead of their IDs for Reviews!
 // we see now two IDs for user and tour, but after the population process, It will fill up the user and tour with respected names instead of their IDs.
