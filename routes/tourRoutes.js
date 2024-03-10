@@ -24,14 +24,15 @@ const reviewRouter = require('../routes/reviewRoutes');
 router.use('/:tourId/reviews', reviewRouter);
 
 const {
-  getAllTours,
-  getTour,
-  createTour,
-  updateTour,
-  deleteTour,
-  aliasTopTours,
-  getTourStats,
-  getMonthlyPlan,
+   getAllTours,
+   getTour,
+   createTour,
+   updateTour,
+   deleteTour,
+   aliasTopTours,
+   getTourStats,
+   getMonthlyPlan,
+   getToursWithin,
 } = tourController;
 
 const { protect, restrictTo } = authController;
@@ -47,12 +48,15 @@ router.route('/tour-stats').get(getTourStats);
 
 // NOTE: adding a new route for getting monthly plan:
 // our monthly plan info is restricted only for admin, lead-guide or guide - normal user can not see this info!
-router
-  .route('/monthly-plan/:year')
-  .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
+router.route('/monthly-plan/:year').get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 // router.route('/').get(getAllTours).post(checkBody, createTour);
+
+// NOTE: we want to pass the coordinates where you are!
+router.route('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
+// /tours-distance?distance=233&center=-40,45&unit=mi => this is not so clean way
+// /tours-distance/233/center/-40,45/unit/mi => we use this way which is more cleaner!
 
 // NOTE: we use a middleware function here to protect the route to run BEFORE each
 // of these handler functions here is: getAllTours =>
@@ -66,10 +70,7 @@ router
 // router.route('/').get(protect, getAllTours).post(createTour);
 
 // NOTE: i removed the protect from below route to access any person from all over the world to see the list of all tours available in our website and not only the logged in people!
-router
-  .route('/')
-  .get(getAllTours)
-  .post(protect, restrictTo('admin', 'lead-guide'), createTour);
+router.route('/').get(getAllTours).post(protect, restrictTo('admin', 'lead-guide'), createTour);
 // WHEN CHECKBODY IS TRUE, ROUTER GOES TO THE CREATETOUR(); OTHERWISE, IT SHOWS US THE
 // BODY CHECK ERROR!
 // tourRouter.route('/').get(getAllTours).post(createTour);
@@ -77,19 +78,19 @@ router
 // tourRouter.route('/api/v1/tours/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 router
-  .route('/:id')
-  // here, everybody can show a single tour!
-  .get(getTour)
-  // but only logged in persons that are admin or lead-guide, can edit the tour!
-  .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
-  // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
-  // as our middleware here! => this is authentication
-  // after that when a person is already logged in, we check if he is allowed to delete a tour or
-  // not? we say here only admin and lead-guide can do that, that's why it is only restricted
-  // to admin and lead-guide! A normal user or we say just a user is not in this list,
-  // therefore, he is not allowed to delete something!
-  // but only logged in persons that are admin or lead-guide can delete a tour!
-  .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
+   .route('/:id')
+   // here, everybody can show a single tour!
+   .get(getTour)
+   // but only logged in persons that are admin or lead-guide, can edit the tour!
+   .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
+   // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
+   // as our middleware here! => this is authentication
+   // after that when a person is already logged in, we check if he is allowed to delete a tour or
+   // not? we say here only admin and lead-guide can do that, that's why it is only restricted
+   // to admin and lead-guide! A normal user or we say just a user is not in this list,
+   // therefore, he is not allowed to delete something!
+   // but only logged in persons that are admin or lead-guide can delete a tour!
+   .delete(protect, restrictTo('admin', 'lead-guide'), deleteTour);
 // tourRouter.route('/:id').get(getTour).patch(updateTour).delete(deleteTour);
 
 ///////////////////////////////////////////NESTED ROUTES///////////////////
