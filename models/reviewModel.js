@@ -79,7 +79,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
          },
       },
    ]);
-  //  console.log(stats);
+   //  console.log(stats);
 
    // NOTE: Persist the stats data in databas in its tour instead of current default value:
    /**
@@ -91,7 +91,7 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   }
 ]
      */
-    // NOTE: we have to add this if and else here because after deleeting the last document, the quantity and average will be null and we have replace them with default values in else setion.
+   // NOTE: we have to add this if and else here because after deleeting the last document, the quantity and average will be null and we have replace them with default values in else setion.
    if (stats.length > 0) {
       await Tour.findByIdAndUpdate(tourId, {
          ratingsQuantity: stats[0].nRating, // nRating is in null position
@@ -122,13 +122,17 @@ reviewSchema.pre(/^findOneAnd/, async function (next) {
    // NOTE: to pass the variable r from pre middleware to post middleware, we need to wrap r in a "this" => in this case we can access to that varibale with "this" again in a post middleware!
    //  const r = await this.clone().findOne(); r is here a simple variable
    this.r = await this.clone().findOne(); // we created a property on r variable
-  //  console.log(this.r);
+   //  console.log(this.r);
    next();
 });
 
 reviewSchema.post(/^findOneAnd/, async function () {
    // NOTE: to call the calcAverageRatings function, we have to use this.r.constructor
    // this.r = await this.clone().findOne(); doesn't NOT work here, query has already executed!
+
+   if (!this.r) {
+      return;
+   }
    await this.r.constructor.calcAverageRatings(this.r.tour);
 });
 
