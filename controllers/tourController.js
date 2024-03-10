@@ -546,20 +546,29 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
 // NOTE: we want to pass the coordinates where you are!
 router.route('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
 // /tours-within/233/center/34.111745,-118.113491/unit/mi => we use this way which is more cleaner! */
-exports.getToursWithin = (req, res, next) => {
+exports.getToursWithin = catchAsync(async (req, res, next) => {
    const { distance, latlng, unit } = req.params;
 
    // to get the coordinated from latitude and langitude in a format like this: 34.111745,-118.113491
    // split needs string content which latlng has!
    const [lat, lng] = latlng.split(','); // => this produces an array of two elements
 
+   // define radius:
+   const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
    if (!lat || !lng) {
       next(new AppError('Please provide latitude and longitude in this format: lat,lng.', 400));
    }
+
+   const tours = await Tour.find({
+      startLocation: { $geoWithin: { $centerShpere: [[lng, lat], radius] } },
+   });
 
    console.log(distance, lat, lng, unit);
 
    res.status(200).json({
       status: 'success',
+      results: tours.length,
+      Geolocation: tours,
    });
-};
+});
