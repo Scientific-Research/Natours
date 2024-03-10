@@ -54,9 +54,9 @@ router.route('/monthly-plan/:year').get(protect, restrictTo('admin', 'lead-guide
 // router.route('/').get(getAllTours).post(checkBody, createTour);
 
 // NOTE: we want to pass the coordinates where you are!
-router.route('/tours-within/:distance/center/:latlng/unit/:unit', getToursWithin);
-// /tours-distance?distance=233&center=-40,45&unit=mi => this is not so clean way
-// /tours-distance/233/center/-40,45/unit/mi => we use this way which is more cleaner!
+router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin);
+// /tours-within?distance=233&center=-40,45&unit=mi => this is not so clean way
+// /tours-within/233/center/-40,45/unit/mi => we use this way which is more cleaner!
 
 // NOTE: we use a middleware function here to protect the route to run BEFORE each
 // of these handler functions here is: getAllTours =>
