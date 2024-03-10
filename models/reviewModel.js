@@ -105,5 +105,29 @@ reviewSchema.post('save', function () {
    //  next(); post doesn't access to next() - we use the next() only for pre().
 });
 
+// findByIdAndUpdate
+// findByIdAndDelete
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+   // after mongoose version 6, we will get this error: MongooseError: Query was already executed! to avoid that, we can do one the following steps:
+   // 1- downgrade the mongoose version for example to 5 => npm i mongoose@5 or
+   // using the .clone() before .findOne()
+   const r = await this.clone().findOne();
+   console.log(r);
+});
+
+// reviewSchema.pre(/^findOneAnd/, function (next) {
+//    this.findOne()
+//       .then((r) => {
+//          console.log(r);
+//          next();
+//       })
+//       .clone()
+//       .exec()
+//       .catch((error) => {
+//          console.error('Error fetching data:', error);
+//          next(error);
+//       });
+// });
+
 const Review = mongoose.model('Review', reviewSchema);
 module.exports = Review;
