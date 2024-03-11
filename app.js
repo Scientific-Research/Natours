@@ -150,12 +150,28 @@ app.use((req, res, next) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 // 3) ROUTES
+// NOTE: This route is for pug engine template:
+// 1)
 app.get('/', (req, res) => {
    // we don't use .json({}) anymore, rather, we use .render() tosend the data to browser!
    res.status(200).render('base', {
       tour: 'The Forest Hiker',
       user: 'Jonas',
    }); // we don't need to specify .pug extension. Express will detect it automatically!
+});
+
+// 2)
+app.get('/overview', (req, res) => {
+   res.status(200).render('overview', {
+      title: 'All Tours',
+   });
+});
+
+// 3)
+app.get('/tour', (req, res) => {
+   res.status(200).render('tour', {
+      title: 'The Forest Hiker Tour',
+   });
 });
 
 app.use('/api/v1/users', userRouter);
