@@ -575,3 +575,47 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
       Geolocation: tours,
    });
 });
+
+// NOTE: GEOLOCATION => getDistances
+// this is an example of route in Postman: {{URL}}api/v1/tours/distances/34.111745,-118.113491/unit/mi
+exports.getDistances = catchAsync(async (req, res, next) => {
+   const { latlng, unit } = req.params;
+
+   // to get the coordinated from latitude and langitude in a format like this: 34.111745,-118.113491
+   // split needs string content which latlng has!
+   const [lat, lng] = latlng.split(','); // => this produces an array of two elements
+
+   if (!lat || !lng) {
+      next(new AppError('Please provide latitude and longitude in this format: lat,lng.', 400));
+   }
+
+   // Start to do the calculation => we use the aggregation pipeline:
+   // which is called on the model itself => Tour
+   const distances = await Tour.aggregate([
+      {
+         // it needs to be always the first stage!
+         $geoNear: {
+            near: {
+               type: 'Point',
+               // * 1 to convert them to the number!
+               coordinates: [lng * 1, lat * 1],
+            },
+            distanceField: 'distance',
+            // a big number in meter * 0.001 => convert to km
+            distanceMultiplier: 0.001,
+         },
+      },
+      // using Project to show only some of the data => we need only distance and name
+      {
+         $project: {
+            distance: 1,
+            name: 1,
+         },
+      },
+   ]);
+
+   res.status(200).json({
+      status: 'success',
+      Geodistances: distances,
+   });
+});
