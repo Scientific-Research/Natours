@@ -1,2 +1,18 @@
-h1 The Park Camper 
-//- Pug translate this into HTML => <h1> The Park Camper </h1> 
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" href="css/style.css")
+    link(rel="shortcut icon" href="img/favicon.png" type="image/png")
+    title Natours | #{tour}
+
+  body 
+    h1= tour  
+    h2= user.toUpperCase() 
+    // we can write JS in Pug too! 
+    //- h1 The Park Camper 
+    //- Pug translate this into HTML => <h1> The Park Camper </h1> 
+    - const x = 9;
+    h2= 2*x 
+    p This is just some texts
