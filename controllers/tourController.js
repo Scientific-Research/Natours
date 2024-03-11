@@ -585,6 +585,8 @@ exports.getDistances = catchAsync(async (req, res, next) => {
    // split needs string content which latlng has!
    const [lat, lng] = latlng.split(','); // => this produces an array of two elements
 
+   const multiplier = unit === 'mi' ? 0.00062137 : 0.001;
+
    if (!lat || !lng) {
       next(new AppError('Please provide latitude and longitude in this format: lat,lng.', 400));
    }
@@ -602,7 +604,8 @@ exports.getDistances = catchAsync(async (req, res, next) => {
             },
             distanceField: 'distance',
             // a big number in meter * 0.001 => convert to km
-            distanceMultiplier: 0.001,
+            // distanceMultiplier: 0.001,
+            distanceMultiplier: multiplier,
          },
       },
       // using Project to show only some of the data => we need only distance and name
