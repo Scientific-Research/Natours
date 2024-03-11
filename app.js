@@ -150,6 +150,11 @@ app.use((req, res, next) => {
 // app.delete('/api/v1/tours/:id', deleteTour);
 
 // 3) ROUTES
+app.get('/', (req, res) => {
+   // we don't use .json({}) anymore, rather, we use .render() tosend the data to browser!
+   res.status(200).render('base'); // we don't need to specify .pug extension. Express will detect it automatically!
+});
+
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/reviews', reviewRouter);
