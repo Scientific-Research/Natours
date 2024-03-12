@@ -32,7 +32,8 @@ block content
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Quick facts
 
-          +overviewBox('Next date',tour.startDates[0].toLocaleString('en-us',{month:'long', year:'numeric'}),'calendar')
+          - const date = tour.startDates[0].toLocaleString('en-us',{month:'long', year:'numeric'})
+          +overviewBox('Next date', date,'calendar')
           //- .overview-box__detail
           //-   svg.overview-box__icon
           //-     use(xlink:href='/img/icons.svg#icon-calendar')
