@@ -23,7 +23,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
    // 1) Get the data, for the requested tour (including reviews and tour guides)
    // const tour = await Tour.findOne((t) => t.slug === slug); => THIS IS FALSE
    const tour = await Tour.findOne({ slug: req.params.slug }).populate({
-      path: 'review',
+      path: 'reviews',
       fields: 'review rating user',
    });
    // console.log(tour);
