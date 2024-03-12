@@ -31,7 +31,8 @@ block content
               svg.card__icon
                 use(xlink:href='img/icons.svg#icon-flag')
               //- span= tour.duration + " stops"
-              span= `${tour.duration} stops`
+              //- span= `${tour.duration} stops`
+              span= `${tour.locations.length} stops`
             .card__data
               svg.card__icon
                 use(xlink:href='img/icons.svg#icon-user')
