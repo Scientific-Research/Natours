@@ -4,8 +4,8 @@ mixin reviewCard(review)
   .reviews__card
     .reviews__avatar
       img.reviews__avatar-img(src=`/img/users/${review.user.photo}` alt=`${review.user.name}`)
-      h6.reviews__user Jim Brown
-    p.reviews__text Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque dignissimos sint quo commodi corrupti accusantium veniam saepe numquam.
+      h6.reviews__user=`${review.user.name}`
+    p.reviews__text= review.review
     .reviews__rating
       svg.reviews__star.reviews__star--active
         use(xlink:href='/img/icons.svg#icon-star')
@@ -122,7 +122,7 @@ block content
     .reviews
       each review in tour.reviews
         +reviewCard(review)
-        
+
   section.section-cta
     .cta
       .cta__img.cta__img--logo
