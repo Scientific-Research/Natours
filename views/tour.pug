@@ -63,7 +63,12 @@ block content
             .overview-box__detail
               //- img.overview-box__img(src='/img/users/user-19.jpg' alt='Lead guide')
               img.overview-box__img(src= `/img/users/${guide.photo}` alt=`${guide.name}`)
-              span.overview-box__label= `${guide.role}`
+
+              //- - guide.role === guide? span.overview-box__label= `tour ${guide.role}`: span.overview-box__label= `${guide.role}`
+              - if (guide.role ==='lead-guide')
+                span.overview-box__label= 'lead guide'              
+              - if (guide.role ==='guide')
+                span.overview-box__label= `tour guide`
               span.overview-box__text= `${guide.name}`
             //- .overview-box__detail
             //-   img.overview-box__img(src='/img/users/user-18.jpg' alt='Tour guide')
