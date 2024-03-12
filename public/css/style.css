@@ -1041,7 +1041,8 @@ body {
    height: 100%;
    background-image: -webkit-gradient(linear, left top, right bottom, from(#7dd56f), to(#28b487));
    background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
-   opacity: 0.7;
+   opacity: 0;
+   /* opacity: 0.7; */
 }
 .card__picture-img {
    -o-object-fit: cover;
