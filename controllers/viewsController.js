@@ -12,7 +12,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
 
    res.status(200).render('overview', {
       title: 'All Tours',
-      tours: tours,
+      tours: tours, // we use this "tours" in overview.pug
    });
 });
 
@@ -34,6 +34,6 @@ exports.getTour = catchAsync(async (req, res, next) => {
 
    res.status(200).render('tour', {
       title: 'The Forest Hiker Tour',
-      tour: tour,
+      tour: tour, // we use this "tour" in tour.pug
    });
 });
