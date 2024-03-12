@@ -6,6 +6,6 @@ const { getOverview, getTour } = viewsController;
 
 // NOTE: This route is for pug engine template:
 router.get('/', getOverview);
-router.get('/tour', getTour);
+router.get('/tour/:slug', getTour);
 
 module.exports = router;
