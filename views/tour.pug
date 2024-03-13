@@ -1,6 +1,9 @@
 extends base
-
 include _reviewCard
+
+//- append means that we inject the current data to the head section in base.pug! It means this data will add to the head part in base.pug after => title Natours | #{title}
+block append head  
+  script(src='/js/mapbox.js')
 
 mixin overviewBox(label, text, icon)
   .overview-box__detail
