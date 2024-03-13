@@ -102,7 +102,8 @@ block content
       //-   img.picture-box__img.picture-box__img--3(src='/img/tour-5-3.jpg' alt='The Park Camper Tour 1')
 
   section.section-map
-    #map
+    #map(data-locations=`${JSON.stringify(tour.locations)}`)
+  //- in tours.json, we have the location as an array of objects, but we need here a string! that's why we use JSON.stringify to convert this array of objects in format of JSON to string!
 
   section.section-reviews
     .reviews
