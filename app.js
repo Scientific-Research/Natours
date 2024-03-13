@@ -35,7 +35,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // NOTE: to set some security for headers: I put it here at the beginning of the middlewares, where all the other comes later and get the security headers!
 // Set Security HTTP headers:
-app.use(helmet());
+// app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 console.log(process.env.NODE_ENV);
 
