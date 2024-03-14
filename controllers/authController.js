@@ -291,6 +291,35 @@ exports.protect = catchAsync(async (req, res, next) => {
    next();
 });
 
+// NOTE: this middleware is only for rendered pages, not to protect them => issues no errors!
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+   // NOTE: we use only the token in cookies for rendered pages and not token in headers in authorization, token in headers in authorization is used only for APIs which we used already in POSTMAN!
+   if (req.cookies.jwt) {
+      // now, we can authenticate a user based on token sent via cookie and not only authorization header!
+
+      // 1) verify token
+      const decodedPayload = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
+
+      // 2) Check if user still exists => we will simply go to the next middleware and don't issue an error message!
+      const currentUser = await User.findById(decodedPayload.id);
+      if (!currentUser) {
+         return next();
+      }
+
+      // 3) Check if user changed the password after the cookies.jwt was issued!, when ja, we will not issue an error message here! we will simply move on to the next middleware and nothing will happen!
+      if (currentUser.changedPasswordAfter(decodedPayload.iat)) {
+         return next();
+      }
+
+      // 4) WHEN ALL THREE ABOVE STEPS ARE OK, SO, NONE OF THE ABOVE NEXT() WILL BE CALLED, WE DON'T GO TO A MIDDLEWARE SUDDENLY, RATHER, WE COME TO THIS STEP => WE WILL HAVE A LOGGED IN USER NOW!
+      // req.user = currentUser;
+      res.locals.user = currentUser; // with locals. + a variable like user, all pug templates will have access to the user variable hereafter!
+      next();
+   }
+   // When there is no cookies then there is no loggd in user, we have to move on to the next middleware anyway => that's why there is a next() here:
+   next();
+});
+
 // NOTE: implementing the Authorisation middleware for 'admin' and 'lead-guide':
 exports.restrictTo = (...roles) => {
    return (req, res, next) => {
