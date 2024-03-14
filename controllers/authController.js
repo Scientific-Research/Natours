@@ -314,7 +314,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
       // 4) WHEN ALL THREE ABOVE STEPS ARE OK, SO, NONE OF THE ABOVE NEXT() WILL BE CALLED, WE DON'T GO TO A MIDDLEWARE SUDDENLY, RATHER, WE COME TO THIS STEP => WE WILL HAVE A LOGGED IN USER NOW!
       // req.user = currentUser;
       res.locals.user = currentUser; // with locals. + a variable like user, all pug templates will have access to the user variable hereafter!
-      next();
+      return next();
    }
    // When there is no cookies then there is no loggd in user, we have to move on to the next middleware anyway => that's why there is a next() here:
    next();
