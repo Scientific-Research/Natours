@@ -6,26 +6,9 @@ const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
 // using deconstructuring:
-const {
-  getAllUsers,
-  getUser,
-  getMe,
-  createUser,
-  updateUser,
-  deleteUser,
-  updateMe,
-  deleteMe,
-} = userController;
+const { getAllUsers, getUser, getMe, createUser, updateUser, deleteUser, updateMe, deleteMe } = userController;
 
-const {
-  protect,
-  signup,
-  login,
-  forgotPassword,
-  resetPassword,
-  updatePassword,
-  restrictTo,
-} = authController;
+const { protect, signup, login, forgotPassword, resetPassword, updatePassword, restrictTo, logout } = authController;
 
 // Route for auths:
 // NOTE: for signup only 'post' (send the user data) make sense and 'get' or 'patch'
@@ -33,6 +16,7 @@ const {
 // 127.0.0.1:3000/api/v1/users/signup
 router.post('/signup', signup);
 router.post('/login', login);
+router.get('/logout', logout); // we don't send any data with the request and we don't change any data too! we just get the data!
 
 // NOTE: these two routes for forgotPassword and resetPassword functions!
 // first of all, we will start to implement forgotPassword:
