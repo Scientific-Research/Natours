@@ -11985,7 +11985,7 @@ var showAlert = exports.showAlert = function showAlert(type, msg) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.login = void 0;
+exports.logout = exports.login = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _alerts = require("./alerts");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -12031,6 +12031,36 @@ var login = exports.login = /*#__PURE__*/function () {
   }));
   return function login(_x, _x2) {
     return _ref.apply(this, arguments);
+  };
+}();
+var logout = exports.logout = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+      while (1) switch (_context2.prev = _context2.next) {
+        case 0:
+          _context2.prev = 0;
+          _context2.next = 3;
+          return _axios.default.get('http://127.0.0.1:3000/api/v1/users/logout');
+        case 3:
+          res = _context2.sent;
+          if (res.data.status === 'success') {
+            location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
+          }
+          _context2.next = 10;
+          break;
+        case 7:
+          _context2.prev = 7;
+          _context2.t0 = _context2["catch"](0);
+          (0, _alerts.showAlert)('error', 'Error logging out! Try again.'); // when for example, we don't have Internet!
+        case 10:
+        case "end":
+          return _context2.stop();
+      }
+    }, _callee2, null, [[0, 7]]);
+  }));
+  return function logout() {
+    return _ref2.apply(this, arguments);
   };
 }();
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"index.js":[function(require,module,exports) {

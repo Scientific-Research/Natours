@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { hideAlert, showAlert } from './alerts';
+import { showAlert } from './alerts';
 
 export const login = async (email, password) => {
    // console.log('LOGIN...');
@@ -23,5 +23,17 @@ export const login = async (email, password) => {
       // console.log('Error:', error.response.data);
       showAlert('error', error.response.data.message); // we get the message from our data => JSON data!
       // alert(error.response.data.message); // we get the message from our data => JSON data!
+   }
+};
+
+export const logout = async () => {
+   try {
+      const res = await axios.get('http://127.0.0.1:3000/api/v1/users/logout');
+
+      if (res.data.status === 'success') {
+         location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
+      }
+   } catch (error) {
+      showAlert('error', 'Error logging out! Try again.'); // when for example, we don't have Internet!
    }
 };
