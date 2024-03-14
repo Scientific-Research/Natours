@@ -1,5 +1,8 @@
-const login = async (email, password) => {
-   //  console.log(email, password);
+import axios from 'axios';
+
+export const login = async (email, password) => {
+   // console.log('LOGIN...');
+   // console.log(email, password);
    //  alert(email, password);
    // NOTE: to get the http request for the login, we use the axios from CDN to fecth the data!
 
@@ -19,10 +22,3 @@ const login = async (email, password) => {
       alert(error.response.data.message); // we get the message from our data => JSON data!
    }
 };
-
-document.querySelector('.form').addEventListener('submit', (e) => {
-   e.preventDefault();
-   const email = document.getElementById('email').value;
-   const password = document.getElementById('password').value;
-   login(email, password);
-});
