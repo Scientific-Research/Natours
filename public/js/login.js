@@ -34,6 +34,8 @@ export const logout = async () => {
          location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
       }
    } catch (error) {
-      showAlert('error', 'Error logging out! Try again.'); // when for example, we don't have Internet!
+      console.log('hallo');
+
+      showAlert('error', 'Error logging out! Try again.' + error.response); // when for example, we don't have Internet!
    }
 };

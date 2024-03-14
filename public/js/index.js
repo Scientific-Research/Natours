@@ -1,8 +1,9 @@
 import '@babel/polyfill';
-import { login } from './login';
+import { login, logout } from './login';
 
 // DOM ELEMENTS
 const loginForm = document.querySelector('.form');
+const logOutBtn = document.querySelector('.nav__el--logout');
 
 // DELEGATION
 
@@ -16,3 +17,6 @@ if (loginForm)
       // console.log(email, password);
       login(email, password);
    });
+
+// NOTE: when somebody click on the logout button, the logout function will be executed!
+if (logOutBtn) logOutBtn.addEventListener('click', logout);
