@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -68,7 +69,8 @@ app.use('/api', limiter);
 // NOTE: when the body is larger than 10 kilo bytes, it will not be accepted! => limit amounts of the data that comes into body:
 // Body parser, reading data from body into req.body:
 // app.use(express.json());
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: '10kb' })); // this parse the data from body
+app.use(cookieParser()); // this parse the data from cookie
 
 // NOTE: Data sanitization against NoSQL query injection:
 // we have to install this package:express-mongo-sanitize
@@ -115,6 +117,7 @@ app.use(
 // Test middleware:
 app.use((req, res, next) => {
    req.requestTime = new Date().toISOString();
+   console.log(req.cookies); // here shows us the cookie content! we just have to reload any webpage of our website, then we can see the Cookie in the Terminal!
    // console.log(x); ONLY FOR TEST THE UNCAUGHT EXCEPTIONS IN SERVER.JS
    // when we send a request in Postman and we are in Production mode, it goes to the globalErrorHandler
    // and then production mode and this error doesn't belong to these three kinds of error => this
