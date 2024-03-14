@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { hideAlert, showAlert } from './alerts';
 
 export const login = async (email, password) => {
    // console.log('LOGIN...');
@@ -12,13 +13,15 @@ export const login = async (email, password) => {
 
       // console.log('response from axios:', res.data); // data is our JSON data!
       if (res.data.status === 'success') {
-         alert('Logged in successfully!');
+         showAlert('success', 'Logged in successfully!');
+         // alert('Logged in successfully!');
          window.setTimeout(() => {
             location.assign('/');
          }, 100);
       }
    } catch (error) {
       // console.log('Error:', error.response.data);
-      alert(error.response.data.message); // we get the message from our data => JSON data!
+      showAlert('error', error.response.data.message); // we get the message from our data => JSON data!
+      // alert(error.response.data.message); // we get the message from our data => JSON data!
    }
 };
