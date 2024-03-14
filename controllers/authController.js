@@ -162,6 +162,16 @@ exports.login = catchAsync(async (req, res, next) => {
    //   });
 });
 
+// NOTE: for log out, we send an empty token with only a string as content: 'logged out' and exactly the same name as 'jwt and expiry date: 10 seconds after creation!
+exports.logout = (req, res) => {
+   res.cookie('jwt', 'logged out', {
+      // expires: Date.now() + 10 * 1000,
+      expires: new Date(Date.now() + 10 * 1000), // after 10sec
+      httpOnly: true,
+   });
+   res.status(200).json({ status: 'success' });
+};
+
 // NOTE: creating the protect middleware to preventing the unauthorized access(not logged in user)
 // to the router.route('/').get(getAllTours) => it means not logged user can not see the list of
 // all the tours!
