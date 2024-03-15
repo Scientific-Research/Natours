@@ -4,7 +4,7 @@ const authConteroller = require('../controllers/authController');
 
 const router = express.Router();
 
-const { getOverview, getTour, getLoginForm, getAccount } = viewsController;
+const { getOverview, getTour, getLoginForm, getAccount, UpdateUserData } = viewsController;
 const { isLoggedIn, protect } = authConteroller;
 
 // NOTE: we want that isLoggedIn middleware to be applied to all the following routes that we have here! => that's why we put this middleware on top of all other routes!
@@ -19,6 +19,8 @@ router.get('/', isLoggedIn, getOverview);
 router.get('/tour/:slug', isLoggedIn, getTour);
 router.get('/login', isLoggedIn, getLoginForm);
 router.get('/me', protect, getAccount);
+
+router.post('/submit-user-data', UpdateUserData);
 
 //   /login
 module.exports = router;
