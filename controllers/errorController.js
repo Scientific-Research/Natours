@@ -56,10 +56,22 @@ const handleTokenExpiredError = (err) => {
    return new AppError(message, 401);
 };
 
-const sendErrorDev = (err, res) => {
+const sendErrorDev = (err, req, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
    // status and message for that error!
+   if (req.originalUrl.startsWith('/api')) {
+      res.status(err.statusCode).json({
+         status: err.status,
+         error: err,
+         message: err.message,
+         stack: err.stack,
+      });
+   } else {
+      res.status(err.status).render('error', {
+         title: 'Something went wrong!',
+      });
+   }
    res.status(err.statusCode).json({
       status: err.status,
       error: err, // print the entire error
@@ -68,7 +80,7 @@ const sendErrorDev = (err, res) => {
    });
 };
 
-const sendErrorProd = (err, res) => {
+const sendErrorProd = (err, req, res) => {
    // NOTE: Operational, trusted error: send message to the client
    // console.log(err.isOperational);
 
@@ -106,7 +118,7 @@ const globalErrorHandler = (err, req, res, next) => {
    // and when it is 400 or 404 status Code, it would be 'fail' as we write it as status in our json!
 
    if (process.env.NODE_ENV === 'development') {
-      sendErrorDev(err, res);
+      sendErrorDev(err, req, res);
    } else if (process.env.NODE_ENV === 'production') {
       // NOTE: we have three errors come from Mongoose and we have to change these errors to
       // meaningful errors for client:
@@ -170,7 +182,7 @@ const globalErrorHandler = (err, req, res, next) => {
          error = handleTokenExpiredError(error);
       }
 
-      sendErrorProd(error, res);
+      sendErrorProd(error, req, res);
    }
 };
 
