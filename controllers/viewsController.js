@@ -53,3 +53,7 @@ exports.getAccount = (req, res) => {
       title: 'Your account',
    });
 };
+
+exports.UpdateUserData = (req, res, next) => {
+   console.log('UPDATING USER: ' + req.body);
+};

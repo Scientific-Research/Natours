@@ -12199,7 +12199,7 @@ require("core-js/modules/web.dom.iterable.js");
 require("regenerator-runtime/runtime.js");
 var _login = require("./login");
 // DOM ELEMENTS
-var loginForm = document.querySelector('.form');
+var loginForm = document.querySelector('.form--login');
 var logOutBtn = document.querySelector('.nav__el--logout');
 
 // DELEGATION
