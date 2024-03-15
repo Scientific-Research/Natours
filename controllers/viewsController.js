@@ -1,4 +1,5 @@
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
@@ -54,8 +55,26 @@ exports.getAccount = (req, res) => {
    });
 };
 
-exports.updateUserData = (req, res, next) => {
+exports.updateUserData = catchAsync(async (req, res, next) => {
    // NOTE: console.log(`UPDATING USER: ${req.body}`); // this will not work!!!
    // NOTE: console.log('UPDATING USER:' + req.body); // this will not work too!!!
    console.log('UPDATING USER:', req.body); // NOTE: this only works!!! => only works with comma!!!!
-};
+
+   // NOTE: because we protected this route using protect, we have access to the currentUser via req.user.id => req.user = currentUser; res.locals.user = currentUser;
+   const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+         name: req.body.name, // name is already there in html => account.pug
+         email: req.body.email, // name is alread there in html => account.pug
+      },
+      {
+         new: true,
+         runValidators: true,
+      }
+   );
+   // after submitting data, we want to back to the same page and new data should remain there in its fields! => we have to render acount page again:
+   res.status(200).render('account', {
+      title: 'Your account',
+      user: updatedUser, // we have to specify the user with new one!
+   });
+});

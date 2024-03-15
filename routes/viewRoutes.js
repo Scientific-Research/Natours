@@ -20,7 +20,7 @@ router.get('/tour/:slug', isLoggedIn, getTour);
 router.get('/login', isLoggedIn, getLoginForm);
 router.get('/me', protect, getAccount);
 
-router.post('/submit-user-data', updateUserData);
+router.post('/submit-user-data', protect, updateUserData);
 
 //   /login
 module.exports = router;
