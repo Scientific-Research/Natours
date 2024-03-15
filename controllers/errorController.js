@@ -60,6 +60,7 @@ const sendErrorDev = (err, req, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
    // status and message for that error!
+   // API
    if (req.originalUrl.startsWith('/api')) {
       res.status(err.statusCode).json({
          status: err.status,
@@ -68,16 +69,12 @@ const sendErrorDev = (err, req, res) => {
          stack: err.stack,
       });
    } else {
-      res.status(err.status).render('error', {
+      // RENDERED WEBSITE
+      res.status(err.statusCode).render('error', {
          title: 'Something went wrong!',
+         msg: err.message,
       });
    }
-   res.status(err.statusCode).json({
-      status: err.status,
-      error: err, // print the entire error
-      message: err.message,
-      stack: err.stack,
-   });
 };
 
 const sendErrorProd = (err, req, res) => {

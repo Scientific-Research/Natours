@@ -1117,13 +1117,16 @@ body {
 }
 
 .error {
-   position: absolute;
+   /* position: absolute; */
+   position: relative;
+   /* display: inline; */
    top: 35%;
    left: 50%;
    -webkit-transform: translate(-50%, -50%);
    transform: translate(-50%, -50%);
    max-width: 80rem;
    text-align: center;
+   margin-top: 14rem;
 }
 .error__title {
    display: -webkit-box;
