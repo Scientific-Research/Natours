@@ -70,6 +70,10 @@ app.use('/api', limiter);
 // Body parser, reading data from body into req.body:
 // app.use(express.json());
 app.use(express.json({ limit: '10kb' })); // this parse the data from body
+
+// to send the data from a form to the server, we need a middleware => urlencoded from express and the way that form send the data to the server is called urlencoded too! we need this middleware to parse the data coming from the url encoded form!
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
 app.use(cookieParser()); // this parse the data from cookie
 
 // NOTE: Data sanitization against NoSQL query injection:

@@ -54,6 +54,8 @@ exports.getAccount = (req, res) => {
    });
 };
 
-exports.UpdateUserData = (req, res, next) => {
-   console.log('UPDATING USER: ' + req.body);
+exports.updateUserData = (req, res, next) => {
+   // NOTE: console.log(`UPDATING USER: ${req.body}`); // this will not work!!!
+   // NOTE: console.log('UPDATING USER:' + req.body); // this will not work too!!!
+   console.log('UPDATING USER:', req.body); // NOTE: this only works!!! => only works with comma!!!!
 };
