@@ -298,6 +298,8 @@ exports.protect = catchAsync(async (req, res, next) => {
    // need it for the next middleware => restrictTo() to extract the role of the logged in
    // person
    req.user = currentUser;
+   res.locals.user = currentUser; // with locals. + a variable like user, all pug templates will have access to the user variable hereafter! we can use the currentUser in all pug templates now!
+
    next();
 });
 
