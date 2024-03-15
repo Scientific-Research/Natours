@@ -60,46 +60,68 @@ const sendErrorDev = (err, req, res) => {
    // we send as many details as possible to the developer to find a solution to get ride of that!
    // NOTE: first of all, we see what is statusCode and after that, it gives us the related
    // status and message for that error!
-   // API
+   // A) API
    if (req.originalUrl.startsWith('/api')) {
-      res.status(err.statusCode).json({
+      return res.status(err.statusCode).json({
          status: err.status,
          error: err,
          message: err.message,
          stack: err.stack,
       });
-   } else {
-      // RENDERED WEBSITE
-      res.status(err.statusCode).render('error', {
-         title: 'Something went wrong!',
-         msg: err.message,
-      });
    }
+
+   // B) RENDERED WEBSITE
+   console.error('ERROR!!!', err);
+   return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: err.message,
+   });
 };
 
 const sendErrorProd = (err, req, res) => {
-   // NOTE: Operational, trusted error: send message to the client
-   // console.log(err.isOperational);
-
-   if (err.isOperational) {
-      // NOTE: first of all, we see what is statusCode and after that, it gives us the related
-      // status and message for that error!
-      res.status(err.statusCode).json({
-         status: err.status,
-         message: err.message,
-      });
-
-      // NOTE: Programming or other unknown errors: don't leak error details to client
-   } else {
+   // A) API => we will have the same Scenario like what we had already for sendErrorDev
+   if (req.originalUrl.startsWith('/api')) {
+      // NOTE: A) Operational, trusted error: send message to the client
+      // console.log(err.isOperational);
+      if (err.isOperational) {
+         // NOTE: first of all, we see what is statusCode and after that, it gives us the related
+         // status and message for that error!
+         return res.status(err.statusCode).json({
+            status: err.status,
+            message: err.message,
+         });
+      }
+      // NOTE: B) Programming or other unknown errors: don't leak error details to client
       // 1) Log error to the console:
       console.error('ERROR!!!', err);
-
       // 2) Send generic message:
-      res.status(500).json({
+      return res.status(500).json({
          status: 'error',
          message: 'Something went very wrong!',
       });
    }
+
+   // B) RENDERED WEBSITE
+   // A) Operational, trusted error: send message to the client
+   if (err.isOperational) {
+      // NOTE: first of all, we see what is statusCode and after that, it gives us the related
+      // status and message for that error!
+      console.log(err);
+
+      return res.status(err.statusCode).render('error', {
+         title: 'Something went wrong!',
+         msg: err.message,
+      });
+   }
+
+   // NOTE: B) Programming or other unknown errors: don't leak error details to client
+   // 1) Log error to the console:
+   console.error('ERROR!!!', err);
+   // 2) Send generic message:
+   return res.status(err.statusCode).render('error', {
+      title: 'Something went wrong!',
+      msg: 'Please try again later!',
+   });
 };
 
 const globalErrorHandler = (err, req, res, next) => {
@@ -135,6 +157,11 @@ const globalErrorHandler = (err, req, res, next) => {
 
       // NOTE: but this one worked => // Create a deep copy using JSON.parse() and JSON.stringify()
       let error = JSON.parse(JSON.stringify(err)); // we make a hard copy of err object which created by mongoose!
+
+      // NOTE: for a reason that i don't know, it doesn't copy message from err to message from error in Dev mode!!!!, that's why i did it manually!
+      error.message = err.message;
+      // NOTE: without this starement, we will not have appropriate error messages in Prod mode, but we will see all the appropriate error messages in Dev mode without this statement!
+
       // NOTE: This is how to handle the first error in Production mode and send a user-friendly
       // message to the client, when we enter an invalid id in URL like this one:
       // 127.0.0.1:3000/api/v1/tours/5624562645
@@ -179,6 +206,8 @@ const globalErrorHandler = (err, req, res, next) => {
          error = handleTokenExpiredError(error);
       }
 
+      // console.log('err: ' + err.message);
+      // console.log('error: ' + error.message);
       sendErrorProd(error, req, res);
    }
 };
