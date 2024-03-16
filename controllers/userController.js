@@ -82,8 +82,8 @@ exports.getMe = (req, res, next) => {
 
 // NOTE: we want to update the currently logged in User: => updating name and email address:
 exports.updateMe = catchAsync(async (req, res, next) => {
-   console.log(req.file); // show us all the information about uploaded photo!
-   console.log(req.body); // show us only the name of the user and not the photo, that's why we use the multer middleware!
+   //  console.log(req.file); // show us all the information about uploaded photo!
+   //  console.log(req.body); // show us only the name of the user and not the photo, that's why we use the multer middleware!
 
    // 1) Create error if user POSTs password data
    // 400 is for bad request!
@@ -97,6 +97,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
    // x would be only the name and email and nothing else!!! - To do that, we have to use filter to allow only these two parameters to chnage and not other parameters!
    // NOTE: with filterObj, we want to keep only name and email and filter out all the rest!
    const filteredBody = filterObj(req.body, 'name', 'email');
+   if (req.file) filteredBody.photo = req.file.filename; // filename is: user-687sdf87sf.....jpeg
 
    // 3) Update user document
    const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
