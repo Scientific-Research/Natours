@@ -6,17 +6,19 @@ const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
 // MULTI STORAGE
-const multerStorage = multer.diskStorage({
-   destination: (req, file, cb) => {
-      cb(null, 'public/img/users');
-   },
-   filename: (req, file, cb) => {
-      // mimetype: 'image/jpeg',
-      const ext = file.mimetype.split('/')[1]; // that would be only extension part => jpeg
-      // NOTE: user-8347658736asb645ufghjkd-72653478234826.jpeg => combination of UserId and timestamp(), that's why it would be a guarantie that two images will never have the same name!
-      cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
-   },
-});
+// const multerStorage = multer.diskStorage({
+//    destination: (req, file, cb) => {
+//       cb(null, 'public/img/users');
+//    },
+//    filename: (req, file, cb) => {
+//       // mimetype: 'image/jpeg',
+//       const ext = file.mimetype.split('/')[1]; // that would be only extension part => jpeg
+//       // NOTE: user-8347658736asb645ufghjkd-72653478234826.jpeg => combination of UserId and timestamp(), that's why it would be a guarantie that two images will never have the same name!
+//       cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//    },
+// });
+
+const multerStorage = multer.memoryStorage(); // NOTE: we don't need the above definition for multerStorage anymore and we use memoryStorage() to store an image as a buffer instead! that's why i commented above statements out!
 
 // MULTI FILTER
 // NOTE: here, we testen if the uploaded file is an image or not? when it is an image => we send true to cb in multerstorage part, otherwise, we send an error!
@@ -24,7 +26,10 @@ const multerFilter = (req, file, cb) => {
    if (file.mimetype.startsWith('image')) {
       cb(null, true); // if this is an image, no problem! => we send true to callback
    } else {
-      const error = new AppError('Not an image! Please upload only images.', 400);
+      const error = new AppError(
+         'Not an image! Please upload only images.',
+         400
+      );
       cb(error, false); // if this is not an image, there is problem! => we send false to callback => AN ERROR!!! 400 statusCode means bad request!
    }
 };
@@ -43,7 +48,15 @@ exports.uploadUserPhoto = upload.single('photo');
 exports.resizeUserPhoto = (req, res, next) => {
    if (!req.file) return next(); // when there is no request, do nothing and go to the next middleware!
 
-   // Otherwise, do the resizing: => we use the sharp package!
+   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+   // Otherwise, do the resizing: => we use the sharp package! here, we read the image from buffer momory and not disk storage anymore! => and this is a more efficient way!
+   sharp(req.file.buffer)
+      .resize(500, 500) // height and width needs to be the same for a square image!
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/users/${req.file.filename}`); // to store it in users folder in project!
+
+   next(); // from here goes directly to updateMe handler function!
 };
 
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
@@ -96,7 +109,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
    // 1) Create error if user POSTs password data
    // 400 is for bad request!
    if (req.body.password || req.body.passwordConfirm) {
-      return next(new AppError('This route is not for password updates. Please use /updateMyPassword.', 400));
+      return next(
+         new AppError(
+            'This route is not for password updates. Please use /updateMyPassword.',
+            400
+         )
+      );
    }
    // 2) Filtered out unwanted fields names that are not allowed to be updated!
    // for non-sensitive data like name and email, we can use findByIdAndUpdate.
@@ -128,7 +146,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 exports.deleteMe = catchAsync(async (req, res, next) => {
    // NOTE: for deleting an account, we have to be already logged in! that's why id belong to the user is already stored conveniently in req.user.id.
    // we add also the data that we want to update here: { active: false }
-   const deleteMe = await User.findByIdAndUpdate(req.user.id, { active: false });
+   const deleteMe = await User.findByIdAndUpdate(req.user.id, {
+      active: false,
+   });
 
    res.status(200).json({
       status: 'success',
@@ -152,7 +172,8 @@ exports.createUser = (req, res) => {
    res.status(500).json({
       data: {
          status: 'error',
-         message: 'This route is not yet defined! - createUser - Please use /signup instead!',
+         message:
+            'This route is not yet defined! - createUser - Please use /signup instead!',
       },
    });
 };

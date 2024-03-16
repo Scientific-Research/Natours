@@ -40,11 +40,15 @@ if (userPasswordForm)
       const passwordCurrent = document.getElementById('password-current').value;
       const password = document.getElementById('password').value;
       const passwordConfirm = document.getElementById('password-confirm').value;
-      await updateSettings({ passwordCurrent, password, passwordConfirm }, 'password');
+      await updateSettings(
+         { passwordCurrent, password, passwordConfirm },
+         'password'
+      );
 
       // NOTE: to clear the fields after our password updated successfully!
 
-      document.querySelector('.btn--save-password').textContent = 'Save Password';
+      document.querySelector('.btn--save-password').textContent =
+         'Save Password';
       document.getElementById('password-current').value = '';
       document.getElementById('password').value = '';
       document.getElementById('password-confirm').value = '';
