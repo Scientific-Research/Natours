@@ -28,8 +28,14 @@ const multerFilter = (req, file, cb) => {
    }
 };
 
-const upload = multer({ dest: 'public/img/users' });
+// FINAL STEP: USING MULTER MIDDLEWARE
+// const upload = multer({ dest: 'public/img/users' });
+const upload = multer({
+   storage: multerStorage,
+   fileFilter: multerFilter,
+});
 
+// UPLOAD THE SINGLE FILE: with the photo name in DB: => and then export it to the userRoutes.js to use it there!
 exports.uploadUserPhoto = upload.single('photo');
 
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
