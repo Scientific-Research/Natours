@@ -4,6 +4,30 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
+// MULTI STORAGE
+const multerStorage = multer.diskStorage({
+   destination: (req, file, cb) => {
+      cb(null, 'public/img/users');
+   },
+   filename: (req, file, cb) => {
+      // mimetype: 'image/jpeg',
+      const ext = file.mimetype.split('/')[1]; // that would be only extension part => jpeg
+      // NOTE: user-8347658736asb645ufghjkd-72653478234826.jpeg => combination of UserId and timestamp(), that's why it would be a guarantie that two images will never have the same name!
+      cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+   },
+});
+
+// MULTI FILTER
+// NOTE: here, we testen if the uploaded file is an image or not? when it is an image => we send true to cb in multerstorage part, otherwise, we send an error!
+const multerFilter = (req, file, cb) => {
+   if (file.mimetype.startsWith('image')) {
+      cb(null, true); // if this is an image, no problem! => we send true to callback
+   } else {
+      const error = new AppError('Not an image! Please upload only images.', 400);
+      cb(error, false); // if this is not an image, there is problem! => we send false to callback => AN ERROR!!! 400 statusCode means bad request!
+   }
+};
+
 const upload = multer({ dest: 'public/img/users' });
 
 exports.uploadUserPhoto = upload.single('photo');
