@@ -38,6 +38,11 @@ const upload = multer({
 // UPLOAD THE SINGLE FILE: with the photo name in DB: => and then export it to the userRoutes.js to use it there!
 exports.uploadUserPhoto = upload.single('photo');
 
+// NOTE: resize the photo for photo which are not square before upload them in browser!
+exports.resizeUserPhoto = (req, res, next) => {
+  
+};
+
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
 // it takes obj as object and allowedFields: other filelds as an array containing name and email!
 // NOTE: obj is an Object and allowedFields is an array!
