@@ -12272,12 +12272,18 @@ if (loginForm) loginForm.addEventListener('submit', function (e) {
 if (logOutBtn) logOutBtn.addEventListener('click', _login.logout);
 if (userDataForm) userDataForm.addEventListener('submit', function (e) {
   e.preventDefault();
-  var name = document.getElementById('name').value;
-  var email = document.getElementById('email').value;
-  (0, _updateSettings.updateSettings)({
-    name: name,
-    email: email
-  }, 'data');
+
+  // to create a form here and append the requested fields to that form => we do this to add photo, otherwise, the previous code for name and email was enough and we don't nedd the form here!
+  var form = new FormData();
+  form.append('name', document.getElementById('name').value);
+  form.append('email', document.getElementById('email').value);
+  form.append('photo', document.getElementById('photo').files[0]); // Only one photo=>index 0
+  console.log(form);
+  (0, _updateSettings.updateSettings)(form, 'data'); // axios recognize the form as an object and do the same like before! we don't need to change anything in updateSettings file!
+
+  // const name = document.getElementById('name').value;
+  // const email = document.getElementById('email').value;
+  // updateSettings({ name, email }, 'data');
 });
 if (userPasswordForm) userPasswordForm.addEventListener('submit', /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(e) {

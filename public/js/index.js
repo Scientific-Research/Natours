@@ -27,9 +27,19 @@ if (logOutBtn) logOutBtn.addEventListener('click', logout);
 if (userDataForm)
    userDataForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      updateSettings({ name, email }, 'data');
+
+      // to create a form here and append the requested fields to that form => we do this to add photo, otherwise, the previous code for name and email was enough and we don't nedd the form here!
+      const form = new FormData();
+      form.append('name', document.getElementById('name').value);
+      form.append('email', document.getElementById('email').value);
+      form.append('photo', document.getElementById('photo').files[0]); // Only one photo=>index 0
+      console.log(form);
+
+      updateSettings(form, 'data'); // axios recognize the form as an object and do the same like before! we don't need to change anything in updateSettings file!
+
+      // const name = document.getElementById('name').value;
+      // const email = document.getElementById('email').value;
+      // updateSettings({ name, email }, 'data');
    });
 
 if (userPasswordForm)

@@ -76,6 +76,7 @@ block content
 
           //- WITHOUT API
           //- form.form.form-user-data(action='/submit-user-data' method='POST')
+          //- form.form.form-user-data(action='/submit-user-data' method='POST' enctype='multipart/form-data') multipart: is for the sending the data to server! multer is abbreviation of multipart!
 
           //- WITH API
           form.form.form-user-data
@@ -87,7 +88,12 @@ block content
               input#email.form__input(type='email' value=`${user.email}`, required, name='email')
             .form__group.form__photo-upload
               img.form__user-photo(src=`img/users/${user.photo}` alt=`${user.name}`)
-              a.btn-text(href='') Choose new photo
+
+              // NOTE: TO UPLOAD A PHOTO:
+              //- * means all formats that the images have!
+              input.form__upload(type='file' accept='image/*' id='photo' , name= 'photo') 
+              label(for='photo') Choose new photo
+
             .form__group.right
               button.btn.btn--small.btn--green Save settings
 
