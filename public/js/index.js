@@ -1,6 +1,6 @@
 import '@babel/polyfill';
 import { login, logout } from './login';
-import { updateData } from './updateSettings';
+import { updateSettings } from './updateSettings';
 
 // DOM ELEMENTS
 const loginForm = document.querySelector('.form--login');
@@ -28,5 +28,5 @@ if (userDataForm)
       e.preventDefault();
       const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
-      updateData(name, email);
+      updateSettings({ name, email }, 'data');
    });
