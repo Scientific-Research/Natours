@@ -33,10 +33,16 @@ if (userDataForm)
    });
 
 if (userPasswordForm)
-   userPasswordForm.addEventListener('submit', (e) => {
+   userPasswordForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const passwordCurrent = document.getElementById('password-current').value;
       const password = document.getElementById('password').value;
       const passwordConfirm = document.getElementById('password-confirm').value;
-      updateSettings({ passwordCurrent, password, passwordConfirm }, 'password');
+      await updateSettings({ passwordCurrent, password, passwordConfirm }, 'password');
+
+      // NOTE: to clear the fields after our password updated successfully!
+
+      document.getElementById('password-current').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('password-confirm').value = '';
    });
