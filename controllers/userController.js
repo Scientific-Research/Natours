@@ -1,7 +1,12 @@
+const multer = require('multer');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
+
+const upload = multer({ dest: 'public/img/users' });
+
+exports.uploadUserPhoto = upload.single('photo');
 
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
 // it takes obj as object and allowedFields: other filelds as an array containing name and email!
