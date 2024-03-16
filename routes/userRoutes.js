@@ -1,7 +1,10 @@
 const express = require('express');
-
+const multer = require('multer');
 const router = express.Router();
 // const userRouter = express.Router();
+
+const upload = multer({ dest: 'public/img/users' });
+
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
@@ -46,7 +49,7 @@ router.get('/me', getMe, getUser);
 // NOTE: this route muss stay at the top of other routes which are only intended for users! otherwise, it will not work!
 
 // router.patch('/updateMe', protect, updateMe);
-router.patch('/updateMe', updateMe);
+router.patch('/updateMe', upload.single('photo'), updateMe);
 
 // NOTE: This will not delete the user from database, it will make it unaccessable only!
 

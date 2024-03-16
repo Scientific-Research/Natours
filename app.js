@@ -121,7 +121,7 @@ app.use(
 // Test middleware:
 app.use((req, res, next) => {
    req.requestTime = new Date().toISOString();
-   console.log(req.cookies); // here shows us the cookie content! we just have to reload any webpage of our website, then we can see the Cookie in the Terminal!
+   // console.log(req.cookies); // here shows us the cookie content! we just have to reload any webpage of our website, then we can see the Cookie in the Terminal!
    // console.log(x); ONLY FOR TEST THE UNCAUGHT EXCEPTIONS IN SERVER.JS
    // when we send a request in Postman and we are in Production mode, it goes to the globalErrorHandler
    // and then production mode and this error doesn't belong to these three kinds of error => this
