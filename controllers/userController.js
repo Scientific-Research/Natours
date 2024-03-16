@@ -1,4 +1,5 @@
 const multer = require('multer');
+const sharp = require('sharp');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -40,7 +41,9 @@ exports.uploadUserPhoto = upload.single('photo');
 
 // NOTE: resize the photo for photo which are not square before upload them in browser!
 exports.resizeUserPhoto = (req, res, next) => {
-  
+   if (!req.file) return next(); // when there is no request, do nothing and go to the next middleware!
+
+   // Otherwise, do the resizing: => we use the sharp package!
 };
 
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
