@@ -46,7 +46,7 @@ module.exports = class Email {
       // renderFile takes the pug file and render it to the real html file:
       // __dirname is current folder, where email.js is located! => util
       const html = pug.renderFile(
-         `${__dirname}/../views/emails/${template}.pug`,
+         `${__dirname}/../views/email/${template}.pug`,
          {
             firstName: this.firstName,
             url: this.url,
@@ -60,10 +60,13 @@ module.exports = class Email {
          //rather, it will send it to our faked email container as mailtrap.io to test it and when everything is OK, we will implement it in a real web service!
          from: this.from,
          to: this.to,
-         subject: subject,
-         html: html,
+         // subject: subject,
+         // html: html,
+         subject,
+         html,
          // to convert from html to text: => the package html-to-text was installed!
-         text: htmlToText.fromString(html),
+         // text: htmlToText.fromString(html), => fromString is already deprecated!
+         text: htmlToText.convert(html),
       };
       // 3) Create a transport and send email
       await this.newTransport().sendMail(mailOptions);
