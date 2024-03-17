@@ -34,6 +34,8 @@ const {
    getMonthlyPlan,
    getToursWithin,
    getDistances,
+   uploadTourImages,
+   resizeTourImages,
 } = tourController;
 
 const { protect, restrictTo } = authController;
@@ -49,13 +51,17 @@ router.route('/tour-stats').get(getTourStats);
 
 // NOTE: adding a new route for getting monthly plan:
 // our monthly plan info is restricted only for admin, lead-guide or guide - normal user can not see this info!
-router.route('/monthly-plan/:year').get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
+router
+   .route('/monthly-plan/:year')
+   .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
 // tourRouter.route('/api/v1/tours').get(getAllTours).post(createTour);
 // router.route('/').get(getAllTours).post(checkBody, createTour);
 
 // NOTE: we want to pass the coordinates where you are!
-router.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin);
+router
+   .route('/tours-within/:distance/center/:latlng/unit/:unit')
+   .get(getToursWithin);
 // /tours-within?distance=233&center=-40,45&unit=mi => this is not so clean way
 // /tours-within/233/center/-40,45/unit/mi => we use this way which is more cleaner!
 
@@ -74,7 +80,10 @@ router.route('/distances/:latlng/unit/:unit').get(getDistances);
 // router.route('/').get(protect, getAllTours).post(createTour);
 
 // NOTE: i removed the protect from below route to access any person from all over the world to see the list of all tours available in our website and not only the logged in people!
-router.route('/').get(getAllTours).post(protect, restrictTo('admin', 'lead-guide'), createTour);
+router
+   .route('/')
+   .get(getAllTours)
+   .post(protect, restrictTo('admin', 'lead-guide'), createTour);
 // WHEN CHECKBODY IS TRUE, ROUTER GOES TO THE CREATETOUR(); OTHERWISE, IT SHOWS US THE
 // BODY CHECK ERROR!
 // tourRouter.route('/').get(getAllTours).post(createTour);
@@ -86,7 +95,13 @@ router
    // here, everybody can show a single tour!
    .get(getTour)
    // but only logged in persons that are admin or lead-guide, can edit the tour!
-   .patch(protect, restrictTo('admin', 'lead-guide'), updateTour)
+   .patch(
+      protect,
+      restrictTo('admin', 'lead-guide'),
+      uploadTourImages,
+      resizeTourImages,
+      updateTour
+   )
    // NOTE: for deleteTour, first of all, we check if he is logged in! that's why we use protect
    // as our middleware here! => this is authentication
    // after that when a person is already logged in, we check if he is allowed to delete a tour or
