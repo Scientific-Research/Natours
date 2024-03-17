@@ -56,6 +56,26 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
    req.body.imageCover = imageCoverFilename;
 
    // 2) Other images
+   // NOTE: like above, the images are in an array too and we use loop to iterate all of them!
+   // All of these information are available in req.files:
+   req.body.images = []; // because we have more than one image => we have images!
+
+   await Promise.all(
+      // to promises all the every single promise in every loop in new array from map()
+      req.files.images.map(async (file, i) => {
+         // i + 1 because index is zero-based!
+         const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+
+         await sharp(file.buffer)
+            .resize(2000, 1333) // height and width needs to be the same for a square image!
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toFile(`public/img/tours/${filename}`); // to store it in users folder in project!
+         // to update the imageCover too with all other data => we will assign imageCoverFilename to req.body in updateOne in handleFactory.js
+         req.body.images.push(filename); // at the end, we have to push the images in req.body.images array!
+      })
+   );
+   // console.log(req.body);
    next();
 });
 
