@@ -1,8 +1,48 @@
 // const fs = require('fs');
+const multer = require('multer');
+const sharp = require('sharp');
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 const AppError = require('../utils/appError');
+
+const multerStorage = multer.memoryStorage(); // NOTE: we don't need the above definition for multerStorage anymore and we use memoryStorage() to store an image as a buffer instead! that's why i commented above statements out!
+
+// MULTI FILTER
+// NOTE: here, we testen if the uploaded file is an image or not? when it is an image => we send true to cb in multerstorage part, otherwise, we send an error!
+const multerFilter = (req, file, cb) => {
+   if (file.mimetype.startsWith('image')) {
+      cb(null, true); // if this is an image, no problem! => we send true to callback
+   } else {
+      const error = new AppError(
+         'Not an image! Please upload only images.',
+         400
+      );
+      cb(error, false); // if this is not an image, there is problem! => we send false to callback => AN ERROR!!! 400 statusCode means bad request!
+   }
+};
+
+// FINAL STEP: USING MULTER MIDDLEWARE
+// const upload = multer({ dest: 'public/img/users' });
+const upload = multer({
+   storage: multerStorage,
+   fileFilter: multerFilter,
+});
+
+exports.uploadTourImages = upload.fields([
+   { name: 'imageCover', maxCount: 1 },
+   { name: 'images', maxCount: 3 },
+]);
+
+// NOTE: different kinds of file uploads:
+// upload.single('image'); // one image => req.file
+// upload.array('images', 5); // multi image without imageCover => req.files
+// upload.fields([...]) // like what we have above, when we have both imageCover and images =>req.files
+
+exports.resizeTourImages = (req, res, next) => {
+   console.log(req.files);
+   next();
+};
 
 exports.aliasTopTours = (req, res, next) => {
    // All fields have to be in String format! here we have a prefilling process before
@@ -560,7 +600,12 @@ exports.getToursWithin = catchAsync(async (req, res, next) => {
    const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
 
    if (!lat || !lng) {
-      next(new AppError('Please provide latitude and longitude in this format: lat,lng.', 400));
+      next(
+         new AppError(
+            'Please provide latitude and longitude in this format: lat,lng.',
+            400
+         )
+      );
    }
 
    const tours = await Tour.find({
@@ -588,7 +633,12 @@ exports.getDistances = catchAsync(async (req, res, next) => {
    const multiplier = unit === 'mi' ? 0.00062137 : 0.001;
 
    if (!lat || !lng) {
-      next(new AppError('Please provide latitude and longitude in this format: lat,lng.', 400));
+      next(
+         new AppError(
+            'Please provide latitude and longitude in this format: lat,lng.',
+            400
+         )
+      );
    }
 
    // Start to do the calculation => we use the aggregation pipeline:
