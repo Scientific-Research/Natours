@@ -45,19 +45,19 @@ const upload = multer({
 exports.uploadUserPhoto = upload.single('photo');
 
 // NOTE: resize the photo for photo which are not square before upload them in browser!
-exports.resizeUserPhoto = (req, res, next) => {
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
    if (!req.file) return next(); // when there is no request, do nothing and go to the next middleware!
 
    req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
    // Otherwise, do the resizing: => we use the sharp package! here, we read the image from buffer momory and not disk storage anymore! => and this is a more efficient way!
-   sharp(req.file.buffer)
+   await sharp(req.file.buffer)
       .resize(500, 500) // height and width needs to be the same for a square image!
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
       .toFile(`public/img/users/${req.file.filename}`); // to store it in users folder in project!
 
    next(); // from here goes directly to updateMe handler function!
-};
+});
 
 // NOTE: Implementing this function to keep only name and email and filter out all the rest!
 // it takes obj as object and allowedFields: other filelds as an array containing name and email!

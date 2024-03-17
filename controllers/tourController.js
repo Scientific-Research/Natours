@@ -39,10 +39,25 @@ exports.uploadTourImages = upload.fields([
 // upload.array('images', 5); // multi image without imageCover => req.files
 // upload.fields([...]) // like what we have above, when we have both imageCover and images =>req.files
 
-exports.resizeTourImages = (req, res, next) => {
-   console.log(req.files);
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+   // console.log(req.files);
+
+   if (!req.files.imageCover || !req.files.images) return next();
+
+   // 1) Cover image
+   const imageCoverFilename = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
+   await sharp(req.files.imageCover[0].buffer)
+      .resize(2000, 1333) // height and width needs to be the same for a square image!
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toFile(`public/img/tours/${imageCoverFilename}`); // to store it in users folder in project!
+   // to update the imageCover too with all other data => we will assign imageCoverFilename to req.body in updateOne in handleFactory.js
+   req.body.imageCover = imageCoverFilename;
+
+   // 2) Other images
    next();
-};
+});
 
 exports.aliasTopTours = (req, res, next) => {
    // All fields have to be in String format! here we have a prefilling process before
