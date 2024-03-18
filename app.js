@@ -13,6 +13,7 @@ const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const reviewRouter = require('./routes/reviewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
 
 const app = express();
@@ -93,7 +94,14 @@ app.use(xss());
 // {{URL}}api/v1/tours?sort=duration&sort=price => this solution takes only the last one and sort the prices ascendly and doesn't consider the first sort which is for duration, and therfore, the error will be gone!
 app.use(
    hpp({
-      whitelist: ['duration', 'ratingsQuantity', 'ratingsAverage', 'maxGroupSize', 'difficulty', 'price'],
+      whitelist: [
+         'duration',
+         'ratingsQuantity',
+         'ratingsAverage',
+         'maxGroupSize',
+         'difficulty',
+         'price',
+      ],
    })
 );
 
@@ -164,6 +172,7 @@ app.use('/', viewRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // NOTE: all means all the http Methods like get, post, ...
 // we write here a middleware for all invalid URL(Routes) which are not listed as our valid Routes
