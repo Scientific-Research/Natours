@@ -9,28 +9,38 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
    const tourId = req.params.tourId;
    //  const tour = await Tour.find((tour) => tourId === req.tour.id);
    const tour = await Tour.findById(tourId); // NOTE: findById needs only an id and not two Ids with a equal sign in between!
+   console.log(tour);
 
    // 2) Create checkout session
-   const session = await stripe.checkout.session.create({
+   const session = await stripe.checkout.sessions.create({
       // This part is the information about session itself
       payment_method_types: ['card'],
       success_url: `${req.protocol}://${req.get('host')}/`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       customer_email: req.user.email, // user is already at request, because the route is protected!
       client_reference_id: tourId,
+      mode: 'payment',
       // This is the information about session itself
 
       // This part is information about product that user is going to purchase!
       line_items: [
          {
-            name: `${tour.name} Tour`,
-            description: tour.summary,
-            images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
-            amount: tour.price * 100,
-            currency: 'usd',
+            price_data: {
+               currency: 'usd',
+               product_data: {
+                  name: `${tour.name} Tour`,
+                  description: tour.summary,
+                  images: [
+                     `https://www.natours.dev/img/tours/${tour.imageCover}`,
+                  ],
+               },
+               unit_amount: tour.price * 100,
+            },
             quantity: 1,
+            // price: 'price_1OvgwCKtuNRIpwxYKxYGU1Wn',
          },
       ],
+      // },
    });
 
    // 3) Create session as response and send it to the client
