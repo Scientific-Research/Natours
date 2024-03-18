@@ -75,6 +75,13 @@ module.exports = class Email {
       // welcome would be the pug template that will be created later!
       await this.send('welcome', 'Welcome to the Natours Family!');
    }
+
+   async sendPasswordReset() {
+      await this.send(
+         'passwordReset',
+         'Your password reset token (valid for only 10 minutes)'
+      );
+   }
 };
 
 // const sendEmail = async (options) => {
