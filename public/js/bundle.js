@@ -12090,7 +12090,10 @@ var updateSettings = exports.updateSettings = /*#__PURE__*/function () {
       while (1) switch (_context.prev = _context.next) {
         case 0:
           _context.prev = 0;
-          url = type === 'password' ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword' : 'http://127.0.0.1:3000/api/v1/users/updateMe';
+          url = type === 'password' ? '/api/v1/users/updateMyPassword' // => in prod mode
+          : '/api/v1/users/updateMe'; // => in prod mode
+          // ? 'http://127.0.0.1:3000/api/v1/users/updateMyPassword' => in dev mode
+          // : 'http://127.0.0.1:3000/api/v1/users/updateMe'; => in dev mode
           _context.next = 4;
           return _axios.default.patch(url, data);
         case 4:
