@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -124,6 +125,8 @@ app.use(
 //    console.log('Hello from our own middleware!');
 //    next(); // calling the next() here!
 // });
+
+app.use(compression()); // this will compress the texts!
 
 // 2- create our own middleware function: => our global route handler before other ones:
 // Test middleware:
