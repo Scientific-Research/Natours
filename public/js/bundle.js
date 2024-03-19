@@ -12052,7 +12052,8 @@ var logout = exports.logout = /*#__PURE__*/function () {
         case 7:
           _context2.prev = 7;
           _context2.t0 = _context2["catch"](0);
-          console.log('hallo');
+          // console.log('hallo');
+          console.log(_context2.t0.response);
           (0, _alerts.showAlert)('error', 'Error logging out! Try again.' + _context2.t0.response); // when for example, we don't have Internet!
         case 11:
         case "end":
@@ -12137,26 +12138,23 @@ var bookTour = exports.bookTour = /*#__PURE__*/function () {
           return _axios.default.get("http://127.0.0.1:3000/api/v1/bookings/checkout-session/".concat(tourId));
         case 3:
           session = _context.sent;
-          console.log(session);
-
-          // 2) Create checkout form + charge credit card
-          _context.next = 7;
+          _context.next = 6;
           return stripe.redirectToCheckout({
             sessionId: session.data.session.id
           });
-        case 7:
-          _context.next = 13;
+        case 6:
+          _context.next = 12;
           break;
-        case 9:
-          _context.prev = 9;
+        case 8:
+          _context.prev = 8;
           _context.t0 = _context["catch"](0);
           console.log(_context.t0);
           (0, _alerts.showAlert)('error', _context.t0);
-        case 13:
+        case 12:
         case "end":
           return _context.stop();
       }
-    }, _callee, null, [[0, 9]]);
+    }, _callee, null, [[0, 8]]);
   }));
   return function bookTour(_x) {
     return _ref.apply(this, arguments);
@@ -12331,7 +12329,8 @@ if (userDataForm) userDataForm.addEventListener('submit', function (e) {
   form.append('name', document.getElementById('name').value);
   form.append('email', document.getElementById('email').value);
   form.append('photo', document.getElementById('photo').files[0]); // Only one photo=>index 0
-  console.log(form);
+  // console.log(form);
+
   (0, _updateSettings.updateSettings)(form, 'data'); // axios recognize the form as an object and do the same like before! we don't need to change anything in updateSettings file!
 
   // const name = document.getElementById('name').value;

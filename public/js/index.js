@@ -35,7 +35,7 @@ if (userDataForm)
       form.append('name', document.getElementById('name').value);
       form.append('email', document.getElementById('email').value);
       form.append('photo', document.getElementById('photo').files[0]); // Only one photo=>index 0
-      console.log(form);
+      // console.log(form);
 
       updateSettings(form, 'data'); // axios recognize the form as an object and do the same like before! we don't need to change anything in updateSettings file!
 

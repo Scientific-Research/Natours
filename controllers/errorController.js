@@ -20,7 +20,7 @@ const handleDuplicateFieldsDB = (err) => {
    // const value = err.keyValue.name;
    // const value = err.keyValue.name; // value has the name of the tour!
    const value = err.keyValue.name || err.keyValue.email; // value has the name of the tour!
-   console.log('The duplicate field is: ' + value);
+   // console.log('The duplicate field is: ' + value);
    // const message = `Duplicate field value: x. Please use another value!`;
    const message = `Duplicate field: ${value}. Please pick up a new one!`;
    return new AppError(message, 400);
@@ -106,7 +106,7 @@ const sendErrorProd = (err, req, res) => {
    if (err.isOperational) {
       // NOTE: first of all, we see what is statusCode and after that, it gives us the related
       // status and message for that error!
-      console.log(err);
+      // console.log(err);
 
       return res.status(err.statusCode).render('error', {
          title: 'Something went wrong!',
@@ -168,7 +168,7 @@ const globalErrorHandler = (err, req, res, next) => {
       if (error.name === 'CastError') {
          error = handleCastErrorDB(error); // it will return error for us
          // produced by our AppError and with isOperational set to true!
-         console.log('error from appError: ' + error);
+         // console.log('error from appError: ' + error);
       }
 
       // NOTE: This is how to handle the second error in Production mode and send a user-friendly
@@ -182,7 +182,7 @@ const globalErrorHandler = (err, req, res, next) => {
          error = handleDuplicateFieldsDB(error); // we will create this function at top
          // response = handleDuplicateFieldsDB(res); // we will create this function at top
          // and send error which has a deep copy of our Object => it contains all the information
-         console.log('error from appError: ' + error);
+         // console.log('error from appError: ' + error);
       }
 
       // NOTE: This is how to handle the third error in Production mode and send a user-friendly

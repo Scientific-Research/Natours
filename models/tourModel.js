@@ -11,8 +11,14 @@ const tourSchema = new mongoose.Schema(
          unique: true,
          trim: true,
          // Adding two validators which are available on Strings!
-         maxLength: [40, 'A tour name must have less or equal than 40 Characters'],
-         minLength: [10, 'A tour name must have more or equal than 10 Characters'],
+         maxLength: [
+            40,
+            'A tour name must have less or equal than 40 Characters',
+         ],
+         minLength: [
+            10,
+            'A tour name must have more or equal than 10 Characters',
+         ],
          // NOTE: we don't call the isAlpha, rather we use it here!
          // validate: [validator.isAlpha, 'Tour name must only contains Characters!'],
          // NOTE: this is not a good validator, because it doesn't accept space between characters!
@@ -62,7 +68,8 @@ const tourSchema = new mongoose.Schema(
                return val < this.price; // 100 < 200 => true, otherwise: false trigger a validation
                // error
             },
-            message: 'Discount price ({VALUE}) should be below the regular price!',
+            message:
+               'Discount price ({VALUE}) should be below the regular price!',
             // NOTE: this VALUE here in a form of Object has the same value as val above!
          },
       },
@@ -251,13 +258,13 @@ tourSchema.pre(/^find/, function (next) {
 
 // NOTE: A post middleware for find() => this middleware will run after Query was executed!
 // that's why it has access to the documents which returned!
-tourSchema.post(/^find/, function (docs, next) {
-   // console.log(`Query took ${Date.now() - this.start} milliseconds!`);
-   // Query took 41 milliseconds!
-   // console.log(docs); // it shows us the matched data to the console!
-   // I comment docs out due to not polluting my VSCode Terminal!
-   next();
-});
+// tourSchema.post(/^find/, function (docs, next) {
+//    // console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+//    // Query took 41 milliseconds!
+//    // console.log(docs); // it shows us the matched data to the console!
+//    // I comment docs out due to not polluting my VSCode Terminal!
+//    next();
+// });
 
 // NOTE: to get only one tour, we use findById(id) and this is synonyme of findOne when we
 // want to use it as Query Middleware and it works fine in Postman -

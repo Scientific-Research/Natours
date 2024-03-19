@@ -9,7 +9,10 @@ export const login = async (email, password) => {
 
    // Usage:
    try {
-      const res = await axios.post('http://127.0.0.1:3000/api/v1/users/login', { email, password });
+      const res = await axios.post('http://127.0.0.1:3000/api/v1/users/login', {
+         email,
+         password,
+      });
 
       // console.log('response from axios:', res.data); // data is our JSON data!
       if (res.data.status === 'success') {
@@ -34,8 +37,8 @@ export const logout = async () => {
          location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
       }
    } catch (error) {
-      console.log('hallo');
-
+      // console.log('hallo');
+      console.log(error.response);
       showAlert('error', 'Error logging out! Try again.' + error.response); // when for example, we don't have Internet!
    }
 };

@@ -140,7 +140,10 @@ userSchema.pre(/^find/, function (next) {
 
 // NOTE: check if the entered password is the same with the stored one in database:
 // we use instance method:
-userSchema.methods.correctPassword = async function (candidatePassword, userPassword) {
+userSchema.methods.correctPassword = async function (
+   candidatePassword,
+   userPassword
+) {
    return await bcrypt.compare(candidatePassword, userPassword);
    // if these two passwords are the same, return true, otherwise, return false!
 };
@@ -159,7 +162,10 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       // and we have to convert this 2024-03-03T00:00:00.000Z to seconds like another one!
       // it means we have to convert passwordChangedAt to second like JWTTimestamp.
       // getTime(); gives us the time in miliseconds and we have to divide it by 1000 for second
-      const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+      const changedTimestamp = parseInt(
+         this.passwordChangedAt.getTime() / 1000,
+         10
+      );
       // console.log(changedTimestamp, JWTTimestamp);
       // console.log(this.passwordChangedAt, JWTTimestamp);
       return JWTTimestamp < changedTimestamp; // this means NOT changed!
@@ -192,11 +198,14 @@ userSchema.methods.createPasswordResetToken = function () {
    // hexadecimal string!
 
    // NOTE: how to encrypt it? we use again crypto algorithm:
-   this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+   this.passwordResetToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
    // we will store this encrypted reset token in database to compare it later with the token
    // that user provide!
 
-   console.log({ randomResetToken: resetToken }, { encryptedPasswordResetToken: this.passwordResetToken });
+   // console.log({ randomResetToken: resetToken }, { encryptedPasswordResetToken: this.passwordResetToken });
 
    // NOTE: 10 min add to current time:
    this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // => 10 * 60 * 1000 milisecond

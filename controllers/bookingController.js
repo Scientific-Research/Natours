@@ -9,7 +9,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
    const tourId = req.params.tourId;
    //  const tour = await Tour.find((tour) => tourId === req.tour.id);
    const tour = await Tour.findById(tourId); // NOTE: findById needs only an id and not two Ids with a equal sign in between!
-   console.log(tour);
+   // console.log(tour);
 
    // 2) Create checkout session
    const session = await stripe.checkout.sessions.create({
