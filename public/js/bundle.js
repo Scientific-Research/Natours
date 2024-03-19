@@ -12001,7 +12001,8 @@ var login = exports.login = /*#__PURE__*/function () {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return _axios.default.post('http://127.0.0.1:3000/api/v1/users/login', {
+          return _axios.default.post('/api/v1/users/login', {
+            // => in prod mode
             email: email,
             password: password
           });
@@ -12041,9 +12042,11 @@ var logout = exports.logout = /*#__PURE__*/function () {
         case 0:
           _context2.prev = 0;
           _context2.next = 3;
-          return _axios.default.get('http://127.0.0.1:3000/api/v1/users/logout');
+          return _axios.default.get('/api/v1/users/logout');
         case 3:
           res = _context2.sent;
+          // in prod mode
+
           if (res.data.status === 'success') {
             location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
           }
