@@ -1,8 +1,8 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('../models/tourModel');
+const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
-const AppError = require('../utils/appError');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
    // 1) Get the currently booked tour
@@ -53,12 +53,22 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 // NOTE: create a function to store the booked tour in database!
-exports.createBookingCheckout = (req, res, next) => {
+exports.createBookingCheckout = catchAsync(async (req, res, next) => {
    // getting the data from query string:
+   // This is only TEMPORARY, because it's UNSECURE: everyone can make bookings without paying!
    const { tour, user, price } = req.query;
 
-   // when all of them are available, then create a new booking:
+   // when all of them are not available, go to the next middleware!
    if (!tour && !user && !price) {
-      return next(); // in this case, we go to the next middleware!
+      return next(); // it goes to this route: getOverview
    }
-};
+   // otherwise, store them in database!
+   await Booking.create({
+      tour,
+      user,
+      price,
+   });
+
+   // next();
+   res.redirect(req.originalUrl.split('?')[0]); // we nedd just this part of url: ${req.protocol}://${req.get('host')}/, that's why we use ? plus split('')[0] => we take first element, our root element! => at the end, we go to the home URL => ('/')
+});
