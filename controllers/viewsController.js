@@ -1,5 +1,6 @@
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
@@ -54,6 +55,22 @@ exports.getAccount = (req, res) => {
       title: 'Your account',
    });
 };
+
+exports.getMyTours = catchAsync(async (req, res, next) => {
+   // 1) first, find all the tours for currently logged in user that has already booked! => find all bookings:
+   const bookings = await Booking.find({ user: req.user.id });
+   // 2) Find tours with the returned IDs:
+   const tourIDs = bookings.map((el) => el.tour); // map gives us an array of tourIDs
+   const tours = await Tour.find({ _id: { $in: tourIDs } });
+
+   // NOTE: we have our tours now to be rendered:
+   res.status(200).render('overview', {
+      // we don't define a new pug template, rather, we reuse the overview template which we used it already to display all the Tours.
+      // the only difference is: we show here only the tours that user already booked! and not all the tours!
+      title: 'My Tours',
+      tours: tours,
+   });
+});
 
 exports.updateUserData = catchAsync(async (req, res, next) => {
    // NOTE: console.log(`UPDATING USER: ${req.body}`); // this will not work!!!
