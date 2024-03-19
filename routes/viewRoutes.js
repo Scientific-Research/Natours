@@ -5,8 +5,15 @@ const bookingController = require('../controllers/bookingController');
 
 const router = express.Router();
 
-const { getOverview, getTour, getLoginForm, getAccount, updateUserData } =
-   viewsController;
+const {
+   getOverview,
+   getTour,
+   getLoginForm,
+   getAccount,
+   updateUserData,
+   getMyTours,
+} = viewsController;
+
 const { isLoggedIn, protect } = authConteroller;
 
 const { createBookingCheckout } = bookingController;
@@ -23,6 +30,7 @@ router.get('/', createBookingCheckout, isLoggedIn, getOverview);
 router.get('/tour/:slug', isLoggedIn, getTour);
 router.get('/login', isLoggedIn, getLoginForm);
 router.get('/me', protect, getAccount);
+router.get('/my-tours', protect, getMyTours);
 
 router.post('/submit-user-data', protect, updateUserData);
 
