@@ -72,3 +72,14 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
    // next();
    res.redirect(req.originalUrl.split('?')[0]); // we nedd just this part of url: ${req.protocol}://${req.get('host')}/, that's why we use ? plus split('')[0] => we take first element, our root element! => at the end, we go to the home URL => ('/')
 });
+
+// exports.factory.get(a,b)={
+
+// }
+
+// exports.factory.getOne(Tour);
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.getAllBooking = factory.getAll(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
