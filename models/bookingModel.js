@@ -31,6 +31,7 @@ bookingSchema.pre(/^find/, function (next) {
       path: 'tour',
       select: 'name',
    });
+   next(); // NOTE: not forgetting to call next() here, in pre middleware, we have always (next)as argument and we have to call the next here too! otherwise, our process get stocked!
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);
