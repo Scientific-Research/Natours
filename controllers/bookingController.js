@@ -15,7 +15,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
    const session = await stripe.checkout.sessions.create({
       // This part is the information about session itself
       payment_method_types: ['card'],
-      success_url: `${req.protocol}://${req.get('host')}/`,
+      success_url: `${req.protocol}://${req.get('host')}/?tour=${
+         req.params.tourId
+      }&user=${req.user.id}&price=${tour.price}`,
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       customer_email: req.user.email, // user is already at request, because the route is protected!
       client_reference_id: tourId,
@@ -49,3 +51,14 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       session: session,
    });
 });
+
+// NOTE: create a function to store the booked tour in database!
+exports.createBookingCheckout = (req, res, next) => {
+   // getting the data from query string:
+   const { tour, user, price } = req.query;
+
+   // when all of them are available, then create a new booking:
+   if (!tour && !user && !price) {
+      return next(); // in this case, we go to the next middleware!
+   }
+};
