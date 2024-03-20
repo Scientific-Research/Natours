@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -26,6 +27,15 @@ app.set('views', path.join(__dirname, 'views'));
 // app.set('views', './views');
 
 // 1) GLOBAL MIDDLEWARES
+// Implement CORS
+app.use(cors()); // we allow CORS everywhere for all routes! or we can add it to every specific route!
+// Access-Control-Allow-Origin * => we allow every request to access our API, it doesn't matter where they are coming from!
+// for example: I want to access api from this website: api.natours.com, front-end natours.com
+// app.use(
+//    cors({
+//       origin: 'https://www.natours.com', // only this URL is allowed to send the request to api.natours.com!
+//    })
+// );
 
 // how to show the static files using middleware in express:
 // Serving static files:
