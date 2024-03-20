@@ -36,6 +36,8 @@ app.use(cors()); // we allow CORS everywhere for all routes! or we can add it to
 //       origin: 'https://www.natours.com', // only this URL is allowed to send the request to api.natours.com!
 //    })
 // );
+app.options('*', cors()); // cors() is allowed for all routes like get, create, delte, patch
+// app.options('/api/v1/tours/:id', cors()); // cors() is allowed only for patch and delete! other routes like get and create are not allowed via cors()!
 
 // how to show the static files using middleware in express:
 // Serving static files:
