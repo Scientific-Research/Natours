@@ -4,13 +4,10 @@
    "description": "Learning node, express and MongoDB",
    "main": "app.js",
    "scripts": {
-      "//": "cross-env make it possible to use NODE_ENV in both below commands",
-      "start": "cross-env NODE_ENV=development node src/server.js",
-      "dev": "cross-env NODE_ENV=development nodemon src/server.js",
-      "start:prod": "cross-env NODE_ENV=production nodemon src/server.js",
-      "debug": "ndb src/server.js",
-      "watch:js": "parcel watch ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js",
-      "build:js": "parcel build ./src/public/js/index.js --out-dir ./src/public/js --out-file bundle.js"
+      "dev": "nodemon src/server.js",
+      "start": "npm run build && node dist/server.js",
+      "deploy": "git pull --no-rebase && npm i && npm run build && pm2 restart mk-tours-in-nature --update-env --time && pm2 save",
+      "build": "parcel build ./src/public/js/index.js --out-dir dist && cp -R src/controllers src/dev-data src/models src/public src/routes src/utils src/views src/app.js src/server.js dist/"
    },
    "keywords": [],
    "author": "Maximilian",
