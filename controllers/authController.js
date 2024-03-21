@@ -234,6 +234,14 @@ exports.protect = catchAsync(async (req, res, next) => {
    // we used the jwt.sign already and now, we use jwt.verify:
    // NOTE: we need to promisify the jsw.verify and after that, like always, await it.
    // NOTE: Our decoded Payload is here our user._id => id: '65e0fd7a89e6afc71ed7fc9f'
+
+   // NOTE: when we use the following 'if' => it will not enter the decodedPayload when we log out and therefore, we will not get the error message! because the log out token is 'logged out' and is completely diffrent from original token => verify process will fail and we will run into an error!
+   if (token === 'logged out') {
+      return setTimeout(() => {
+         res.redirect('/');
+      }, 100);
+   }
+
    const decodedPayload = await promisify(jwt.verify)(
       token,
       process.env.JWT_SECRET
