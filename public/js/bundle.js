@@ -11985,7 +11985,7 @@ var showAlert = exports.showAlert = function showAlert(type, msg) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.logout = exports.login = void 0;
+exports.signup = exports.logout = exports.login = void 0;
 var _axios = _interopRequireDefault(require("axios"));
 var _alerts = require("./alerts");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -12034,38 +12034,81 @@ var login = exports.login = /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }();
-var logout = exports.logout = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+var signup = exports.signup = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(name, email, password, passwordConfirm) {
     var res;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
           _context2.next = 3;
-          return _axios.default.get('/api/v1/users/logout');
+          return _axios.default.post('/api/v1/users/signup', {
+            // => in prod mode
+            name: name,
+            email: email,
+            password: password,
+            passwordConfirm: passwordConfirm
+          });
         case 3:
           res = _context2.sent;
-          // in prod mode
-
+          // console.log('response from axios:', res.data); // data is our JSON data!
           if (res.data.status === 'success') {
-            location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
+            (0, _alerts.showAlert)('success', 'Sign-up successful!');
+            // alert('Logged in successfully!');
+            window.setTimeout(function () {
+              location.assign('/login');
+            }, 100);
           }
-          _context2.next = 11;
+          _context2.next = 10;
           break;
         case 7:
           _context2.prev = 7;
           _context2.t0 = _context2["catch"](0);
-          // console.log('hallo');
-          console.log(_context2.t0.response);
-          (0, _alerts.showAlert)('error', 'Error logging out! Try again.' + _context2.t0.response); // when for example, we don't have Internet!
-        case 11:
+          // console.log('Error:', error.response.data);
+          (0, _alerts.showAlert)('error', _context2.t0.response.data.message); // we get the message from our data => JSON data!
+          // alert(error.response.data.message); // we get the message from our data => JSON data!
+        case 10:
         case "end":
           return _context2.stop();
       }
     }, _callee2, null, [[0, 7]]);
   }));
-  return function logout() {
+  return function signup(_x3, _x4, _x5, _x6) {
     return _ref2.apply(this, arguments);
+  };
+}();
+var logout = exports.logout = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+    var res;
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          _context3.next = 3;
+          return _axios.default.get('/api/v1/users/logout');
+        case 3:
+          res = _context3.sent;
+          // in prod mode
+
+          if (res.data.status === 'success') {
+            location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
+          }
+          _context3.next = 11;
+          break;
+        case 7:
+          _context3.prev = 7;
+          _context3.t0 = _context3["catch"](0);
+          // console.log('hallo');
+          console.log(_context3.t0.response);
+          (0, _alerts.showAlert)('error', 'Error logging out! Try again.' + _context3.t0.response); // when for example, we don't have Internet!
+        case 11:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3, null, [[0, 7]]);
+  }));
+  return function logout() {
+    return _ref3.apply(this, arguments);
   };
 }();
 },{"axios":"../../node_modules/axios/index.js","./alerts":"alerts.js"}],"updateSettings.js":[function(require,module,exports) {
@@ -12310,6 +12353,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 // DOM ELEMENTS
 var loginForm = document.querySelector('.form--login');
+var signupForm = document.querySelector('.form--signup');
 var logOutBtn = document.querySelector('.nav__el--logout');
 var userDataForm = document.querySelector('.form-user-data');
 var userPasswordForm = document.querySelector('.form-user-password');
@@ -12325,6 +12369,17 @@ if (loginForm) loginForm.addEventListener('submit', function (e) {
   var password = document.getElementById('password').value;
   // console.log(email, password);
   (0, _login.login)(email, password);
+});
+if (signupForm) signupForm.addEventListener('submit', function (e) {
+  // document.querySelector('.form').addEventListener('submit', (e) => {
+
+  e.preventDefault();
+  var name = document.getElementById('name').value;
+  var email = document.getElementById('email').value;
+  var password = document.getElementById('password').value;
+  var passwordConfirm = document.getElementById('passwordConfirm').value;
+  // console.log(email, password);
+  (0, _login.signup)(name, email, password, passwordConfirm);
 });
 
 // NOTE: when somebody click on the logout button, the logout function will be executed!
