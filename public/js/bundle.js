@@ -12144,6 +12144,7 @@ var updateSettings = exports.updateSettings = /*#__PURE__*/function () {
           // console.log('response from axios:', res.data); // data is our JSON data!
           if (res.data.status === 'success') {
             (0, _alerts.showAlert)('success', "".concat(type.toUpperCase(), " updated successfully!"));
+            location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
           }
           _context.next = 11;
           break;

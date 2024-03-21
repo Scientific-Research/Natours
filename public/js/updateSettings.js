@@ -17,6 +17,7 @@ export const updateSettings = async (data, type) => {
       // console.log('response from axios:', res.data); // data is our JSON data!
       if (res.data.status === 'success') {
          showAlert('success', `${type.toUpperCase()} updated successfully!`);
+         location.reload(true); // it forces a reload from the server and not from browser cache! in this case, we will not have the user menu from cache, rather, we will have a fresh page from server => that's why this true here is very important!
       }
    } catch (error) {
       showAlert('error', error.response.data.message);

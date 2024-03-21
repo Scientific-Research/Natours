@@ -45,7 +45,8 @@ const userSchema = new mongoose.Schema({
          validator: function (el) {
             return el === this.password; // abc === abc => return true! otherwise, it would be false!
          },
-         message: 'Passwords are not the same!',
+         // message: 'Passwords are not the same!',
+         message: 'Password and Confirm Password are not the same!',
       },
    },
    // NOTE: we need to add a date field here to show the time in which the passowrd has been
