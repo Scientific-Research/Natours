@@ -51,7 +51,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
       .resize(2000, 1333) // height and width needs to be the same for a square image!
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
-      .toFile(`public/img/tours/${imageCoverFilename}`); // to store it in users folder in project!
+      .toFile(`src/public/img/tours/${imageCoverFilename}`); // to store it in users folder in project!
    // to update the imageCover too with all other data => we will assign imageCoverFilename to req.body in updateOne in handleFactory.js
    req.body.imageCover = imageCoverFilename;
 

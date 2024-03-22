@@ -9,7 +9,7 @@ header.header
       //- a.nav__el(href='#')
       // - pointing to the '/me' in viewRoutes.js => router.get('/me', protect, getAccount);
       a.nav__el(href='/me')
-        img.nav__user-img(src=`src/public/img/users/${user.photo}` alt=`Photo of ${user.name}`)
+        img.nav__user-img(src=`/img/users/${user.photo}` alt=`Photo of ${user.name}`)
         span= user.name.split(' ')[0] 
         // we want to display only the first element => first name!
     else

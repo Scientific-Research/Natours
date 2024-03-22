@@ -52,7 +52,8 @@ export const signup = async (name, email, password, passwordConfirm) => {
          showAlert('success', 'Sign-up successful!');
          // alert('Logged in successfully!');
          window.setTimeout(() => {
-            location.assign('/login');
+            // location.assign('/');
+            res.redirect('/');
          }, 100);
       }
    } catch (error) {
