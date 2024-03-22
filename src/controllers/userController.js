@@ -54,7 +54,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
       .resize(500, 500) // height and width needs to be the same for a square image!
       .toFormat('jpeg')
       .jpeg({ quality: 90 })
-      .toFile(`public/img/users/${req.file.filename}`); // to store it in users folder in project!
+      .toFile(`src/public/img/users/${req.file.filename}`); // to store it in users folder in project!
 
    next(); // from here goes directly to updateMe handler function!
 });
