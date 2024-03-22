@@ -6,6 +6,7 @@
    "scripts": {
       "dev": "nodemon src/server.js",
       "start": "npm run build && node dist/server.js",
+      "setup": "pm2 start --name mk-tours-in-nature npm -- start",
       "deploy": "git pull --no-rebase && npm i && npm run build && pm2 restart mk-tours-in-nature --update-env --time && pm2 save",
       "build": "parcel build ./src/public/js/index.js --out-dir dist && cp -R src/controllers src/dev-data src/models src/public src/routes src/utils src/views src/app.js src/server.js dist/"
    },
