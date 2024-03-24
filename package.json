@@ -4,11 +4,11 @@
    "description": "Learning node, express and MongoDB",
    "main": "app.js",
    "scripts": {
-      "dev": "nodemon src/server.js",
-      "start": "npm run build && node dist/server.js",
+      "dev": "nodemon server.js",
+      "start": "npm run build && node server.js",
       "setup": "pm2 start --name mk-tours-in-nature npm -- start",
       "deploy": "git pull --no-rebase && npm i && npm run build && pm2 restart mk-tours-in-nature --update-env --time && pm2 save",
-      "build": "parcel build ./src/public/js/index.js --out-dir dist && cp -R src/controllers src/dev-data src/models src/public src/routes src/utils src/views src/app.js src/server.js dist/"
+      "build": "babel controllers dev-data models public routes utils views app.js server.js --out-dir ."
    },
    "keywords": [],
    "author": "Maximilian",
@@ -41,6 +41,9 @@
       "xss-clean": "^0.1.4"
    },
    "devDependencies": {
+      "@babel/core": "^7.24.3",
+      "@babel/preset-env": "^7.24.3",
+      "@babel/preset-typescript": "^7.24.1",
       "cross-env": "^7.0.3",
       "ndb": "^1.1.5",
       "parcel-bundler": "^1.12.5"
